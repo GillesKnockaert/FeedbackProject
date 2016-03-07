@@ -25,7 +25,7 @@ function init() {
     loadhtml2canvas();
 
     //button done highlighting aanmaken
-    //readyButton();
+    readyButton();
 
     //ophalen van alle achtergrondinformatie
     getBackgroundinfo();
@@ -147,6 +147,7 @@ function init() {
 
                     document.getElementById("partialContainer").onclick = function () {
                         console.log("click on thumbnail from part of site");
+                        DrawOnCanvas(canvas);
                     };
 
 
@@ -177,6 +178,7 @@ function init() {
 
                         document.getElementById("fullContainer").onclick = function () {
                             console.log("click on thumbnail from fullsite");
+                            DrawOnCanvas(canvas);
                         };
 
 
@@ -204,12 +206,12 @@ function init() {
         //    document.getElementById("readyButton").style.visibility = "visible";
         //};
 
-        //document.getElementById("readyButton").onclick = function () {
-        //    document.body.className += " bodyoverflowclass";
-        //    document.getElementById("feedbackbtn").style.visibility = "visible";
-        //    document.getElementById("feedbackmodal").style.visibility = "visible";
-        //    document.getElementById("readyButton").style.visibility = "hidden";
-        //};
+        document.getElementById("readyButton").onclick = function () {
+            document.body.className += " bodyoverflowclass";
+            //document.getElementById("feedbackbtn").style.visibility = "visible";
+            document.getElementById("highlightmodal").style.visibility = "hidden";
+            document.getElementById("readyButton").style.visibility = "hidden";
+        };
 
 
 
@@ -246,15 +248,36 @@ function createButton(){
     document.body.appendChild(feedbackbtn);
     feedbackbtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
 }
-//function readyButton(){
-//    var readyButton = document.createElement("div");
-//    readyButton.id = "readyButton";
-//    readyButton.className = "feedbackbtn button";
-//    document.body.appendChild(readyButton);
-//    readyButton.innerHTML = "Done Highlighting";
-//}
+function readyButton(){
+    var readyButton = document.createElement("div");
+    readyButton.id = "readyButton";
+    readyButton.className = "feedbackbtn button";
+    document.body.appendChild(readyButton);
+    readyButton.innerHTML = "Done Highlighting";
+}
+
+function DrawOnCanvas(canvas){
+    //console.log(canvas);
+
+    var myElem = document.getElementById('highlightmodal');
+    if (myElem === null) {
+        var highlightmodal = document.createElement("div");
+        highlightmodal.id = "highlightmodal";
+        highlightmodal.className = "highlightmodal";
+        document.body.appendChild(highlightmodal);
+
+        var highlightmodalinnerdiv = document.createElement("div");
+        highlightmodalinnerdiv.id = "highlightmodalinnerdiv";
+        highlightmodalinnerdiv.className = "highlightmodalinnerdiv";
+        highlightmodal.appendChild(highlightmodalinnerdiv);
 
 
+        highlightmodalinnerdiv.appendChild(canvas);
+        //console.log(canvas)
+    }
+    document.getElementById("highlightmodal").style.visibility = "visible";
+    document.getElementById("readyButton").style.visibility = "visible";
+}
 
 
 
@@ -367,19 +390,19 @@ function getBackgroundinfo(){
 
     //-------------display background info-------------
 
-    alert(''
-        +'Browser name  = '+browserName+'\n'
-        +'Full version  = '+fullVersion+'\n'
-        +'Major version = '+majorVersion+'\n'
-        +'Browser width = '+x+'\n'
-        +'Browser height = '+y+'\n'
-        +'screen width = '+screen.width+'\n'
-        +'screen height = '+screen.height+'\n'
-        +'Location = '+window.location.href+'\n'
-        +'Date = '+date+'\n'
-        +'Timestamp = '+time+'\n'
-        +'Platform = '+platform+'\n'
-    )
+    //alert(''
+    //    +'Browser name  = '+browserName+'\n'
+    //    +'Full version  = '+fullVersion+'\n'
+    //    +'Major version = '+majorVersion+'\n'
+    //    +'Browser width = '+x+'\n'
+    //    +'Browser height = '+y+'\n'
+    //    +'screen width = '+screen.width+'\n'
+    //    +'screen height = '+screen.height+'\n'
+    //    +'Location = '+window.location.href+'\n'
+    //    +'Date = '+date+'\n'
+    //    +'Timestamp = '+time+'\n'
+    //    +'Platform = '+platform+'\n'
+    //)
 
 
 
