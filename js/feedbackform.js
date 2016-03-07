@@ -25,12 +25,14 @@ function init() {
     loadhtml2canvas();
 
     //button done highlighting aanmaken
-    readyButton();
+    //readyButton();
 
+    //ophalen van alle achtergrondinformatie
     getBackgroundinfo();
 
 
     document.getElementById("feedbackbtn").onclick = function () {
+
 
 
         var myElem = document.getElementById('feedbackmodal');
@@ -74,8 +76,8 @@ function init() {
             "<option value='Medium' selected>Medium</option>" +
             "<option value='Low'>Low</option>" +
             "</select>" +
-            "<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
-            "<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
+            //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
+            //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
             "<div id='screenshotsContainer'></div>" +
             "</div>" +
             "<div class='modalFooter'>" +
@@ -104,9 +106,9 @@ function init() {
 
 
 
-
-        document.getElementById("screenshotbutton").onclick = function () {
-
+        getscreenshots();
+        //document.getElementById("screenshotbutton").onclick = function () {
+        function getscreenshots(){
             document.body.className = bodystate;
 
             document.getElementById("feedbackmodal").style.visibility = "hidden";
@@ -142,6 +144,12 @@ function init() {
                     //canvas.height = document.body.clientHeight;
                     //ctx=canvas.getContext("2d");
                     //ctx.putImageData(content, 0, 0);
+
+                    document.getElementById("partialContainer").onclick = function () {
+                        console.log("click on thumbnail from part of site");
+                    };
+
+
                 }
             });
             html2canvas(document.body, {
@@ -165,28 +173,43 @@ function init() {
 
                         //-----------full screenshot in screenshotcontainer--------------------
                         //document.getElementById("screenshotsContainer").appendChild(canvas);
+
+
+                        document.getElementById("fullContainer").onclick = function () {
+                            console.log("click on thumbnail from fullsite");
+                        };
+
+
                     }
                 });
 
             document.body.className += " bodyoverflowclass";
             document.getElementById("feedbackmodal").style.visibility = "visible";
             document.getElementById("feedbackbtn").style.visibility = "visible";
+
+
+
+
         };
 
 
-        document.getElementById("highlitebutton").onclick = function () {
-            document.body.className = bodystate;
-            document.getElementById("feedbackbtn").style.visibility = "hidden";
-            document.getElementById("feedbackmodal").style.visibility = "hidden";
-            document.getElementById("readyButton").style.visibility = "visible";
-        };
 
-        document.getElementById("readyButton").onclick = function () {
-            document.body.className += " bodyoverflowclass";
-            document.getElementById("feedbackbtn").style.visibility = "visible";
-            document.getElementById("feedbackmodal").style.visibility = "visible";
-            document.getElementById("readyButton").style.visibility = "hidden";
-        };
+
+
+
+        //document.getElementById("highlitebutton").onclick = function () {
+        //    document.body.className = bodystate;
+        //    document.getElementById("feedbackbtn").style.visibility = "hidden";
+        //    document.getElementById("feedbackmodal").style.visibility = "hidden";
+        //    document.getElementById("readyButton").style.visibility = "visible";
+        //};
+
+        //document.getElementById("readyButton").onclick = function () {
+        //    document.body.className += " bodyoverflowclass";
+        //    document.getElementById("feedbackbtn").style.visibility = "visible";
+        //    document.getElementById("feedbackmodal").style.visibility = "visible";
+        //    document.getElementById("readyButton").style.visibility = "hidden";
+        //};
 
 
 
@@ -223,20 +246,31 @@ function createButton(){
     document.body.appendChild(feedbackbtn);
     feedbackbtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
 }
-function readyButton(){
-    var readyButton = document.createElement("div");
-    readyButton.id = "readyButton";
-    readyButton.className = "feedbackbtn button";
-    document.body.appendChild(readyButton);
-    readyButton.innerHTML = "Done Highlighting";
-}
+//function readyButton(){
+//    var readyButton = document.createElement("div");
+//    readyButton.id = "readyButton";
+//    readyButton.className = "feedbackbtn button";
+//    document.body.appendChild(readyButton);
+//    readyButton.innerHTML = "Done Highlighting";
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function getBackgroundinfo(){
-
-
-
     //-------------Get background information-------------
-
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;
     var browserName = navigator.appName;
@@ -346,6 +380,8 @@ function getBackgroundinfo(){
         +'Timestamp = '+time+'\n'
         +'Platform = '+platform+'\n'
     )
+
+
 
 
 
