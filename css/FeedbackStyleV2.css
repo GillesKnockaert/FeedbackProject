@@ -108,6 +108,7 @@ canvas{
 }
 #readyButton{
     visibility: hidden;
+    z-index: 999999;
 }
 .screenshot{
     max-height: 200px;
@@ -142,7 +143,7 @@ canvas{
     opacity: 0;
 }
 .partialoverlay > img, .fulloverlay > img{
-    margin-top: 50px;
+    margin-top: 65px;
     width: 50px;
     height: auto;
 }
@@ -152,4 +153,30 @@ canvas{
     /*background-image: url("../img/pencil.png");
     background-position: top;
     background-repeat: no-repeat;*/
+}
+
+
+
+/*  ---------- highlite modal ----------  */
+#highlightmodal {
+    overflow-y: scroll;
+    background-color: rgba(0,0,0,0.7);
+    /*background-color: white;*/
+    visibility: hidden;
+    position: fixed;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    padding: 5% 10%;
+    text-align:center;
+    z-index: 99999;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+
+}
+#highlightmodalinnerdiv{
+    background-color: white;
+}
+#destinationCanvas{
 }
