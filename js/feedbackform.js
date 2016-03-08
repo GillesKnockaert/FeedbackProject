@@ -101,6 +101,7 @@ function init() {
             document.getElementById("feedbackmodal").style.visibility = "hidden";
             document.body.className = bodystate;
         };
+        $('#feedbackform').on('submit', submitForm);
 
 
 
@@ -352,5 +353,23 @@ function getBackgroundinfo(){
 }
 
 
+function submitForm(e) {
+    e.preventDefault();
+    var data = convertFormData($(this).serializeArray());
+    console.log(data);
+}
 
-
+function convertFormData(formdata) {
+    var json = {};
+    $.each(formdata, function() {
+        if (json[this.name] !== undefined) {
+            if (!json[this.name].push) {
+                json[this.name] = [json[this.name]];
+            }
+            json[this.name].push(this.value || '');
+        } else {
+            json[this.name] = this.value || '';
+        }
+    });
+    return json;
+}
