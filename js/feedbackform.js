@@ -33,17 +33,15 @@ function init() {
 
     document.getElementById("feedbackbtn").onclick = function () {
 
-
-
         var myElem = document.getElementById('feedbackmodal');
         if (myElem === null) {
-
             //Add overlay div to the html
             var feedbackmodal = document.createElement("div");
             feedbackmodal.id = "feedbackmodal";
             feedbackmodal.className = "feedbackmodal";
             document.body.appendChild(feedbackmodal);
         }
+
         document.getElementById("feedbackmodal").style.visibility = "visible";
 
         //Put html code in the feedbackmodal div
@@ -60,9 +58,11 @@ function init() {
 
             "<label for='Type'>Type</label>" +
             "<select id='Type' name='Type'>" +
-            "<option value='Question'>Question</option>" +
-            "<option value='Bug' selected>Problem/Bug</option>" +
-            "<option value='Request'>Request</option>" +
+            "<option value='NewFeature'>New Feature</option>" +
+            "<option value='Bug' selected>Bug</option>" +
+            "<option value='Improvement'>Improvement</option>" +
+            "<option value='Support'>Support</option>" +
+            "<option value='Change'>Change</option>" +
             "</select>" +
 
             "<label for='Priority'>Priority</label>" +
@@ -89,9 +89,6 @@ function init() {
         bodystate = document.body.className;
         document.body.className += " bodyoverflowclass";
 
-
-
-
         document.getElementById("closeModal").onclick = function () {
             document.getElementById("feedbackmodal").style.visibility = "hidden";
             document.body.className = bodystate;
@@ -100,8 +97,6 @@ function init() {
             document.getElementById("feedbackmodal").style.visibility = "hidden";
             document.body.className = bodystate;
         };
-
-
 
         getscreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
@@ -146,8 +141,6 @@ function init() {
                         console.log("click on thumbnail from part of site");
                         DrawOnCanvas(canvas);
                     };
-
-
                 }
             });
             html2canvas(document.body, {
@@ -177,7 +170,6 @@ function init() {
                             console.log("click on thumbnail from fullsite");
                             DrawOnCanvas(canvas);
                         };
-
 
                     }
                 });
@@ -209,9 +201,6 @@ function init() {
             document.getElementById("highlightmodal").style.visibility = "hidden";
             document.getElementById("readyButton").style.visibility = "hidden";
         };
-
-
-
     };
 }
 
@@ -254,10 +243,8 @@ function readyButton(){
 }
 
 function DrawOnCanvas(canvas){
-    //console.log(canvas);
-
     var myElem = document.getElementById('highlightmodal');
-    if (myElem === null) {
+    if (myElem === null ) {
         var highlightmodal = document.createElement("div");
         highlightmodal.id = "highlightmodal";
         highlightmodal.className = "highlightmodal";
@@ -268,9 +255,33 @@ function DrawOnCanvas(canvas){
         highlightmodalinnerdiv.className = "highlightmodalinnerdiv";
         highlightmodal.appendChild(highlightmodalinnerdiv);
 
+        var copiedCanvas = cloneCanvas(canvas);
+        highlightmodalinnerdiv.appendChild(copiedCanvas);
 
-        highlightmodalinnerdiv.appendChild(canvas);
-        //console.log(canvas)
+
+    }else{
+        var modalInnerDiv = document.getElementById("highlightmodalinnerdiv");
+        modalInnerDiv.removeChild(document.getElementById("zoomedCanvas"));
+        var copiedCanvas = cloneCanvas(canvas);
+
+        modalInnerDiv.appendChild(copiedCanvas);
+    }
+    function cloneCanvas(oldCanvas) {
+
+        //create a new canvas
+        var newCanvas = document.createElement('canvas');
+        var context = newCanvas.getContext('2d');
+
+        //set dimensions
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+        newCanvas.id = "zoomedCanvas";
+
+        //apply the old canvas to the new one
+        context.drawImage(oldCanvas, 0, 0);
+
+        //return the new canvas
+        return newCanvas;
     }
     document.getElementById("highlightmodal").style.visibility = "visible";
     document.getElementById("readyButton").style.visibility = "visible";
