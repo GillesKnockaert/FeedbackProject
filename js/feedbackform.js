@@ -43,11 +43,8 @@ function init() {
             feedbackmodal.id = "feedbackmodal";
             feedbackmodal.className = "feedbackmodal";
             document.body.appendChild(feedbackmodal);
-            document.getElementById("feedbackmodal").style.visibility = "visible";
-
-        } else {
-            document.getElementById("feedbackmodal").style.visibility = "visible";
         }
+        document.getElementById("feedbackmodal").style.visibility = "visible";
 
         //Put html code in the feedbackmodal div
         document.getElementById("feedbackmodal").innerHTML = "" +
@@ -403,11 +400,6 @@ function getBackgroundinfo(){
     //    +'Timestamp = '+time+'\n'
     //    +'Platform = '+platform+'\n'
     //)
-
-
-
-
-
 }
 
 
