@@ -5,17 +5,16 @@ docReady(function() {
 });
 
 var feedbackModule = (function() {
-    //Css
-    var csspath = "css/FeedbackStyleV2.css";
-    //path to img folder
-    var img = "img/";
-    //html2canvas library inladen
-    var html2canvaspath = "js/html2canvas.js";
+    var csspath = "css/FeedbackStyleV2.css",
+        img = "img/", //path to img folder
+        html2canvaspath = "js/html2canvas.js", // path to html2canvas library
+        head; // head DOM element
 
     function loadcss() {
       var cssId = 'myCss';
       if (!document.getElementById(cssId)) {
-        var head = document.getElementsByTagName('head')[0];
+        head = head || document.getElementsByTagName('head')[0];
+
         var link = document.createElement('link');
         link.id = cssId;
         link.rel = 'stylesheet';
@@ -27,7 +26,7 @@ var feedbackModule = (function() {
     }
 
     function loadhtml2canvas() {
-      var head = document.getElementsByTagName('head')[0];
+      head = head || document.getElementsByTagName('head')[0];
       var script = document.createElement("script");
       script.type = "text/javascript";
       script.src = html2canvaspath;
@@ -43,7 +42,7 @@ var feedbackModule = (function() {
       feedbackbtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
     }
 
-    function readyButton() {
+    function createReadyButton() {
       var readyButton = document.createElement("div");
       readyButton.id = "readyButton";
       readyButton.className = "feedbackbtn button";
@@ -52,8 +51,6 @@ var feedbackModule = (function() {
     }
 
     function DrawOnCanvas(canvas) {
-      //console.log(canvas);
-
       var myElem = document.getElementById('highlightmodal');
       if (myElem === null) {
         var highlightmodal = document.createElement("div");
@@ -68,7 +65,6 @@ var feedbackModule = (function() {
 
 
         highlightmodalinnerdiv.appendChild(canvas);
-        //console.log(canvas)
       }
       document.getElementById("highlightmodal").style.visibility = "visible";
       document.getElementById("readyButton").style.visibility = "visible";
@@ -76,12 +72,12 @@ var feedbackModule = (function() {
 
     function getBackgroundinfo() {
       //-------------Get background information-------------
-      var nVer = navigator.appVersion;
-      var nAgt = navigator.userAgent;
+      var nVer = navigator.appVersion; // TODO betere variabele namen. Code moet leesbaar zijn, nVer zegt niets.
+      var nAgt = navigator.userAgent; // TODO zelfde als hierboven
       var browserName = navigator.appName;
       var fullVersion = '' + parseFloat(navigator.appVersion);
       var majorVersion = parseInt(navigator.appVersion, 10);
-      var nameOffset, verOffset, ix;
+      var nameOffset, verOffset, ix; // TODO ix?
       var platform = navigator.platform;
 
       // In Opera 15+, the true version is after "OPR/"
@@ -139,6 +135,15 @@ var feedbackModule = (function() {
         majorVersion = parseInt(navigator.appVersion, 10);
       }
 
+      // TODO better variable names. Why use d = document here when you use document without this variable elsewhere in this file?
+      // Also, read up on variable hoisting in javascript. Better to declare all variables at the top of this scope. (function block)
+      // read: http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html
+      // I've replaced all your below code with a more concise example, but kept the old version in comment so you
+      // could compare. 12 less variables. Code becomes a bit less readable, but a comment can fix that.
+      // Note: For an even more concise solution, you could just use the build-in toString method, which will return
+      // a date/time in the format DDD MMM dd yyyy hh:mm:ss Z. For example: Wed Jul 28 1993 14:39:07 GMT-0600 (PDT)
+
+      /*
       var w = window,
         d = document,
         e = d.documentElement,
@@ -154,6 +159,8 @@ var feedbackModule = (function() {
       var mm = date.getMonth() + 1; //January is 0!
       var yyyy = date.getFullYear();
 
+      // TODO you only check these four variables. Why declare the other variables above?
+      // I've added a much smaller, faster way below to get the same result
       m = checkNumber(m);
       s = checkNumber(s);
       dd = checkNumber(dd);
@@ -168,24 +175,35 @@ var feedbackModule = (function() {
 
       date = dd + '/' + mm + '/' + yyyy;
       time = h + ":" + m + ":" + s;
+      */
+
+      var date = new Date();
+      function checkNumber(i) {
+        return (i < 10) ? '0' + i : i;
+      }
+
+      // Format the current date in the following format: dd/mm/yyyy
+      date = checkNumber(date.getDate()) + '/' + checkNumber(date.getMonth() + 1) + '/' + date.getFullYear();
+      // Format the current time in the following format: hh:mm:ss
+      time = date.getHours() + ':' + checkNumber(date.getMinutes()) + ':' + checkNumber(date.getSeconds());
     }
 
     var init = function() {
 
       //css inladen
-      loadcss();
+      loadcss(); // TODO Camelcasing!
 
       //button send feedback aanmaken
       createButton();
 
       //html2canvas inladen
-      loadhtml2canvas();
+      loadhtml2canvas(); // TODO Camelcasing!
 
       //button done highlighting aanmaken
-      readyButton();
+      createReadyButton();
 
       //ophalen van alle achtergrondinformatie
-      getBackgroundinfo();
+      getBackgroundinfo(); // TODO Camelcasing!
 
       document.getElementById("feedbackbtn").onclick = function() {
         var myElem = document.getElementById('feedbackmodal');
@@ -250,11 +268,9 @@ var feedbackModule = (function() {
           document.body.className = bodystate;
         };
 
-
-
         getscreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
-        function getscreenshots() {
+        function getscreenshots() {  // TODO Camelcasing!
           document.body.className = bodystate;
 
           document.getElementById("feedbackmodal").style.visibility = "hidden";
