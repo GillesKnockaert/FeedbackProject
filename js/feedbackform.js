@@ -50,6 +50,15 @@ var feedbackModule = (function() {
       readyButton.innerHTML = "Done Highlighting";
     }
 
+    function createToolbox() {
+      var Toolbox = document.createElement("div");
+      Toolbox.id = "Toolbox";
+      Toolbox.className = "Toolbox";
+      document.body.appendChild(Toolbox);
+      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "drawRect.png id='drawRect'><img src=" + img + "toolboxPencil.png id='drawFree'>";
+      //Toolbox.innerHTML = "test";
+    }
+
 
     //function DrawOnCanvas(canvas) {
     //  var myElem = document.getElementById('highlightModal');
@@ -240,19 +249,19 @@ var feedbackModule = (function() {
       var BrowserWidth = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
       var BrowserHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
 
-      alert(''
-        +'Browser name  = '+browserName+'\n'
-        +'Full version  = '+fullVersion+'\n'
-        +'Major version = '+majorVersion+'\n'
-        +'Browser width = '+BrowserWidth+'\n'
-        +'Browser height = '+BrowserHeight+'\n'
-        +'screen width = '+screen.width+'\n'
-        +'screen height = '+screen.height+'\n'
-        +'Location = '+window.location.href+'\n'
-        +'Date = '+date+'\n'
-        +'Timestamp = '+time+'\n'
-        +'Platform = '+platform+'\n'
-      )
+      //alert(''
+      //  +'Browser name  = '+browserName+'\n'
+      //  +'Full version  = '+fullVersion+'\n'
+      //  +'Major version = '+majorVersion+'\n'
+      //  +'Browser width = '+BrowserWidth+'\n'
+      //  +'Browser height = '+BrowserHeight+'\n'
+      //  +'screen width = '+screen.width+'\n'
+      //  +'screen height = '+screen.height+'\n'
+      //  +'Location = '+window.location.href+'\n'
+      //  +'Date = '+date+'\n'
+      //  +'Timestamp = '+time+'\n'
+      //  +'Platform = '+platform+'\n'
+      //)
 
     }
 
@@ -298,21 +307,16 @@ var feedbackModule = (function() {
 
           "<label for='Type'>Type</label>" +
           "<select id='Type' name='Type'>" +
-          "<option value='1' selected>Bug</option>" +
-          "<option value='2'>New feature</option>" +
-          "<option value='4'>Improvement</option>" +
-          "<option value='10200'>Support</option>" +
-          "<option value='10401'>Change</option>" +
+          "<option value='Incident' selected>Incident</option>" +
+          "<option value='Service Request'>Service Request</option>" +
           "</select>" +
 
           "<label for='Priority'>Priority</label>" +
           "<select id='Priority' name='Priority'>" +
-          "<option value='1'>Highest</option>" +
-          "<option value='2'>High</option>" +
-          "<option value='3' selected>Medium</option>" +
-          "<option value='4'>Low</option>" +
-          "<option value='5'>Lowest</option>" +
-          "<option value='10000'>On hold</option>" +
+          "<option value='1'>Laag</option>" +
+          "<option value='2' selected>Gemiddeld</option>" +
+          "<option value='3'>Hoog</option>" +
+          "<option value='4'>Urgent</option>" +
           "</select>" +
           //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
           //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
@@ -371,7 +375,9 @@ var feedbackModule = (function() {
               ctx = canvas.getContext("2d");
               ctx.putImageData(content, 0, 0);
               document.getElementById("partialContainer").onclick = function() {
+                createToolbox();
                 DrawOnCanvas(canvas);
+                  DrawfreeInCanvas();
               };
             }
           });
@@ -398,7 +404,9 @@ var feedbackModule = (function() {
               //-----------full screenshot in screenshotcontainer--------------------
               //document.getElementById("screenshotsContainer").appendChild(canvas);
               document.getElementById("fullContainer").onclick = function() {
+                createToolbox();
                 DrawOnCanvas(canvas);
+                  DrawfreeInCanvas();
               };
             }
           });
@@ -428,3 +436,88 @@ var feedbackModule = (function() {
       init: init
     };
   })();
+
+function DrawfreeInCanvas(){
+// Find the canvas element.
+    canvas = document.getElementById('zoomedCanvas');
+    if (!canvas) {
+        alert('Error: I cannot find the canvas element!');
+        return;
+    }
+
+    if (!canvas.getContext) {
+        alert('Error: no canvas.getContext!');
+        return;
+    }
+
+    // Get the 2D canvas context.
+    context = canvas.getContext('2d');
+    if (!context) {
+        alert('Error: failed to getContext!');
+        return;
+    }
+    // Pencil tool instance.
+    tool = new tool_pencil();
+    // Attach the mousemove event handler
+    canvas.addEventListener('mousedown', ev_canvas, false);
+    canvas.addEventListener('mousemove', ev_canvas, false);
+    canvas.addEventListener('mouseup',   ev_canvas, false);
+
+// This painting tool works like a drawing pencil which tracks the mouse
+    // movements.
+    function tool_pencil () {
+
+        var tool = this;
+        this.started = false;
+
+        // This is called when you start holding down the mouse button.
+        // This starts the pencil drawing.
+        this.mousedown = function (ev) {
+            console.log(ev);
+            context.beginPath();
+            context.moveTo(ev._x, ev._y);
+            tool.started = true;
+        };
+
+        // This function is called every time you move the mouse. Obviously, it only
+        // draws if the tool.started state is set to true (when you are holding down
+        // the mouse button).
+        this.mousemove = function (ev) {
+            if (tool.started) {
+                context.lineTo(ev._x, ev._y);
+                context.stroke();
+            }
+        };
+
+        // This is called when you release the mouse button.
+        this.mouseup = function (ev) {
+            if (tool.started) {
+                tool.mousemove(ev);
+                tool.started = false;
+            }
+        };
+    }
+
+    // The general-purpose event handler. This function just determines the mouse
+    // position relative to the canvas element.
+    function ev_canvas (ev) {
+
+        if (ev.layerX || ev.layerX == 0) { // Firefox
+            ev._x = ev.layerX;
+            ev._y = ev.layerY;
+        } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+            ev._x = ev.offsetX;
+            ev._y = ev.offsetY;
+        }
+
+        ev._x *= (canvas.width / canvas.clientWidth);
+        //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
+        ev._y *= (canvas.height / canvas.clientHeight)  - document.body.scrollTop;
+        console.log(ev._x + " - " + ev._y);
+        // Call the event handler of the tool.
+        var func = tool[ev.type];
+        if (func) {
+            func(ev);
+        }
+    }
+}

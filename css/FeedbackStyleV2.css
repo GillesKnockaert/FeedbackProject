@@ -160,7 +160,7 @@ canvas{
 /*  ---------- highlite modal ----------  */
 #highlightModal {
     overflow-y: scroll;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.9);
     /*background-color: white;*/
     visibility: hidden;
     position: fixed;
@@ -176,4 +176,36 @@ canvas{
 }
 #highlightModalInnerdiv{
     background-color: white;
+}
+
+/*  ---------- toolbox ----------  */
+#Toolbox{
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid #aaaaaa;
+    border-radius: 4px;
+    background-color: #eeeeee;
+    padding: 5px;
+    margin: 5px;
+    z-index: 99999999999;
+    position: fixed;
+    bottom: 50%;
+    right: 20px;
+}
+#Toolbox img{
+    margin: auto;
+    display: block;
+    padding: 0px;
+    width: 30px;
+    height: auto;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+#Toolbox p{
+    text-decoration: underline;
 }
