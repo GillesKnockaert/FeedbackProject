@@ -298,18 +298,21 @@ var feedbackModule = (function() {
 
           "<label for='Type'>Type</label>" +
           "<select id='Type' name='Type'>" +
-          "<option value='Question'>Question</option>" +
-          "<option value='Bug' selected>Problem/Bug</option>" +
-          "<option value='Request'>Request</option>" +
+          "<option value='1' selected>Bug</option>" +
+          "<option value='2'>New feature</option>" +
+          "<option value='4'>Improvement</option>" +
+          "<option value='10200'>Support</option>" +
+          "<option value='10401'>Change</option>" +
           "</select>" +
 
           "<label for='Priority'>Priority</label>" +
           "<select id='Priority' name='Priority'>" +
-          "<option value='Blocking'>Blocking</option>" +
-          "<option value='Critical'>Critical</option>" +
-          "<option value='High'>High</option>" +
-          "<option value='Medium' selected>Medium</option>" +
-          "<option value='Low'>Low</option>" +
+          "<option value='1'>Highest</option>" +
+          "<option value='2'>High</option>" +
+          "<option value='3' selected>Medium</option>" +
+          "<option value='4'>Low</option>" +
+          "<option value='5'>Lowest</option>" +
+          "<option value='10000'>On hold</option>" +
           "</select>" +
           //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
           //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
