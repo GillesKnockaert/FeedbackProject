@@ -155,6 +155,10 @@ canvas{
     background-repeat: no-repeat;*/
 }
 
+#zoomedCanvas:hover{
+    cursor: crosshair;
+}
+
 
 
 /*  ---------- highlite modal ----------  */
@@ -180,7 +184,8 @@ canvas{
 }
 
 /*  ---------- toolbox ----------  */
-#Toolbox{
+#toolbox{
+    visibility: hidden;
     display: inline-block;
     font-size: 14px;
     font-weight: 400;
@@ -198,7 +203,7 @@ canvas{
     bottom: 50%;
     right: 20px;
 }
-#Toolbox img{
+#toolbox img{
     margin: auto;
     display: block;
     padding: 0px;
@@ -207,7 +212,7 @@ canvas{
     margin-bottom: 5px;
     cursor: pointer;
 }
-#Toolbox p{
+#toolbox p{
     text-decoration: underline;
 
 }
