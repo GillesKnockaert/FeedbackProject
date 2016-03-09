@@ -299,6 +299,9 @@ var feedbackModule = (function() {
           "<div class='modalHeader'>Feedback</div>" +
           "<form method='post' id='feedbackForm' novalidate>" +
           "<div class='modalBody'>" +
+          "<label for='email'>email</label>" +
+          "<input type='email' id='email' name='email' placeholder='example@provider.com' required />" +
+
           "<label for='Subject'>Subject</label>" +
           "<input type='text' id='Subject' name='Subject' placeholder='Subject' required />" +
 
