@@ -173,6 +173,7 @@ canvas{
     z-index: 99999;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
+
 }
 #highlightModalInnerdiv{
     background-color: white;
@@ -208,4 +209,5 @@ canvas{
 }
 #Toolbox p{
     text-decoration: underline;
+
 }
