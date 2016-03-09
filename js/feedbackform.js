@@ -5,12 +5,12 @@ docReady(function() {
 });
 
 var feedbackModule = (function() {
-    var csspath = "css/FeedbackStyleV2.css",
+    var cssPath = "css/FeedbackStyleV2.css",
         img = "img/", //path to img folder
-        html2canvaspath = "js/html2canvas.js", // path to html2canvas library
+        html2CanvasPath = "js/html2canvas.js", // path to html2canvas library
         head; // head DOM element
 
-    function loadcss() {
+    function loadCss() {
       var cssId = 'myCss';
       if (!document.getElementById(cssId)) {
         head = head || document.getElementsByTagName('head')[0];
@@ -19,106 +19,156 @@ var feedbackModule = (function() {
         link.id = cssId;
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = csspath;
+        link.href = cssPath;
         link.media = 'all';
         head.appendChild(link);
       }
     }
 
-    function loadhtml2canvas() {
+    function loadHtml2Canvas() {
       head = head || document.getElementsByTagName('head')[0];
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = html2canvaspath;
+      script.src = html2CanvasPath;
       head.appendChild(script);
       document.body.appendChild(script);
     }
 
     function createButton() {
-      var feedbackbtn = document.createElement("div");
-      feedbackbtn.id = "feedbackbtn";
-      feedbackbtn.className = "feedbackbtn button";
-      document.body.appendChild(feedbackbtn);
-      feedbackbtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
+      var feedbackBtn = document.createElement("div");
+      feedbackBtn.id = "feedbackBtn";
+      feedbackBtn.className = "feedbackBtn button";
+      document.body.appendChild(feedbackBtn);
+      feedbackBtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
     }
 
     function createReadyButton() {
       var readyButton = document.createElement("div");
       readyButton.id = "readyButton";
-      readyButton.className = "feedbackbtn button";
+      readyButton.className = "feedbackBtn button";
       document.body.appendChild(readyButton);
       readyButton.innerHTML = "Done Highlighting";
     }
 
-    function DrawOnCanvas(canvas) {
-      var myElem = document.getElementById('highlightmodal');
-      if (myElem === null) {
-        var highlightmodal = document.createElement("div");
-        highlightmodal.id = "highlightmodal";
-        highlightmodal.className = "highlightmodal";
-        document.body.appendChild(highlightmodal);
 
-        var highlightmodalinnerdiv = document.createElement("div");
-        highlightmodalinnerdiv.id = "highlightmodalinnerdiv";
-        highlightmodalinnerdiv.className = "highlightmodalinnerdiv";
-        highlightmodal.appendChild(highlightmodalinnerdiv);
+    //function DrawOnCanvas(canvas) {
+    //  var myElem = document.getElementById('highlightModal');
+    //  if (myElem === null) {
+    //    var highlightModal = document.createElement("div");
+    //    highlightModal.id = "highlightModal";
+    //    highlightModal.className = "highlightModal";
+    //    document.body.appendChild(highlightModal);
+//
+    //    var highlightModalInnerdiv = document.createElement("div");
+    //    highlightModalInnerdiv.id = "highlightModalInnerdiv";
+    //    highlightModalInnerdiv.className = "highlightModalInnerdiv";
+    //    highlightModal.appendChild(highlightModalInnerdiv);
+//
+//
+    //    highlightModalInnerdiv.appendChild(canvas);
+    //  }
+    //  document.getElementById("highlightModal").style.visibility = "visible";
+    //  document.getElementById("readyButton").style.visibility = "visible";
+    //}
+
+    function DrawOnCanvas(canvas){
+      var myElem = document.getElementById('highlightModal');
+      if (myElem === null ) {
+        var highlightModal = document.createElement("div");
+        highlightModal.id = "highlightModal";
+        highlightModal.className = "highlightModal";
+        document.body.appendChild(highlightModal);
+
+        var highlightModalInnerdiv = document.createElement("div");
+        highlightModalInnerdiv.id = "highlightModalInnerdiv";
+        highlightModalInnerdiv.className = "highlightModalInnerdiv";
+        highlightModal.appendChild(highlightModalInnerdiv);
+
+        var copiedCanvas = cloneCanvas(canvas);
+        highlightModalInnerdiv.appendChild(copiedCanvas);
 
 
-        highlightmodalinnerdiv.appendChild(canvas);
+      }else{
+        var modalInnerDiv = document.getElementById("highlightModalInnerdiv");
+        modalInnerDiv.removeChild(document.getElementById("zoomedCanvas"));
+        var copiedCanvas = cloneCanvas(canvas);
+
+        modalInnerDiv.appendChild(copiedCanvas);
       }
-      document.getElementById("highlightmodal").style.visibility = "visible";
+      function cloneCanvas(oldCanvas) {
+
+        //create a new canvas
+        var newCanvas = document.createElement('canvas');
+        var context = newCanvas.getContext('2d');
+
+        //set dimensions
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+        newCanvas.id = "zoomedCanvas";
+
+        //apply the old canvas to the new one
+        context.drawImage(oldCanvas, 0, 0);
+
+        //return the new canvas
+        return newCanvas;
+      }
+      document.getElementById("highlightModal").style.visibility = "visible";
       document.getElementById("readyButton").style.visibility = "visible";
     }
 
-    function getBackgroundinfo() {
+
+
+
+    function getBackgroundInfo() {
       //-------------Get background information-------------
-      var nVer = navigator.appVersion; // TODO betere variabele namen. Code moet leesbaar zijn, nVer zegt niets.
-      var nAgt = navigator.userAgent; // TODO zelfde als hierboven
+      //var browserVersion = navigator.appVersion; // TODO betere variabele namen. Code moet leesbaar zijn, nVer zegt niets. DONE
+      var userAgent = navigator.userAgent; // TODO zelfde als hierboven DONE
       var browserName = navigator.appName;
       var fullVersion = '' + parseFloat(navigator.appVersion);
       var majorVersion = parseInt(navigator.appVersion, 10);
-      var nameOffset, verOffset, ix; // TODO ix?
+      var nameOffset, verOffset;
+      //var ix; // TODO ix? DONE
       var platform = navigator.platform;
 
       // In Opera 15+, the true version is after "OPR/"
-      if ((verOffset = nAgt.indexOf("OPR/")) != -1) {
+      if ((verOffset = userAgent.indexOf("OPR/")) != -1) {
         browserName = "Opera";
-        fullVersion = nAgt.substring(verOffset + 4);
+        fullVersion = userAgent.substring(verOffset + 4);
       }
       // In older Opera, the true version is after "Opera" or after "Version"
-      else if ((verOffset = nAgt.indexOf("Opera")) != -1) {
+      else if ((verOffset = userAgent.indexOf("Opera")) != -1) {
         browserName = "Opera";
-        fullVersion = nAgt.substring(verOffset + 6);
-        if ((verOffset = nAgt.indexOf("Version")) != -1)
-          fullVersion = nAgt.substring(verOffset + 8);
+        fullVersion = userAgent.substring(verOffset + 6);
+        if ((verOffset = userAgent.indexOf("Version")) != -1)
+          fullVersion = userAgent.substring(verOffset + 8);
       }
       // In MSIE, the true version is after "MSIE" in userAgent
-      else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
+      else if ((verOffset = userAgent.indexOf("MSIE")) != -1) {
         browserName = "Microsoft Internet Explorer";
-        fullVersion = nAgt.substring(verOffset + 5);
+        fullVersion = userAgent.substring(verOffset + 5);
       }
       // In Chrome, the true version is after "Chrome"
-      else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
+      else if ((verOffset = userAgent.indexOf("Chrome")) != -1) {
         browserName = "Chrome";
-        fullVersion = nAgt.substring(verOffset + 7);
+        fullVersion = userAgent.substring(verOffset + 7);
       }
       // In Safari, the true version is after "Safari" or after "Version"
-      else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
+      else if ((verOffset = userAgent.indexOf("Safari")) != -1) {
         browserName = "Safari";
-        fullVersion = nAgt.substring(verOffset + 7);
-        if ((verOffset = nAgt.indexOf("Version")) != -1)
-          fullVersion = nAgt.substring(verOffset + 8);
+        fullVersion = userAgent.substring(verOffset + 7);
+        if ((verOffset = userAgent.indexOf("Version")) != -1)
+          fullVersion = userAgent.substring(verOffset + 8);
       }
       // In Firefox, the true version is after "Firefox"
-      else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
+      else if ((verOffset = userAgent.indexOf("Firefox")) != -1) {
         browserName = "Firefox";
-        fullVersion = nAgt.substring(verOffset + 8);
+        fullVersion = userAgent.substring(verOffset + 8);
       }
       // In most other browsers, "name/version" is at the end of userAgent
-      else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) <
-        (verOffset = nAgt.lastIndexOf('/'))) {
-        browserName = nAgt.substring(nameOffset, verOffset);
-        fullVersion = nAgt.substring(verOffset + 1);
+      else if ((nameOffset = userAgent.lastIndexOf(' ') + 1) <
+        (verOffset = userAgent.lastIndexOf('/'))) {
+        browserName = userAgent.substring(nameOffset, verOffset);
+        fullVersion = userAgent.substring(verOffset + 1);
         if (browserName.toLowerCase() == browserName.toUpperCase()) {
           browserName = navigator.appName;
         }
@@ -182,46 +232,64 @@ var feedbackModule = (function() {
         return (i < 10) ? '0' + i : i;
       }
 
-      // Format the current date in the following format: dd/mm/yyyy
-      date = checkNumber(date.getDate()) + '/' + checkNumber(date.getMonth() + 1) + '/' + date.getFullYear();
       // Format the current time in the following format: hh:mm:ss
       time = date.getHours() + ':' + checkNumber(date.getMinutes()) + ':' + checkNumber(date.getSeconds());
+      // Format the current date in the following format: dd/mm/yyyy
+      date = checkNumber(date.getDate()) + '/' + checkNumber(date.getMonth() + 1) + '/' + date.getFullYear();
+
+      var BrowserWidth = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+      var BrowserHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+
+      alert(''
+        +'Browser name  = '+browserName+'\n'
+        +'Full version  = '+fullVersion+'\n'
+        +'Major version = '+majorVersion+'\n'
+        +'Browser width = '+BrowserWidth+'\n'
+        +'Browser height = '+BrowserHeight+'\n'
+        +'screen width = '+screen.width+'\n'
+        +'screen height = '+screen.height+'\n'
+        +'Location = '+window.location.href+'\n'
+        +'Date = '+date+'\n'
+        +'Timestamp = '+time+'\n'
+        +'Platform = '+platform+'\n'
+      )
+
     }
 
     var init = function() {
 
       //css inladen
-      loadcss(); // TODO Camelcasing!
+      loadCss(); // TODO Camelcasing! DONE
 
       //button send feedback aanmaken
       createButton();
 
       //html2canvas inladen
-      loadhtml2canvas(); // TODO Camelcasing!
+      loadHtml2Canvas(); // TODO Camelcasing! DONE
 
       //button done highlighting aanmaken
       createReadyButton();
 
       //ophalen van alle achtergrondinformatie
-      getBackgroundinfo(); // TODO Camelcasing!
+      getBackgroundInfo(); // TODO Camelcasing! DONE
 
-      document.getElementById("feedbackbtn").onclick = function() {
-        var myElem = document.getElementById('feedbackmodal');
+      document.getElementById("feedbackBtn").onclick = function() {
+        var myElem = document.getElementById('feedbackModal');
         if (myElem === null) {
           //Add overlay div to the html
-          var feedbackmodal = document.createElement("div");
-          feedbackmodal.id = "feedbackmodal";
-          feedbackmodal.className = "feedbackmodal";
-          document.body.appendChild(feedbackmodal);
+          var feedbackModal = document.createElement("div");
+          feedbackModal.id = "feedbackModal";
+          feedbackModal.className = "feedbackModal";
+          document.body.appendChild(feedbackModal);
         }
-        document.getElementById("feedbackmodal").style.visibility = "visible";
+        document.getElementById("feedbackModal").style.visibility = "visible";
 
-        //Put html code in the feedbackmodal div
-        document.getElementById("feedbackmodal").innerHTML = "" +
-          "<div id='modalcontent'>" +
+        //Put html code in the feedbackModal div
+        document.getElementById("feedbackModal").innerHTML = "" +
+          "<div id='modalContent'>" +
           "<div class='modalHeader'>Feedback</div>" +
-          "<form method='post' id='feedbackform' novalidate>" +
-          "<div class='modalContent'>" +
+          "<form method='post' id='feedbackForm' novalidate>" +
+          "<div class='modalBody'>" +
           "<label for='Subject'>Subject</label>" +
           "<input type='text' id='Subject' name='Subject' placeholder='Subject' required />" +
 
@@ -249,7 +317,7 @@ var feedbackModule = (function() {
           "</div>" +
           "<div class='modalFooter'>" +
           "<div id='closeModal' class='button'>Close</div>" +
-          "<button type='submit' id='submitModal' class='button buttonprimary'>Send</button>" +
+          "<button type='submit' id='submitModal' class='button buttonPrimary'>Send</button>" +
           "</div>" +
           "</form>" +
           "</div>";
@@ -257,24 +325,24 @@ var feedbackModule = (function() {
         //place current body classes in var
         //add "overflow: hidden;" to the body element
         bodystate = document.body.className;
-        document.body.className += " bodyoverflowclass";
+        document.body.className += " bodyOverflowClass";
 
         document.getElementById("closeModal").onclick = function() {
-          document.getElementById("feedbackmodal").style.visibility = "hidden";
+          document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
         };
         document.getElementById("submitModal").onclick = function() {
-          document.getElementById("feedbackmodal").style.visibility = "hidden";
+          document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
         };
 
-        getscreenshots();
+        getScreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
-        function getscreenshots() {  // TODO Camelcasing!
+        function getScreenshots() {  // TODO Camelcasing! DONE
           document.body.className = bodystate;
 
-          document.getElementById("feedbackmodal").style.visibility = "hidden";
-          document.getElementById("feedbackbtn").style.visibility = "hidden";
+          document.getElementById("feedbackModal").style.visibility = "hidden";
+          document.getElementById("feedbackBtn").style.visibility = "hidden";
 
           //use html2canvas library to generate the html page on a canvas
           html2canvas(document.body, {
@@ -284,12 +352,12 @@ var feedbackModule = (function() {
               partialContainer.id = "partialContainer";
               partialContainer.className = "screenshot";
               document.getElementById("screenshotsContainer").appendChild(partialContainer);
-              var partialoverlay = document.createElement("div");
-              partialoverlay.id = "partialoverlay";
-              partialoverlay.className = "partialoverlay";
-              document.getElementById("partialContainer").appendChild(partialoverlay);
+              var partialOverlay = document.createElement("div");
+              partialOverlay.id = "partialOverlay";
+              partialOverlay.className = "partialOverlay";
+              document.getElementById("partialContainer").appendChild(partialOverlay);
 
-              document.getElementById("partialoverlay").innerHTML += "<img src=" + img + "pencilWhite.png><p>Click to edit</p>";
+              document.getElementById("partialOverlay").innerHTML += "<img src=" + img + "pencilWhite.png><p>Click to edit</p>";
 
               document.getElementById("partialContainer").innerHTML += "<p>Screenshot from the current view</p>";
               document.getElementById("partialContainer").appendChild(canvas);
@@ -299,16 +367,7 @@ var feedbackModule = (function() {
               canvas.height = document.body.clientHeight;
               ctx = canvas.getContext("2d");
               ctx.putImageData(content, 0, 0);
-              //-----------partial screenshot in screenshotcontainer--------------------
-              //document.getElementById("screenshotsContainer").appendChild(canvas);
-              //var ctx=canvas.getContext("2d");
-              //var content = ctx.getImageData(0,document.body.scrollTop,canvas.width, document.body.clientHeight);
-              //canvas.height = document.body.clientHeight;
-              //ctx=canvas.getContext("2d");
-              //ctx.putImageData(content, 0, 0);
-
               document.getElementById("partialContainer").onclick = function() {
-                console.log("click on thumbnail from part of site");
                 DrawOnCanvas(canvas);
               };
             }
@@ -316,19 +375,19 @@ var feedbackModule = (function() {
 
           html2canvas(document.body, {
             onrendered: function(canvas) {
-              canvas.id = "screenshotcanvasFull";
+              canvas.id = "screenshotCanvasFull";
               var fullContainer = document.createElement("div");
               fullContainer.id = "fullContainer";
               fullContainer.className = "screenshot";
               document.getElementById("screenshotsContainer").appendChild(fullContainer);
 
 
-              var fulloverlay = document.createElement("div");
-              fulloverlay.id = "fulloverlay";
-              fulloverlay.className = "fulloverlay";
-              document.getElementById("fullContainer").appendChild(fulloverlay);
+              var fullOverlay = document.createElement("div");
+              fullOverlay.id = "fullOverlay";
+              fullOverlay.className = "fullOverlay";
+              document.getElementById("fullContainer").appendChild(fullOverlay);
 
-              document.getElementById("fulloverlay").innerHTML += "<img src=" + img + "pencilWhite.png><p>Click to edit</p>";
+              document.getElementById("fullOverlay").innerHTML += "<img src=" + img + "pencilWhite.png><p>Click to edit</p>";
 
               document.getElementById("fullContainer").innerHTML += "<p>Screenshot from the full website</p>";
               document.getElementById("fullContainer").appendChild(canvas);
@@ -336,28 +395,27 @@ var feedbackModule = (function() {
               //-----------full screenshot in screenshotcontainer--------------------
               //document.getElementById("screenshotsContainer").appendChild(canvas);
               document.getElementById("fullContainer").onclick = function() {
-                console.log("click on thumbnail from fullsite");
                 DrawOnCanvas(canvas);
               };
             }
           });
 
-          document.body.className += " bodyoverflowclass";
-          document.getElementById("feedbackmodal").style.visibility = "visible";
-          document.getElementById("feedbackbtn").style.visibility = "visible";
+          document.body.className += " bodyOverflowClass";
+          document.getElementById("feedbackModal").style.visibility = "visible";
+          document.getElementById("feedbackBtn").style.visibility = "visible";
         }
 
         //document.getElementById("highlitebutton").onclick = function () {
         //    document.body.className = bodystate;
-        //    document.getElementById("feedbackbtn").style.visibility = "hidden";
-        //    document.getElementById("feedbackmodal").style.visibility = "hidden";
+        //    document.getElementById("feedbackBtn").style.visibility = "hidden";
+        //    document.getElementById("feedbackModal").style.visibility = "hidden";
         //    document.getElementById("readyButton").style.visibility = "visible";
         //};
 
         document.getElementById("readyButton").onclick = function() {
-          document.body.className += " bodyoverflowclass";
-          //document.getElementById("feedbackbtn").style.visibility = "visible";
-          document.getElementById("highlightmodal").style.visibility = "hidden";
+          document.body.className += " bodyOverflowClass";
+          //document.getElementById("feedbackBtn").style.visibility = "visible";
+          document.getElementById("highlightModal").style.visibility = "hidden";
           document.getElementById("readyButton").style.visibility = "hidden";
         };
       };

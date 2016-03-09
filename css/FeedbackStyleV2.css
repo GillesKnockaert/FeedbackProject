@@ -1,8 +1,8 @@
-.bodyoverflowclass{
+.bodyOverflowClass{
     overflow: hidden;
 }
 
-.feedbackbtn{
+.feedbackBtn{
     position: fixed;
     bottom: 10px;
     right: 20px;
@@ -26,14 +26,14 @@
     background-color: #dddddd;
 }
 
-.feedbackbtn img, .icon{
+.feedbackBtn img, .icon{
     padding-right: 5px;
     display: inline;
     width: auto;
     height: 15px;
 }
 
-#feedbackmodal {
+#feedbackModal {
     overflow-y: scroll;
     /*background-color: rgba(0,0,0,0.7);*/
     visibility: hidden;
@@ -47,7 +47,7 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
 }
-#modalcontent {
+#modalContent {
     -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
@@ -68,7 +68,7 @@
     color: #555555;
 }
 
-.modalContent{
+.modalBody{
     padding: 15px;
     margin: 10px;
     border-top: solid 1px #dddddd;
@@ -81,11 +81,11 @@
     margin: 0px;
 }
 
-.buttonprimary{
+.buttonPrimary{
     background-color: #428bca;
     color: white;
 }
-.buttonprimary:hover{
+.buttonPrimary:hover{
     background-color: #317ab9;
 }
 
@@ -133,7 +133,7 @@ canvas{
 #partialContainer, #fullContainer{
     position: relative;
 }
-.partialoverlay, .fulloverlay{
+.partialOverlay, .fullOverlay{
     color: white;
     position: absolute;
     width: 100%;
@@ -142,12 +142,12 @@ canvas{
     padding: 0px;
     opacity: 0;
 }
-.partialoverlay > img, .fulloverlay > img{
+.partialOverlay > img, .fullOverlay > img{
     margin-top: 65px;
     width: 50px;
     height: auto;
 }
-.partialoverlay:hover, .fulloverlay:hover{
+.partialOverlay:hover, .fullOverlay:hover{
     opacity: 1;
     background-color: rgba(0,0,0,0.7);
     /*background-image: url("../img/pencil.png");
@@ -158,7 +158,7 @@ canvas{
 
 
 /*  ---------- highlite modal ----------  */
-#highlightmodal {
+#highlightModal {
     overflow-y: scroll;
     background-color: rgba(0,0,0,0.7);
     /*background-color: white;*/
@@ -174,6 +174,6 @@ canvas{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
 }
-#highlightmodalinnerdiv{
+#highlightModalInnerdiv{
     background-color: white;
 }
