@@ -334,6 +334,7 @@ var feedbackModule = (function() {
         bodystate = document.body.className;
         document.body.className += " bodyOverflowClass";
 
+        $('#feedbackForm').on('submit', submitForm);
         document.getElementById("closeModal").onclick = function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
@@ -341,6 +342,7 @@ var feedbackModule = (function() {
         document.getElementById("submitModal").onclick = function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
+          $('feedbackForm').submit();
         };
 
         getScreenshots();
@@ -520,4 +522,25 @@ function DrawfreeInCanvas(){
             func(ev);
         }
     }
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  var data = convertFormData($(this).serializeArray());
+  console.log(data);
+}
+
+function convertFormData(formdata) {
+  var json = {};
+  $.each(formdata, function() {
+    if (json[this.name] !== undefined) {
+      if (!json[this.name].push) {
+        json[this.name] = [json[this.name]];
+      }
+      json[this.name].push(this.value || '');
+    } else {
+      json[this.name] = this.value || '';
+    }
+  });
+  return json;
 }
