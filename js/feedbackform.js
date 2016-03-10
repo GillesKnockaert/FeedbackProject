@@ -613,6 +613,19 @@ function DrawfreeInCanvas2() {
 
 
     this.mousedown = function (ev) {
+
+
+      //else {
+      //  var d = document.getElementById('temporaryRectangle');
+      //  d.style.position = "absolute";
+      //  d.style.left = x;
+      //  d.style.top = y;
+      //  console.log(x + " " + y);
+      //}
+
+
+
+
       tool.started = true;
       tool.x0 = ev._x;
       tool.y0 = ev._y;
@@ -631,8 +644,22 @@ function DrawfreeInCanvas2() {
       w = Math.abs(ev._x - tool.x0);
       h = Math.abs(ev._y - tool.y0);
 
-      //context.clearRect(0, 0, canvas.width, canvas.height);
-      //context.stroke();
+
+
+      var myElem = document.getElementById('temporaryRectangle');
+      if (!myElem) {
+        var temporaryRectangle = document.createElement("div");
+        temporaryRectangle.id = "temporaryRectangle";
+        temporaryRectangle.className = "temporaryRectangle";
+        document.getElementById('highlightModalInnerdiv').appendChild(temporaryRectangle);
+        myElem = document.getElementById('temporaryRectangle');
+      }
+
+      myElem.style.left = x * (canvas.clientWidth / canvas.width) + 'px';
+      myElem.style.top = y * (canvas.clientHeight / canvas.height) + 'px';
+      myElem.style.width = w * (canvas.clientWidth / canvas.width) + 'px';
+      myElem.style.height = h * (canvas.clientHeight / canvas.height) + 'px';
+
 
       if (!w || !h) {
         return;
@@ -645,6 +672,15 @@ function DrawfreeInCanvas2() {
     };
 
     this.mouseup = function (ev) {
+
+
+      var myElem = document.getElementById('temporaryRectangle');
+      if (myElem) {
+        var parent = document.getElementById("highlightModalInnerdiv");
+        var child = document.getElementById("temporaryRectangle");
+        parent.removeChild(child);
+      }
+
       //console.log(x + " " + y+ " " + w+ " " + h)
       context.strokeStyle="magenta";
       context.lineWidth=5;

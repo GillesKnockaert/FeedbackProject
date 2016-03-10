@@ -181,6 +181,7 @@ canvas{
 }
 #highlightModalInnerdiv{
     background-color: white;
+    position: relative;
 }
 
 /*  ---------- toolbox ----------  */
@@ -219,4 +220,10 @@ canvas{
     border-radius: 4px;
     border: 1px solid #999999;
     background-color: #bbbbbb;
+}
+#temporaryRectangle{
+    position: absolute;
+    z-index: 999999999999;
+    border: solid 5px magenta;
+    pointer-events: none;
 }
