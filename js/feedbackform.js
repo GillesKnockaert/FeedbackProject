@@ -5,6 +5,8 @@ docReady(function() {
 });
 
 var feedbackModule = (function() {
+var imgData;
+
     var cssPath = "css/FeedbackStyleV2.css",
         img = "img/", //path to img folder
         html2CanvasPath = "js/html2canvas.js", // path to html2canvas library
@@ -267,6 +269,7 @@ var feedbackModule = (function() {
 
     var init = function() {
 
+
       //css inladen
       loadCss(); // TODO Camelcasing! DONE
 
@@ -350,8 +353,18 @@ var feedbackModule = (function() {
           document.body.className = bodystate;
           $('feedbackForm').submit();
         };
-
-        getScreenshots();
+        if(imgData == null){
+          getScreenshots();
+          console.log('took screenshots');
+          console.log(imgData);
+        }
+        else
+        {
+          context.putImageData(imgData, 0, 0);
+          console.log('put the image data');
+          console.log(imgData);
+        }
+        //getScreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
         function getScreenshots() {  // TODO Camelcasing! DONE
           document.body.className = bodystate;
@@ -387,6 +400,17 @@ var feedbackModule = (function() {
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 DrawfreeInCanvas();
+                if(imgData == null){
+                  getScreenshots();
+                  console.log('took screenshots');
+                  console.log(imgData);
+                }
+                else
+                {
+                  context.putImageData(imgData, 0, 0);
+                  console.log('put the image data');
+                  console.log(imgData);
+                }
               };
             }
           });
@@ -417,7 +441,19 @@ var feedbackModule = (function() {
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 DrawfreeInCanvas();
+                if(imgData == null){
+                  getScreenshots();
+                  console.log('took screenshots');
+                  console.log(imgData);
+                }
+                else
+                {
+                  context.putImageData(imgData, 0, 0);
+                  console.log('put the image data');
+                  console.log(imgData);
+                }
               };
+
             }
           });
 
@@ -425,6 +461,8 @@ var feedbackModule = (function() {
           document.getElementById("feedbackModal").style.visibility = "visible";
           document.getElementById("feedbackBtn").style.visibility = "visible";
         }
+
+
 
         //document.getElementById("highlitebutton").onclick = function () {
         //    document.body.className = bodystate;
@@ -434,11 +472,16 @@ var feedbackModule = (function() {
         //};
 
         document.getElementById("readyButton").onclick = function() {
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
           document.body.className += " bodyOverflowClass";
           //document.getElementById("feedbackBtn").style.visibility = "visible";
           document.getElementById("highlightModal").style.visibility = "hidden";
           document.getElementById("readyButton").style.visibility = "hidden";
           document.getElementById("Toolbox").style.visibility = "hidden";
+
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          console.log('took image data');
+          console.log(imgData);
         };
 
         document.getElementById("drawFree").onclick = function() {
@@ -623,9 +666,6 @@ function DrawfreeInCanvas2() {
       //  console.log(x + " " + y);
       //}
 
-
-
-
       tool.started = true;
       tool.x0 = ev._x;
       tool.y0 = ev._y;
@@ -643,8 +683,6 @@ function DrawfreeInCanvas2() {
       y = Math.min(ev._y, tool.y0);
       w = Math.abs(ev._x - tool.x0);
       h = Math.abs(ev._y - tool.y0);
-
-
 
       var myElem = document.getElementById('temporaryRectangle');
       if (!myElem) {
