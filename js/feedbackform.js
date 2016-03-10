@@ -55,7 +55,7 @@ var feedbackModule = (function() {
       Toolbox.id = "Toolbox";
       Toolbox.className = "Toolbox";
       document.body.appendChild(Toolbox);
-      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "drawRect.png id='drawRect'><img src=" + img + "toolboxPencil.png id='drawFree'>";
+      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'>";
       //Toolbox.innerHTML = "test";
     }
 
@@ -279,6 +279,9 @@ var feedbackModule = (function() {
       //button done highlighting aanmaken
       createReadyButton();
 
+      //create the toolbox
+      createToolbox();
+
       //ophalen van alle achtergrondinformatie
       getBackgroundInfo(); // TODO Camelcasing! DONE
 
@@ -380,9 +383,10 @@ var feedbackModule = (function() {
               ctx = canvas.getContext("2d");
               ctx.putImageData(content, 0, 0);
               document.getElementById("partialContainer").onclick = function() {
-                createToolbox();
+                document.getElementById("Toolbox").style.visibility = "visible";
+                document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
-                  DrawfreeInCanvas();
+                DrawfreeInCanvas();
               };
             }
           });
@@ -409,9 +413,10 @@ var feedbackModule = (function() {
               //-----------full screenshot in screenshotcontainer--------------------
               //document.getElementById("screenshotsContainer").appendChild(canvas);
               document.getElementById("fullContainer").onclick = function() {
-                createToolbox();
+                document.getElementById("Toolbox").style.visibility = "visible";
+                document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
-                  DrawfreeInCanvas();
+                DrawfreeInCanvas();
               };
             }
           });
@@ -433,7 +438,24 @@ var feedbackModule = (function() {
           //document.getElementById("feedbackBtn").style.visibility = "visible";
           document.getElementById("highlightModal").style.visibility = "hidden";
           document.getElementById("readyButton").style.visibility = "hidden";
+          document.getElementById("Toolbox").style.visibility = "hidden";
         };
+
+        document.getElementById("drawFree").onclick = function() {
+          document.getElementById("drawFree").className = "";
+          document.getElementById("drawRect").className = "";
+          document.getElementById("drawFree").className += "toolboxItemClicked";
+          DrawfreeInCanvas();
+        };
+
+        document.getElementById("drawRect").onclick = function() {
+          document.getElementById("drawRect").className = "";
+          document.getElementById("drawFree").className = "";
+          document.getElementById("drawRect").className += "toolboxItemClicked"
+          DrawfreeInCanvas2();
+        };
+
+
       };
     };
 
@@ -441,6 +463,9 @@ var feedbackModule = (function() {
       init: init
     };
   })();
+
+
+
 
 function DrawfreeInCanvas(){
 // Find the canvas element.
@@ -478,7 +503,8 @@ function DrawfreeInCanvas(){
         // This is called when you start holding down the mouse button.
         // This starts the pencil drawing.
         this.mousedown = function (ev) {
-            console.log(ev);
+            context.strokeStyle="magenta";
+            context.lineWidth = "5";
             context.beginPath();
             context.moveTo(ev._x, ev._y);
             tool.started = true;
@@ -517,8 +543,7 @@ function DrawfreeInCanvas(){
 
         ev._x *= (canvas.width / canvas.clientWidth);
         //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
-        ev._y *= (canvas.height / canvas.clientHeight)  - document.body.scrollTop;
-        console.log(ev._x + " - " + ev._y);
+        ev._y = (ev._y * (canvas.height / canvas.clientHeight)) - (document.body.scrollTop * (canvas.height / canvas.clientHeight));
         // Call the event handler of the tool.
         var func = tool[ev.type];
         if (func) {
@@ -526,6 +551,7 @@ function DrawfreeInCanvas(){
         }
     }
 }
+
 
 function submitForm(e) {
   e.preventDefault();
@@ -535,7 +561,7 @@ function submitForm(e) {
 
 function convertFormData(formdata) {
   var json = {};
-  $.each(formdata, function() {
+  $.each(formdata, function () {
     if (json[this.name] !== undefined) {
       if (!json[this.name].push) {
         json[this.name] = [json[this.name]];
@@ -546,4 +572,110 @@ function convertFormData(formdata) {
     }
   });
   return json;
+}
+
+
+
+
+
+function DrawfreeInCanvas2() {
+// Find the canvas element.
+  canvas = document.getElementById('zoomedCanvas');
+  if (!canvas) {
+    alert('Error: I cannot find the canvas element!');
+    return;
+  }
+
+  if (!canvas.getContext) {
+    alert('Error: no canvas.getContext!');
+    return;
+  }
+
+  // Get the 2D canvas context.
+  context = canvas.getContext('2d');
+  if (!context) {
+    alert('Error: failed to getContext!');
+    return;
+  }
+  // Pencil tool instance.
+  tool = new tool_pencil();
+  // Attach the mousemove event handler
+  canvas.addEventListener('mousedown', ev_canvas, false);
+  canvas.addEventListener('mousemove', ev_canvas, false);
+  canvas.addEventListener('mouseup', ev_canvas, false);
+
+// This painting tool works like a drawing pencil which tracks the mouse
+  // movements.
+  function tool_pencil() {
+
+    var tool = this;
+    this.started = false;
+
+
+    this.mousedown = function (ev) {
+      tool.started = true;
+      tool.x0 = ev._x;
+      tool.y0 = ev._y;
+    };
+
+    var x, y, w, h;
+
+
+    this.mousemove = function (ev) {
+      if (!tool.started) {
+        return;
+      }
+
+      x = Math.min(ev._x, tool.x0);
+      y = Math.min(ev._y, tool.y0);
+      w = Math.abs(ev._x - tool.x0);
+      h = Math.abs(ev._y - tool.y0);
+
+      //context.clearRect(0, 0, canvas.width, canvas.height);
+      //context.stroke();
+
+      if (!w || !h) {
+        return;
+      }
+      //context.globalAlpha=0.2
+      //context.fillStyle="magenta";
+      //context.fillRect(x, y, w, h);
+      //context.strokeRect(x, y, w, h);
+
+    };
+
+    this.mouseup = function (ev) {
+      //console.log(x + " " + y+ " " + w+ " " + h)
+      context.strokeStyle="magenta";
+      context.lineWidth=5;
+      context.strokeRect(x, y, w, h);
+      if (tool.started) {
+        tool.mousemove(ev);
+        tool.started = false;
+        //img_update();
+      }
+    };
+  }
+
+  // The general-purpose event handler. This function just determines the mouse
+  // position relative to the canvas element.
+  function ev_canvas(ev) {
+
+    if (ev.layerX || ev.layerX == 0) { // Firefox
+      ev._x = ev.layerX;
+      ev._y = ev.layerY;
+    } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+      ev._x = ev.offsetX;
+      ev._y = ev.offsetY;
+    }
+
+    ev._x *= (canvas.width / canvas.clientWidth);
+    //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
+    ev._y = (ev._y * (canvas.height / canvas.clientHeight)) - (document.body.scrollTop * (canvas.height / canvas.clientHeight));
+    // Call the event handler of the tool.
+    var func = tool[ev.type];
+    if (func) {
+      func(ev);
+    }
+  }
 }
