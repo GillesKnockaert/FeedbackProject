@@ -5,13 +5,7 @@ docReady(function() {
 });
 
 var feedbackModule = (function() {
-    var imgData;
-    var imgDataFull;
-    var imgDataFullOriginal;
-    var imgDataPartial;
-    var imgDataPartialOriginal;
-    var imgDataFullBool;
-    var imgDataPartialBool;
+var imgData;
 
     var cssPath = "css/FeedbackStyleV2.css",
         img = "img/", //path to img folder
@@ -63,7 +57,7 @@ var feedbackModule = (function() {
       Toolbox.id = "Toolbox";
       Toolbox.className = "Toolbox";
       document.body.appendChild(Toolbox);
-      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + img + "erase.png id='erase'>";
+      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'>";
       //Toolbox.innerHTML = "test";
     }
 
@@ -275,6 +269,7 @@ var feedbackModule = (function() {
 
     var init = function() {
 
+
       //css inladen
       loadCss(); // TODO Camelcasing! DONE
 
@@ -301,7 +296,6 @@ var feedbackModule = (function() {
           feedbackModal.id = "feedbackModal";
           feedbackModal.className = "feedbackModal";
           document.body.appendChild(feedbackModal);
-
         }
         document.getElementById("feedbackModal").style.visibility = "visible";
 
@@ -359,7 +353,7 @@ var feedbackModule = (function() {
           document.body.className = bodystate;
           $('feedbackForm').submit();
         };
-        /*if(imgData == null){
+        if(imgData == null){
           getScreenshots();
           console.log('took screenshots');
           console.log(imgData);
@@ -369,15 +363,7 @@ var feedbackModule = (function() {
           context.putImageData(imgData, 0, 0);
           console.log('put the image data');
           console.log(imgData);
-        }*/
-
-        /*if(imgDataFull === null && imgDataPartial === null){
-          getScreenshots();
-        }*/
-
-        getScreenshots();
-
-
+        }
         //getScreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
         function getScreenshots() {  // TODO Camelcasing! DONE
@@ -394,7 +380,6 @@ var feedbackModule = (function() {
               partialContainer.id = "partialContainer";
               partialContainer.className = "screenshot";
               document.getElementById("screenshotsContainer").appendChild(partialContainer);
-
               var partialOverlay = document.createElement("div");
               partialOverlay.id = "partialOverlay";
               partialOverlay.className = "partialOverlay";
@@ -406,31 +391,26 @@ var feedbackModule = (function() {
               document.getElementById("partialContainer").appendChild(canvas);
 
               var ctx = canvas.getContext("2d");
-              if(imgDataPartial != null)
-              {
-                //var content = ctx.putImageData(imgDataPartial, 0, 0);
-                ctx = canvas.getContext("2d");
-                ctx.putImageData(imgDataPartial, 0, 0);
-              }
-              if(imgDataPartial == null)
-              {
-                var content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
-                canvas.height = document.body.clientHeight;
-                ctx = canvas.getContext("2d");
-                ctx.putImageData(content, 0, 0);
-                imgDataPartialOriginal = content;
-              }
-              
+              var content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
+              canvas.height = document.body.clientHeight;
+              ctx = canvas.getContext("2d");
+              ctx.putImageData(content, 0, 0);
               document.getElementById("partialContainer").onclick = function() {
-                imgDataPartialBool = true;
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 DrawfreeInCanvas();
-
-                if(imgDataPartial){
-                  context.putImageData(imgDataPartial, 0, 0);
-                }   
+                if(imgData == null){
+                  getScreenshots();
+                  console.log('took screenshots');
+                  console.log(imgData);
+                }
+                else
+                {
+                  context.putImageData(imgData, 0, 0);
+                  console.log('put the image data');
+                  console.log(imgData);
+                }
               };
             }
           });
@@ -454,34 +434,24 @@ var feedbackModule = (function() {
               document.getElementById("fullContainer").innerHTML += "<p>Screenshot from the full website</p>";
               document.getElementById("fullContainer").appendChild(canvas);
 
-              var ctx = canvas.getContext("2d");
-              if(imgDataFull != null)
-              {
-                //var content = ctx.putImageData(imgDataFull, 0, 0);
-                ctx = canvas.getContext("2d");
-                ctx.putImageData(imgDataFull, 0, 0);
-              }
-              if(imgDataFull == null)
-              {
-                var content = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                ctx = canvas.getContext("2d");
-                ctx.putImageData(content, 0, 0);
-                imgDataFullOriginal = content;
-              }
-
               //-----------full screenshot in screenshotcontainer--------------------
               //document.getElementById("screenshotsContainer").appendChild(canvas);
               document.getElementById("fullContainer").onclick = function() {
-                imgDataFullBool = true;
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 DrawfreeInCanvas();
-
-                if(imgDataFull){
-                  context.putImageData(imgDataFull, 0, 0);
+                if(imgData == null){
+                  getScreenshots();
+                  console.log('took screenshots');
+                  console.log(imgData);
                 }
-                
+                else
+                {
+                  context.putImageData(imgData, 0, 0);
+                  console.log('put the image data');
+                  console.log(imgData);
+                }
               };
 
             }
@@ -489,7 +459,6 @@ var feedbackModule = (function() {
 
           document.body.className += " bodyOverflowClass";
           document.getElementById("feedbackModal").style.visibility = "visible";
-          // Set line in comment 
           document.getElementById("feedbackBtn").style.visibility = "visible";
         }
 
@@ -503,29 +472,21 @@ var feedbackModule = (function() {
         //};
 
         document.getElementById("readyButton").onclick = function() {
-          if(imgDataPartialBool){imgDataPartial = context.getImageData(0, 0, canvas.width, canvas.height);}
-          if(imgDataFullBool){imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);}
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
           document.body.className += " bodyOverflowClass";
           //document.getElementById("feedbackBtn").style.visibility = "visible";
           document.getElementById("highlightModal").style.visibility = "hidden";
           document.getElementById("readyButton").style.visibility = "hidden";
           document.getElementById("Toolbox").style.visibility = "hidden";
 
-
-          document.getElementById("drawFree").className = "";
-          document.getElementById("drawRect").className = "";
-          document.getElementById("erase").className = "";
-
-          imgDataFullBool = false;
-          imgDataPartialBool = false;
-
-
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          console.log('took image data');
+          console.log(imgData);
         };
 
         document.getElementById("drawFree").onclick = function() {
           document.getElementById("drawFree").className = "";
           document.getElementById("drawRect").className = "";
-          document.getElementById("erase").className = "";
           document.getElementById("drawFree").className += "toolboxItemClicked";
           DrawfreeInCanvas();
         };
@@ -533,28 +494,10 @@ var feedbackModule = (function() {
         document.getElementById("drawRect").onclick = function() {
           document.getElementById("drawRect").className = "";
           document.getElementById("drawFree").className = "";
-          document.getElementById("erase").className = "";
-          document.getElementById("drawRect").className += "toolboxItemClicked";
+          document.getElementById("drawRect").className += "toolboxItemClicked"
           DrawfreeInCanvas2();
         };
 
-        document.getElementById("erase").onclick = function(){
-          document.getElementById("drawRect").className = "";
-          document.getElementById("drawFree").className = "";
-          document.getElementById("erase").className = "";
-          document.getElementById("erase").className += "toolboxItemClicked";
-          if(imgDataFullBool){
-            context.putImageData(imgDataFullOriginal, 0, 0);
-          }
-          if(imgDataPartialBool){
-            context.putImageData(imgDataPartialOriginal, 0, 0);
-          }
-          document.getElementById("drawFree").className = "";
-          document.getElementById("drawRect").className = "";
-          document.getElementById("erase").className = "";
-          document.getElementById("drawFree").className += "toolboxItemClicked";
-          DrawfreeInCanvas();
-        }
 
       };
     };
@@ -586,19 +529,16 @@ function DrawfreeInCanvas(){
         alert('Error: failed to getContext!');
         return;
     }
-    // if false then ...
     // Pencil tool instance.
     tool = new tool_pencil();
-
     // Attach the mousemove event handler
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
-    
 
 // This painting tool works like a drawing pencil which tracks the mouse
     // movements.
-      function tool_pencil () {
+    function tool_pencil () {
 
         var tool = this;
         this.started = false;
@@ -606,7 +546,6 @@ function DrawfreeInCanvas(){
         // This is called when you start holding down the mouse button.
         // This starts the pencil drawing.
         this.mousedown = function (ev) {
-            console.log("mousedown pencil");
             context.strokeStyle="magenta";
             context.lineWidth = "5";
             context.beginPath();
@@ -626,7 +565,6 @@ function DrawfreeInCanvas(){
 
         // This is called when you release the mouse button.
         this.mouseup = function (ev) {
-          console.log("mouseup pencil");
             if (tool.started) {
                 tool.mousemove(ev);
                 tool.started = false;
@@ -655,8 +593,6 @@ function DrawfreeInCanvas(){
             func(ev);
         }
     }
-    
-    
 }
 
 
@@ -686,7 +622,7 @@ function convertFormData(formdata) {
 
 
 function DrawfreeInCanvas2() {
-  // Find the canvas element.
+// Find the canvas element.
   canvas = document.getElementById('zoomedCanvas');
   if (!canvas) {
     alert('Error: I cannot find the canvas element!');
@@ -704,10 +640,8 @@ function DrawfreeInCanvas2() {
     alert('Error: failed to getContext!');
     return;
   }
-  // if false then ...
   // Pencil tool instance.
   tool = new tool_pencil();
-
   // Attach the mousemove event handler
   canvas.addEventListener('mousedown', ev_canvas, false);
   canvas.addEventListener('mousemove', ev_canvas, false);
@@ -715,13 +649,15 @@ function DrawfreeInCanvas2() {
 
 // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
-    function tool_pencil() {
+  function tool_pencil() {
 
     var tool = this;
     this.started = false;
 
+
     this.mousedown = function (ev) {
-      console.log("mousedown rectangle");
+
+
       //else {
       //  var d = document.getElementById('temporaryRectangle');
       //  d.style.position = "absolute";
@@ -774,7 +710,7 @@ function DrawfreeInCanvas2() {
     };
 
     this.mouseup = function (ev) {
-      console.log("mouseup rectangle");
+
 
       var myElem = document.getElementById('temporaryRectangle');
       if (myElem) {
@@ -815,5 +751,5 @@ function DrawfreeInCanvas2() {
     if (func) {
       func(ev);
     }
-  }  
+  }
 }
