@@ -12,6 +12,7 @@ var feedbackModule = (function() {
     var imgDataPartialOriginal;
     var imgDataFullBool;
     var imgDataPartialBool;
+    var hasEventListeners = false;
 
     var cssPath = "css/FeedbackStyleV2.css",
         img = "img/", //path to img folder
@@ -50,43 +51,21 @@ var feedbackModule = (function() {
       feedbackBtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
     }
 
-    function createReadyButton() {
+    /*function createReadyButton() {
       var readyButton = document.createElement("div");
       readyButton.id = "readyButton";
-      readyButton.className = "feedbackBtn button";
+      readyButton.className = "feedbackBtn button feedbackBtnBackground";
       document.body.appendChild(readyButton);
-      readyButton.innerHTML = "Done Highlighting";
-    }
+      readyButton.innerHTML = "<img src=" + img + "check-mark-md.png>";
+    }*/
 
     function createToolbox() {
       var Toolbox = document.createElement("div");
       Toolbox.id = "Toolbox";
       Toolbox.className = "Toolbox";
       document.body.appendChild(Toolbox);
-      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + img + "erase.png id='erase'>";
-      //Toolbox.innerHTML = "test";
+      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + img + "erase.png id='erase'><img src=" + img + "check-mark-md.png id='readyButton'>";
     }
-
-
-    //function DrawOnCanvas(canvas) {
-    //  var myElem = document.getElementById('highlightModal');
-    //  if (myElem === null) {
-    //    var highlightModal = document.createElement("div");
-    //    highlightModal.id = "highlightModal";
-    //    highlightModal.className = "highlightModal";
-    //    document.body.appendChild(highlightModal);
-//
-    //    var highlightModalInnerdiv = document.createElement("div");
-    //    highlightModalInnerdiv.id = "highlightModalInnerdiv";
-    //    highlightModalInnerdiv.className = "highlightModalInnerdiv";
-    //    highlightModal.appendChild(highlightModalInnerdiv);
-//
-//
-    //    highlightModalInnerdiv.appendChild(canvas);
-    //  }
-    //  document.getElementById("highlightModal").style.visibility = "visible";
-    //  document.getElementById("readyButton").style.visibility = "visible";
-    //}
 
     function DrawOnCanvas(canvas){
       var myElem = document.getElementById('highlightModal');
@@ -96,6 +75,23 @@ var feedbackModule = (function() {
         highlightModal.className = "highlightModal";
         document.body.appendChild(highlightModal);
 
+        /*var closeDiv = document.createElement("div");
+        closeDiv.id = "closeDiv";
+        closeDiv.className = "closeDiv";
+        //highlightModal.appendChild(closeDiv);*/
+
+        // X close button
+        var xClose = document.createElement("div");
+        xClose.id = "xClose";
+        xClose.className = "xClose";
+        xClose.innerHTML = "<img src=" + img + "x-close.png>";
+        highlightModal.appendChild(xClose);
+
+        document.getElementById('xClose').onclick = function(){
+          eventFire(document.getElementById('erase'), 'click');
+          eventFire(document.getElementById('readyButton'), 'click');
+        }
+
         var highlightModalInnerdiv = document.createElement("div");
         highlightModalInnerdiv.id = "highlightModalInnerdiv";
         highlightModalInnerdiv.className = "highlightModalInnerdiv";
@@ -103,7 +99,6 @@ var feedbackModule = (function() {
 
         var copiedCanvas = cloneCanvas(canvas);
         highlightModalInnerdiv.appendChild(copiedCanvas);
-
 
       }else{
         var modalInnerDiv = document.getElementById("highlightModalInnerdiv");
@@ -131,6 +126,7 @@ var feedbackModule = (function() {
       }
       document.getElementById("highlightModal").style.visibility = "visible";
       document.getElementById("readyButton").style.visibility = "visible";
+
     }
 
 
@@ -285,7 +281,7 @@ var feedbackModule = (function() {
       loadHtml2Canvas(); // TODO Camelcasing! DONE
 
       //button done highlighting aanmaken
-      createReadyButton();
+      //createReadyButton();
 
       //create the toolbox
       createToolbox();
@@ -344,6 +340,8 @@ var feedbackModule = (function() {
           "</form>" +
           "</div>";
 
+          //document.getElementById("feedbackModal").innerHTML = tmpl("item_tmpl", dataObject);
+
         //place current body classes in var
         //add "overflow: hidden;" to the body element
         bodystate = document.body.className;
@@ -394,7 +392,7 @@ var feedbackModule = (function() {
               partialContainer.id = "partialContainer";
               partialContainer.className = "screenshot";
               document.getElementById("screenshotsContainer").appendChild(partialContainer);
-
+              
               var partialOverlay = document.createElement("div");
               partialOverlay.id = "partialOverlay";
               partialOverlay.className = "partialOverlay";
@@ -426,7 +424,7 @@ var feedbackModule = (function() {
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
-                DrawfreeInCanvas();
+                DrawfreeInCanvas(hasEventListeners);
 
                 if(imgDataPartial){
                   context.putImageData(imgDataPartial, 0, 0);
@@ -476,14 +474,12 @@ var feedbackModule = (function() {
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
-                DrawfreeInCanvas();
+                DrawfreeInCanvas(hasEventListeners);
 
                 if(imgDataFull){
                   context.putImageData(imgDataFull, 0, 0);
-                }
-                
+                } 
               };
-
             }
           });
 
@@ -491,16 +487,7 @@ var feedbackModule = (function() {
           document.getElementById("feedbackModal").style.visibility = "visible";
           // Set line in comment 
           document.getElementById("feedbackBtn").style.visibility = "visible";
-        }
-
-
-
-        //document.getElementById("highlitebutton").onclick = function () {
-        //    document.body.className = bodystate;
-        //    document.getElementById("feedbackBtn").style.visibility = "hidden";
-        //    document.getElementById("feedbackModal").style.visibility = "hidden";
-        //    document.getElementById("readyButton").style.visibility = "visible";
-        //};
+        } // end of getScreenshots()
 
         document.getElementById("readyButton").onclick = function() {
           if(imgDataPartialBool){imgDataPartial = context.getImageData(0, 0, canvas.width, canvas.height);}
@@ -519,7 +506,10 @@ var feedbackModule = (function() {
           imgDataFullBool = false;
           imgDataPartialBool = false;
 
+          // simulate click event in JS
 
+          eventFire(document.getElementById('closeModal'), 'click');
+          eventFire(document.getElementById('feedbackBtn'), 'click');
         };
 
         document.getElementById("drawFree").onclick = function() {
@@ -527,7 +517,7 @@ var feedbackModule = (function() {
           document.getElementById("drawRect").className = "";
           document.getElementById("erase").className = "";
           document.getElementById("drawFree").className += "toolboxItemClicked";
-          DrawfreeInCanvas();
+          DrawfreeInCanvas(hasEventListeners);
         };
 
         document.getElementById("drawRect").onclick = function() {
@@ -535,26 +525,24 @@ var feedbackModule = (function() {
           document.getElementById("drawFree").className = "";
           document.getElementById("erase").className = "";
           document.getElementById("drawRect").className += "toolboxItemClicked";
-          DrawfreeInCanvas2();
+          DrawfreeInCanvas2(hasEventListeners);
         };
 
         document.getElementById("erase").onclick = function(){
-          document.getElementById("drawRect").className = "";
           document.getElementById("drawFree").className = "";
+          document.getElementById("drawRect").className = "";
           document.getElementById("erase").className = "";
-          document.getElementById("erase").className += "toolboxItemClicked";
+          document.getElementById("drawFree").className += "toolboxItemClicked";
           if(imgDataFullBool){
             context.putImageData(imgDataFullOriginal, 0, 0);
           }
           if(imgDataPartialBool){
             context.putImageData(imgDataPartialOriginal, 0, 0);
           }
-          document.getElementById("drawFree").className = "";
-          document.getElementById("drawRect").className = "";
-          document.getElementById("erase").className = "";
-          document.getElementById("drawFree").className += "toolboxItemClicked";
-          DrawfreeInCanvas();
+          
+          DrawfreeInCanvas(hasEventListeners);
         }
+
 
       };
     };
@@ -567,7 +555,7 @@ var feedbackModule = (function() {
 
 
 
-function DrawfreeInCanvas(){
+function DrawfreeInCanvas(hasEventListeners){
 // Find the canvas element.
     canvas = document.getElementById('zoomedCanvas');
     if (!canvas) {
@@ -590,11 +578,19 @@ function DrawfreeInCanvas(){
     // Pencil tool instance.
     tool = new tool_pencil();
 
-    // Attach the mousemove event handler
+    if(hasEventListeners){
+    canvas.removeEventListener('mousedown', ev_canvas, false);
+    canvas.removeEventListener('mousemove', ev_canvas, false);
+    canvas.removeEventListener('mouseup',   ev_canvas, false);
+  }
+
+    // Attach the mouse eventlisteners
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
-    
+
+    hasEventListeners = true;
+
 
 // This painting tool works like a drawing pencil which tracks the mouse
     // movements.
@@ -685,7 +681,7 @@ function convertFormData(formdata) {
 
 
 
-function DrawfreeInCanvas2() {
+function DrawfreeInCanvas2(hasEventListeners) {
   // Find the canvas element.
   canvas = document.getElementById('zoomedCanvas');
   if (!canvas) {
@@ -708,10 +704,12 @@ function DrawfreeInCanvas2() {
   // Pencil tool instance.
   tool = new tool_pencil();
 
-  // Attach the mousemove event handler
-  canvas.addEventListener('mousedown', ev_canvas, false);
-  canvas.addEventListener('mousemove', ev_canvas, false);
-  canvas.addEventListener('mouseup', ev_canvas, false);
+    if(hasEventListeners){
+    // Attach the mouse eventlisteners
+    canvas.addEventListener('mousedown', ev_canvas, false);
+    canvas.addEventListener('mousemove', ev_canvas, false);
+    canvas.addEventListener('mouseup',   ev_canvas, false)
+  }
 
 // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
@@ -775,23 +773,24 @@ function DrawfreeInCanvas2() {
 
     this.mouseup = function (ev) {
       console.log("mouseup rectangle");
-
-      var myElem = document.getElementById('temporaryRectangle');
-      if (myElem) {
-        var parent = document.getElementById("highlightModalInnerdiv");
-        var child = document.getElementById("temporaryRectangle");
-        parent.removeChild(child);
-      }
-
-      //console.log(x + " " + y+ " " + w+ " " + h)
-      context.strokeStyle="magenta";
-      context.lineWidth=5;
-      context.strokeRect(x, y, w, h);
+      // call here instead of at the end op 'mouseup' => otherwise he ccalls mousemove twice and you get double rectangles when drawing quickly!
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;
         //img_update();
       }
+
+      var myElem = document.getElementById('temporaryRectangle');
+      if (myElem) {
+        var parent = document.getElementById("highlightModalInnerdiv");
+        parent.removeChild(myElem);
+      }
+
+      //console.log(x + " " + y+ " " + w+ " " + h)
+      context.strokeStyle="magenta";
+      context.lineWidth=5;
+      // here you draw the rectangle // x + the line width /2 => so that you draw nicely in the center of your border, rather than outer/inner border // same for y, w & h
+      context.strokeRect(x+context.lineWidth/2, y+context.lineWidth/2, w-context.lineWidth, h-context.lineWidth);
     };
   }
 
@@ -817,3 +816,96 @@ function DrawfreeInCanvas2() {
     }
   }  
 }
+
+// simulate click event in JS
+function eventFire(el, etype){
+  if (el.fireEvent) {
+    el.fireEvent('on' + etype);
+  } else {
+    var evObj = document.createEvent('Events');
+    evObj.initEvent(etype, true, false);
+    el.dispatchEvent(evObj);
+  }
+}
+/*
+// Simple JavaScript Templating
+// John Resig - http://ejohn.org/ - MIT Licensed
+(function(){
+  var cache = {};
+ 
+  this.tmpl = function tmpl(str, data){
+    // Figure out if we're getting a template, or if we need to
+    // load the template - and be sure to cache the result.
+    var fn = !/\W/.test(str) ?
+      cache[str] = cache[str] ||
+        tmpl(document.getElementById(str).innerHTML) :
+     
+      // Generate a reusable function that will serve as a template
+      // generator (and which will be cached).
+      new Function("obj",
+        "var p=[],print=function(){p.push.apply(p,arguments);};" +
+       
+        // Introduce the data as local variables using with(){}
+        "with(obj){p.push('" +
+       
+        // Convert the template into pure JavaScript
+        str
+          .replace(/[\r\t\n]/g, " ")
+          .split("<%").join("\t")
+          .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+          .replace(/\t=(.*?)%>/g, "',$1,'")
+          .split("\t").join("');")
+          .split("%>").join("p.push('")
+          .split("\r").join("\\'")
+      + "');}return p.join('');");
+   
+    // Provide some basic currying to the user
+    return data ? fn( data ) : fn;
+  };
+})();*/
+
+/*$(function(){
+
+  var dataObject = {
+    "" +
+    "<div id='modalContent'>" +
+    "<div class='modalHeader'>Feedback</div>" +
+    "<form method='post' id='feedbackForm' novalidate>" +
+    "<div class='modalBody'>" +
+    "<label for='email'>email</label>" +
+    "<input type='email' id='email' name='email' placeholder='example@provider.com' required />" +
+
+    "<label for='Subject'>Subject</label>" +
+    "<input type='text' id='Subject' name='Subject' placeholder='Subject' required />" +
+
+    "<label for='Subject'>Description</label>" +
+    "<textarea rows='5' id='Description' name='Description' placeholder='Description' required></textarea>" +
+
+    "<label for='Type'>Type</label>" +
+    "<select id='Type' name='Type'>" +
+    "<option value='Incident' selected>Incident</option>" +
+    "<option value='Service Request'>Service Request</option>" +
+    "</select>" +
+
+    "<label for='Priority'>Priority</label>" +
+    "<select id='Priority' name='Priority'>" +
+    "<option value='1'>Laag</option>" +
+    "<option value='2' selected>Gemiddeld</option>" +
+    "<option value='3'>Hoog</option>" +
+    "<option value='4'>Urgent</option>" +
+    "</select>" +
+    //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
+    //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
+    "<div id='screenshotsContainer'></div>" +
+    "</div>" +
+    "<div class='modalFooter'>" +
+    "<div id='closeModal' class='button'>Close</div>" +
+    "<button type='submit' id='submitModal' class='button buttonPrimary'>Send</button>" +
+    "</div>" +
+    "</form>" +
+    "</div>"
+  }; // -> End of dataObject
+
+  document.getElementById("feedbackModal").innerHTML = tmpl("item_tmpl", dataObject);
+
+});*/
