@@ -79,6 +79,7 @@
     text-align:right;
     padding: 15px;
     margin: 0px;
+    position: relative;
 }
 
 .buttonPrimary{
@@ -226,4 +227,18 @@ canvas{
     z-index: 999999999999;
     border: solid 5px magenta;
     pointer-events: none;
+}
+
+#submit_result {
+    position: absolute;
+    bottom: 27px;
+    left: 25px;
+}
+
+.success_result {
+    color: #3eb95d;
+}
+
+.error_result {
+    color: #cc211b
 }

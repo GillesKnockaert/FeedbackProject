@@ -125,18 +125,14 @@ var feedbackModule = (function() {
       document.getElementById("readyButton").style.visibility = "visible";
     }
 
-
-
-
+    // function used to get background information about the user's visit (browser, datetime)
     function getBackgroundInfo() {
-      //-------------Get background information-------------
-      //var browserVersion = navigator.appVersion; // TODO betere variabele namen. Code moet leesbaar zijn, nVer zegt niets. DONE
-      var userAgent = navigator.userAgent; // TODO zelfde als hierboven DONE
+      var browserVersion = navigator.appVersion;
       var browserName = navigator.appName;
+      var userAgent = navigator.userAgent;
       var fullVersion = '' + parseFloat(navigator.appVersion);
       var majorVersion = parseInt(navigator.appVersion, 10);
       var nameOffset, verOffset;
-      //var ix; // TODO ix? DONE
       var platform = navigator.platform;
 
       // In Opera 15+, the true version is after "OPR/"
@@ -175,7 +171,7 @@ var feedbackModule = (function() {
       }
       // In most other browsers, "name/version" is at the end of userAgent
       else if ((nameOffset = userAgent.lastIndexOf(' ') + 1) <
-        (verOffset = userAgent.lastIndexOf('/'))) {
+          (verOffset = userAgent.lastIndexOf('/'))) {
         browserName = userAgent.substring(nameOffset, verOffset);
         fullVersion = userAgent.substring(verOffset + 1);
         if (browserName.toLowerCase() == browserName.toUpperCase()) {
@@ -194,49 +190,9 @@ var feedbackModule = (function() {
         majorVersion = parseInt(navigator.appVersion, 10);
       }
 
-      // TODO better variable names. Why use d = document here when you use document without this variable elsewhere in this file?
-      // Also, read up on variable hoisting in javascript. Better to declare all variables at the top of this scope. (function block)
-      // read: http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html
-      // I've replaced all your below code with a more concise example, but kept the old version in comment so you
-      // could compare. 12 less variables. Code becomes a bit less readable, but a comment can fix that.
-      // Note: For an even more concise solution, you could just use the build-in toString method, which will return
-      // a date/time in the format DDD MMM dd yyyy hh:mm:ss Z. For example: Wed Jul 28 1993 14:39:07 GMT-0600 (PDT)
-
-      /*
-      var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight || e.clientHeight || g.clientHeight;
-
+      // get current date + time
       var date = new Date();
-      var h = date.getHours();
-      var m = date.getMinutes();
-      var s = date.getSeconds();
-      var dd = date.getDate();
-      var mm = date.getMonth() + 1; //January is 0!
-      var yyyy = date.getFullYear();
-
-      // TODO you only check these four variables. Why declare the other variables above?
-      // I've added a much smaller, faster way below to get the same result
-      m = checkNumber(m);
-      s = checkNumber(s);
-      dd = checkNumber(dd);
-      mm = checkNumber(mm);
-
-      function checkNumber(i) {
-        if (i < 10) {
-          i = "0" + i;
-        }
-        return i;
-      }
-
-      date = dd + '/' + mm + '/' + yyyy;
-      time = h + ":" + m + ":" + s;
-      */
-
-      var date = new Date();
+      // used to determine the day & month
       function checkNumber(i) {
         return (i < 10) ? '0' + i : i;
       }
@@ -249,6 +205,7 @@ var feedbackModule = (function() {
       var BrowserWidth = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
       var BrowserHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
 
+      // call all information via alert (NOT ADVISED)
       //alert(''
       //  +'Browser name  = '+browserName+'\n'
       //  +'Full version  = '+fullVersion+'\n'
@@ -263,27 +220,63 @@ var feedbackModule = (function() {
       //  +'Platform = '+platform+'\n'
       //)
 
+      var result = '';
+
+      result += 'Browser name  = ' + browserName + '\n'
+          +'Full version  = ' + fullVersion + '\n'
+          +'Major version = ' + majorVersion + '\n'
+          +'Browser width = ' + BrowserWidth + '\n'
+          +'Browser height = ' + BrowserHeight + '\n'
+          +'screen width = ' + screen.width + '\n'
+          +'screen height = ' + screen.height + '\n'
+          +'Location = ' + window.location.href + '\n'
+          +'Date = ' + date + '\n'
+          +'Timestamp = ' + time + '\n'
+          +'Platform = ' + platform + '\n';
+
+      return result;
+    }
+
+    function createTicket(params) {
+      var http = new XMLHttpRequest();
+      var url = "http://localhost:8000/api/post/ticket";
+      http.open("POST", url, true);
+
+      //Send the proper header information along with the request
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+      http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == XMLHttpRequest.DONE) {
+          var jsonResponse = JSON.parse(http.response);
+
+          if (jsonResponse.status == "success") {
+            document.getElementById("submit_result").className += " success_result";
+            document.getElementById("submit_result").innerText = jsonResponse.message;
+          } else if (jsonResponse.status == "error") {
+            document.getElementById("submit_result").className += " error_result";
+            document.getElementById("submit_result").innerText = jsonResponse.message;
+          }
+        }
+      };
+      http.send(params);
     }
 
     var init = function() {
 
       //css inladen
-      loadCss(); // TODO Camelcasing! DONE
+      loadCss();
 
       //button send feedback aanmaken
       createButton();
 
       //html2canvas inladen
-      loadHtml2Canvas(); // TODO Camelcasing! DONE
+      loadHtml2Canvas();
 
       //button done highlighting aanmaken
       createReadyButton();
 
       //create the toolbox
       createToolbox();
-
-      //ophalen van alle achtergrondinformatie
-      getBackgroundInfo(); // TODO Camelcasing! DONE
 
       document.getElementById("feedbackBtn").onclick = function() {
         var myElem = document.getElementById('feedbackModal');
@@ -324,11 +317,15 @@ var feedbackModule = (function() {
           "<option value='3'>Hoog</option>" +
           "<option value='4'>Urgent</option>" +
           "</select>" +
+
+          "<input type='hidden' name='params' id='params' required />" +
+
           //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
           //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
           "<div id='screenshotsContainer'></div>" +
           "</div>" +
           "<div class='modalFooter'>" +
+          "<div id='submit_result'></div>" +
           "<div id='closeModal' class='button'>Close</div>" +
           "<button type='submit' id='submitModal' class='button buttonPrimary'>Send</button>" +
           "</div>" +
@@ -340,20 +337,21 @@ var feedbackModule = (function() {
         bodystate = document.body.className;
         document.body.className += " bodyOverflowClass";
 
-        $('#feedbackForm').on('submit', submitForm);
         document.getElementById("closeModal").onclick = function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
         };
-        document.getElementById("submitModal").onclick = function() {
+        // TODO check response status before closing!
+        /*document.getElementById("submitModal").onclick = function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
-          $('feedbackForm').submit();
-        };
+        };*/
+        // TODO validate form before submitting!
+        document.getElementById('feedbackForm').addEventListener("submit", submitForm);
 
         getScreenshots();
         //document.getElementById("screenshotbutton").onclick = function () {
-        function getScreenshots() {  // TODO Camelcasing! DONE
+        function getScreenshots() {
           document.body.className = bodystate;
 
           document.getElementById("feedbackModal").style.visibility = "hidden";
@@ -460,7 +458,9 @@ var feedbackModule = (function() {
     };
 
     return {
-      init: init
+      init: init,
+      getBackgroundInfo: getBackgroundInfo,
+      createTicket: createTicket
     };
   })();
 
@@ -551,32 +551,6 @@ function DrawfreeInCanvas(){
         }
     }
 }
-
-
-function submitForm(e) {
-  e.preventDefault();
-  var data = convertFormData($(this).serializeArray());
-  console.log(data);
-}
-
-function convertFormData(formdata) {
-  var json = {};
-  $.each(formdata, function () {
-    if (json[this.name] !== undefined) {
-      if (!json[this.name].push) {
-        json[this.name] = [json[this.name]];
-      }
-      json[this.name].push(this.value || '');
-    } else {
-      json[this.name] = this.value || '';
-    }
-  });
-  return json;
-}
-
-
-
-
 
 function DrawfreeInCanvas2() {
 // Find the canvas element.
@@ -714,4 +688,22 @@ function DrawfreeInCanvas2() {
       func(ev);
     }
   }
+}
+
+
+function submitForm(e) {
+  e.preventDefault();
+  document.getElementById("params").value = feedbackModule.getBackgroundInfo();
+  var data = serializeFormData();
+  feedbackModule.createTicket(data);
+}
+
+function serializeFormData() {
+  return ''
+      + 'description=' + document.getElementById('Description').value + '&'
+      + 'subject=' + document.getElementById('Subject').value + '&'
+      + 'email=' + document.getElementById('email').value + '&'
+      + 'priority=' + document.getElementById('Priority').value + '&'
+      + 'type=' + document.getElementById('Type').value + '&'
+      + 'params=' + document.getElementById('params').value;
 }
