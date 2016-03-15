@@ -317,7 +317,7 @@ var feedbackModule = (function() {
           "<label for='Subject'>Subject</label>" +
           "<input type='text' id='Subject' name='Subject' placeholder='Subject' required />" +
 
-          "<label for='Subject'>Description</label>" +
+          "<label for='Description'>Description</label>" +
           "<textarea rows='5' id='Description' name='Description' placeholder='Description' required></textarea>" +
 
           "<label for='Type'>Type</label>" +
@@ -333,6 +333,8 @@ var feedbackModule = (function() {
           "<option value='3'>Hoog</option>" +
           "<option value='4'>Urgent</option>" +
           "</select>" +
+
+          "<input name='params' id='params' value='' required />" +
           //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
           //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
           "<div id='screenshotsContainer'></div>" +
@@ -349,7 +351,6 @@ var feedbackModule = (function() {
         bodystate = document.body.className;
         document.body.className += " bodyOverflowClass";
 
-        $('#feedbackForm').on('submit', submitForm);
         document.getElementById("closeModal").onclick = function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
