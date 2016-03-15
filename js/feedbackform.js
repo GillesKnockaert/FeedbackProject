@@ -59,27 +59,6 @@ var feedbackModule = (function() {
       //Toolbox.innerHTML = "test";
     }
 
-
-    //function DrawOnCanvas(canvas) {
-    //  var myElem = document.getElementById('highlightModal');
-    //  if (myElem === null) {
-    //    var highlightModal = document.createElement("div");
-    //    highlightModal.id = "highlightModal";
-    //    highlightModal.className = "highlightModal";
-    //    document.body.appendChild(highlightModal);
-//
-    //    var highlightModalInnerdiv = document.createElement("div");
-    //    highlightModalInnerdiv.id = "highlightModalInnerdiv";
-    //    highlightModalInnerdiv.className = "highlightModalInnerdiv";
-    //    highlightModal.appendChild(highlightModalInnerdiv);
-//
-//
-    //    highlightModalInnerdiv.appendChild(canvas);
-    //  }
-    //  document.getElementById("highlightModal").style.visibility = "visible";
-    //  document.getElementById("readyButton").style.visibility = "visible";
-    //}
-
     function DrawOnCanvas(canvas){
       var myElem = document.getElementById('highlightModal');
       if (myElem === null ) {
@@ -97,13 +76,14 @@ var feedbackModule = (function() {
         highlightModalInnerdiv.appendChild(copiedCanvas);
 
 
-      }else{
+      } else {
         var modalInnerDiv = document.getElementById("highlightModalInnerdiv");
         modalInnerDiv.removeChild(document.getElementById("zoomedCanvas"));
         var copiedCanvas = cloneCanvas(canvas);
 
         modalInnerDiv.appendChild(copiedCanvas);
       }
+
       function cloneCanvas(oldCanvas) {
 
         //create a new canvas
@@ -205,36 +185,17 @@ var feedbackModule = (function() {
       var BrowserWidth = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
       var BrowserHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
 
-      // call all information via alert (NOT ADVISED)
-      //alert(''
-      //  +'Browser name  = '+browserName+'\n'
-      //  +'Full version  = '+fullVersion+'\n'
-      //  +'Major version = '+majorVersion+'\n'
-      //  +'Browser width = '+BrowserWidth+'\n'
-      //  +'Browser height = '+BrowserHeight+'\n'
-      //  +'screen width = '+screen.width+'\n'
-      //  +'screen height = '+screen.height+'\n'
-      //  +'Location = '+window.location.href+'\n'
-      //  +'Date = '+date+'\n'
-      //  +'Timestamp = '+time+'\n'
-      //  +'Platform = '+platform+'\n'
-      //)
-
-      var result = '';
-
-      result += 'Browser name  = ' + browserName + '\n'
-          +'Full version  = ' + fullVersion + '\n'
-          +'Major version = ' + majorVersion + '\n'
-          +'Browser width = ' + BrowserWidth + '\n'
-          +'Browser height = ' + BrowserHeight + '\n'
-          +'screen width = ' + screen.width + '\n'
-          +'screen height = ' + screen.height + '\n'
-          +'Location = ' + window.location.href + '\n'
-          +'Date = ' + date + '\n'
-          +'Timestamp = ' + time + '\n'
-          +'Platform = ' + platform + '\n';
-
-      return result;
+      return 'Browser name  = ' + browserName + '\n'
+            +'Full version  = ' + fullVersion + '\n'
+            +'Major version = ' + majorVersion + '\n'
+            +'Browser width = ' + BrowserWidth + '\n'
+            +'Browser height = ' + BrowserHeight + '\n'
+            +'screen width = ' + screen.width + '\n'
+            +'screen height = ' + screen.height + '\n'
+            +'Location = ' + window.location.href + '\n'
+            +'Date = ' + date + '\n'
+            +'Timestamp = ' + time + '\n'
+            +'Platform = ' + platform + '\n';
     }
 
     function createTicket(params) {
@@ -250,11 +211,13 @@ var feedbackModule = (function() {
           var jsonResponse = JSON.parse(http.response);
 
           if (jsonResponse.status == "success") {
-            document.getElementById("submit_result").className += " success_result";
-            document.getElementById("submit_result").innerText = jsonResponse.message;
+            document.getElementById("feedbackModal").style.visibility = "hidden";
+            document.body.className = bodystate;
+            //TODO maybe 'thank you' modal that disappears after couple seconds?
           } else if (jsonResponse.status == "error") {
             document.getElementById("submit_result").className += " error_result";
             document.getElementById("submit_result").innerText = jsonResponse.message;
+            document.getElementById("submitModal").innerText = "Retry";
           }
         }
       };
@@ -341,11 +304,6 @@ var feedbackModule = (function() {
           document.getElementById("feedbackModal").style.visibility = "hidden";
           document.body.className = bodystate;
         };
-        // TODO check response status before closing!
-        /*document.getElementById("submitModal").onclick = function() {
-          document.getElementById("feedbackModal").style.visibility = "hidden";
-          document.body.className = bodystate;
-        };*/
         // TODO validate form before submitting!
         document.getElementById('feedbackForm').addEventListener("submit", submitForm);
 
@@ -581,32 +539,16 @@ function DrawfreeInCanvas2() {
 // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
   function tool_pencil() {
-
     var tool = this;
     this.started = false;
 
-
     this.mousedown = function (ev) {
-
-
-      //else {
-      //  var d = document.getElementById('temporaryRectangle');
-      //  d.style.position = "absolute";
-      //  d.style.left = x;
-      //  d.style.top = y;
-      //  console.log(x + " " + y);
-      //}
-
-
-
-
       tool.started = true;
       tool.x0 = ev._x;
       tool.y0 = ev._y;
     };
 
     var x, y, w, h;
-
 
     this.mousemove = function (ev) {
       if (!tool.started) {
@@ -617,8 +559,6 @@ function DrawfreeInCanvas2() {
       y = Math.min(ev._y, tool.y0);
       w = Math.abs(ev._x - tool.x0);
       h = Math.abs(ev._y - tool.y0);
-
-
 
       var myElem = document.getElementById('temporaryRectangle');
       if (!myElem) {
@@ -634,7 +574,6 @@ function DrawfreeInCanvas2() {
       myElem.style.width = w * (canvas.clientWidth / canvas.width) + 'px';
       myElem.style.height = h * (canvas.clientHeight / canvas.height) + 'px';
 
-
       if (!w || !h) {
         return;
       }
@@ -642,12 +581,9 @@ function DrawfreeInCanvas2() {
       //context.fillStyle="magenta";
       //context.fillRect(x, y, w, h);
       //context.strokeRect(x, y, w, h);
-
     };
 
     this.mouseup = function (ev) {
-
-
       var myElem = document.getElementById('temporaryRectangle');
       if (myElem) {
         var parent = document.getElementById("highlightModalInnerdiv");
@@ -670,7 +606,6 @@ function DrawfreeInCanvas2() {
   // The general-purpose event handler. This function just determines the mouse
   // position relative to the canvas element.
   function ev_canvas(ev) {
-
     if (ev.layerX || ev.layerX == 0) { // Firefox
       ev._x = ev.layerX;
       ev._y = ev.layerY;
@@ -689,7 +624,6 @@ function DrawfreeInCanvas2() {
     }
   }
 }
-
 
 function submitForm(e) {
   e.preventDefault();
