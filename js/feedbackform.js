@@ -422,11 +422,8 @@ var feedbackModule = (function() {
     };
   })();
 
-
-
-
 function DrawfreeInCanvas(){
-// Find the canvas element.
+    // Find the canvas element.
     canvas = document.getElementById('zoomedCanvas');
     if (!canvas) {
         alert('Error: I cannot find the canvas element!');
@@ -451,10 +448,9 @@ function DrawfreeInCanvas(){
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
 
-// This painting tool works like a drawing pencil which tracks the mouse
+    // This painting tool works like a drawing pencil which tracks the mouse
     // movements.
     function tool_pencil () {
-
         var tool = this;
         this.started = false;
 
@@ -490,7 +486,6 @@ function DrawfreeInCanvas(){
     // The general-purpose event handler. This function just determines the mouse
     // position relative to the canvas element.
     function ev_canvas (ev) {
-
         if (ev.layerX || ev.layerX == 0) { // Firefox
             ev._x = ev.layerX;
             ev._y = ev.layerY;
@@ -511,133 +506,133 @@ function DrawfreeInCanvas(){
 }
 
 function DrawfreeInCanvas2() {
-// Find the canvas element.
-  canvas = document.getElementById('zoomedCanvas');
-  if (!canvas) {
-    alert('Error: I cannot find the canvas element!');
-    return;
-  }
-
-  if (!canvas.getContext) {
-    alert('Error: no canvas.getContext!');
-    return;
-  }
-
-  // Get the 2D canvas context.
-  context = canvas.getContext('2d');
-  if (!context) {
-    alert('Error: failed to getContext!');
-    return;
-  }
-  // Pencil tool instance.
-  tool = new tool_pencil();
-  // Attach the mousemove event handler
-  canvas.addEventListener('mousedown', ev_canvas, false);
-  canvas.addEventListener('mousemove', ev_canvas, false);
-  canvas.addEventListener('mouseup', ev_canvas, false);
-
-// This painting tool works like a drawing pencil which tracks the mouse
-  // movements.
-  function tool_pencil() {
-    var tool = this;
-    this.started = false;
-
-    this.mousedown = function (ev) {
-      tool.started = true;
-      tool.x0 = ev._x;
-      tool.y0 = ev._y;
-    };
-
-    var x, y, w, h;
-
-    this.mousemove = function (ev) {
-      if (!tool.started) {
+    // Find the canvas element.
+    canvas = document.getElementById('zoomedCanvas');
+    if (!canvas) {
+        alert('Error: I cannot find the canvas element!');
         return;
-      }
-
-      x = Math.min(ev._x, tool.x0);
-      y = Math.min(ev._y, tool.y0);
-      w = Math.abs(ev._x - tool.x0);
-      h = Math.abs(ev._y - tool.y0);
-
-      var myElem = document.getElementById('temporaryRectangle');
-      if (!myElem) {
-        var temporaryRectangle = document.createElement("div");
-        temporaryRectangle.id = "temporaryRectangle";
-        temporaryRectangle.className = "temporaryRectangle";
-        document.getElementById('highlightModalInnerdiv').appendChild(temporaryRectangle);
-        myElem = document.getElementById('temporaryRectangle');
-      }
-
-      myElem.style.left = x * (canvas.clientWidth / canvas.width) + 'px';
-      myElem.style.top = y * (canvas.clientHeight / canvas.height) + 'px';
-      myElem.style.width = w * (canvas.clientWidth / canvas.width) + 'px';
-      myElem.style.height = h * (canvas.clientHeight / canvas.height) + 'px';
-
-      if (!w || !h) {
-        return;
-      }
-      //context.globalAlpha=0.2
-      //context.fillStyle="magenta";
-      //context.fillRect(x, y, w, h);
-      //context.strokeRect(x, y, w, h);
-    };
-
-    this.mouseup = function (ev) {
-      var myElem = document.getElementById('temporaryRectangle');
-      if (myElem) {
-        var parent = document.getElementById("highlightModalInnerdiv");
-        var child = document.getElementById("temporaryRectangle");
-        parent.removeChild(child);
-      }
-
-      //console.log(x + " " + y+ " " + w+ " " + h)
-      context.strokeStyle="magenta";
-      context.lineWidth=5;
-      context.strokeRect(x, y, w, h);
-      if (tool.started) {
-        tool.mousemove(ev);
-        tool.started = false;
-        //img_update();
-      }
-    };
-  }
-
-  // The general-purpose event handler. This function just determines the mouse
-  // position relative to the canvas element.
-  function ev_canvas(ev) {
-    if (ev.layerX || ev.layerX == 0) { // Firefox
-      ev._x = ev.layerX;
-      ev._y = ev.layerY;
-    } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-      ev._x = ev.offsetX;
-      ev._y = ev.offsetY;
     }
 
-    ev._x *= (canvas.width / canvas.clientWidth);
-    //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
-    ev._y = (ev._y * (canvas.height / canvas.clientHeight)) - (document.body.scrollTop * (canvas.height / canvas.clientHeight));
-    // Call the event handler of the tool.
-    var func = tool[ev.type];
-    if (func) {
-      func(ev);
+    if (!canvas.getContext) {
+        alert('Error: no canvas.getContext!');
+        return;
     }
-  }
+
+    // Get the 2D canvas context.
+    context = canvas.getContext('2d');
+    if (!context) {
+        alert('Error: failed to getContext!');
+        return;
+    }
+    // Pencil tool instance.
+    tool = new tool_pencil();
+    // Attach the mousemove event handler
+    canvas.addEventListener('mousedown', ev_canvas, false);
+    canvas.addEventListener('mousemove', ev_canvas, false);
+    canvas.addEventListener('mouseup', ev_canvas, false);
+
+    // This painting tool works like a drawing pencil which tracks the mouse
+    // movements.
+    function tool_pencil() {
+        var tool = this;
+        this.started = false;
+
+        this.mousedown = function (ev) {
+            tool.started = true;
+            tool.x0 = ev._x;
+            tool.y0 = ev._y;
+        };
+
+        var x, y, w, h;
+
+        this.mousemove = function (ev) {
+            if (!tool.started) {
+                return;
+            }
+
+            x = Math.min(ev._x, tool.x0);
+            y = Math.min(ev._y, tool.y0);
+            w = Math.abs(ev._x - tool.x0);
+            h = Math.abs(ev._y - tool.y0);
+
+            var myElem = document.getElementById('temporaryRectangle');
+            if (!myElem) {
+                var temporaryRectangle = document.createElement("div");
+                temporaryRectangle.id = "temporaryRectangle";
+                temporaryRectangle.className = "temporaryRectangle";
+                document.getElementById('highlightModalInnerdiv').appendChild(temporaryRectangle);
+                myElem = document.getElementById('temporaryRectangle');
+            }
+
+            myElem.style.left = x * (canvas.clientWidth / canvas.width) + 'px';
+            myElem.style.top = y * (canvas.clientHeight / canvas.height) + 'px';
+            myElem.style.width = w * (canvas.clientWidth / canvas.width) + 'px';
+            myElem.style.height = h * (canvas.clientHeight / canvas.height) + 'px';
+
+            if (!w || !h) {
+                return;
+            }
+            //context.globalAlpha=0.2
+            //context.fillStyle="magenta";
+            //context.fillRect(x, y, w, h);
+            //context.strokeRect(x, y, w, h);
+        };
+
+        this.mouseup = function (ev) {
+            var myElem = document.getElementById('temporaryRectangle');
+            if (myElem) {
+                var parent = document.getElementById("highlightModalInnerdiv");
+                var child = document.getElementById("temporaryRectangle");
+                parent.removeChild(child);
+            }
+
+            //console.log(x + " " + y+ " " + w+ " " + h)
+            context.strokeStyle="magenta";
+            context.lineWidth=5;
+            context.strokeRect(x, y, w, h);
+            if (tool.started) {
+                tool.mousemove(ev);
+                tool.started = false;
+                //img_update();
+            }
+        };
+    }
+
+    // The general-purpose event handler. This function just determines the mouse
+    // position relative to the canvas element.
+    function ev_canvas(ev) {
+        if (ev.layerX || ev.layerX == 0) { // Firefox
+            ev._x = ev.layerX;
+            ev._y = ev.layerY;
+        } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+            ev._x = ev.offsetX;
+            ev._y = ev.offsetY;
+        }
+
+        ev._x *= (canvas.width / canvas.clientWidth);
+        //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
+        ev._y = (ev._y * (canvas.height / canvas.clientHeight)) - (document.body.scrollTop * (canvas.height / canvas.clientHeight));
+        // Call the event handler of the tool.
+        var func = tool[ev.type];
+        if (func) {
+            func(ev);
+        }
+    }
 }
 
 function submitForm(e) {
-  e.preventDefault();
-  document.getElementById("params").value = feedbackModule.getBackgroundInfo();
-  var data = serializeFormData();
-  feedbackModule.createTicket(data);
+    e.preventDefault();
+    document.getElementById("params").value = feedbackModule.getBackgroundInfo();
+    var data = serializeFormData();
+    feedbackModule.createTicket(data);
 }
 
 function serializeFormData() {
-  return ''
-      + 'description=' + document.getElementById('Description').value + '&'
-      + 'subject=' + document.getElementById('Subject').value + '&'
-      + 'email=' + document.getElementById('email').value + '&'
-      + 'priority=' + document.getElementById('Priority').value + '&'
-      + 'type=' + document.getElementById('Type').value + '&'
-      + 'params=' + document.getElementById('params').value;
+    return ''
+        + 'description=' + document.getElementById('Description').value + '&'
+        + 'subject=' + document.getElementById('Subject').value + '&'
+        + 'email=' + document.getElementById('email').value + '&'
+        + 'priority=' + document.getElementById('Priority').value + '&'
+        + 'type=' + document.getElementById('Type').value + '&'
+        + 'params=' + document.getElementById('params').value;
 }
