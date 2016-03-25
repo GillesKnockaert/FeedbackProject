@@ -7,6 +7,7 @@
     bottom: 10px;
     right: 20px;
 }
+
 .button{
     display: inline-block;
     margin: 5px;
@@ -21,9 +22,6 @@
     border: 1px solid #aaaaaa;
     border-radius: 4px;
     background-color: #eeeeee;
-}
-.button:hover{
-    background-color: #dddddd;
 }
 
 .feedbackBtn img, .icon{
@@ -108,7 +106,6 @@ canvas{
     height: auto;
 }
 #readyButton{
-    visibility: hidden;
     z-index: 999999;
 }
 .screenshot{
@@ -160,8 +157,6 @@ canvas{
     cursor: crosshair;
 }
 
-
-
 /*  ---------- highlite modal ----------  */
 #highlightModal {
     overflow-y: scroll;
@@ -178,11 +173,27 @@ canvas{
     z-index: 99999;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
-
 }
+
+#closeDiv{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#xClose{
+    position: fixed;
+    top: 30px;
+    right: 120px;
+    max-height: 100%;
+    max-width: 100%;
+    z-index: 999999;
+    cursor: pointer;
+}
+
 #highlightModalInnerdiv{
     background-color: white;
     position: relative;
+    z-index: 999999;
 }
 
 /*  ---------- toolbox ----------  */
@@ -202,7 +213,8 @@ canvas{
     margin: 5px;
     z-index: 99999999999;
     position: fixed;
-    bottom: 50%;
+    top: 50%;
+    transform:translateY(-50%);
     right: 20px;
 }
 #Toolbox img{
@@ -228,7 +240,6 @@ canvas{
     border: solid 5px magenta;
     pointer-events: none;
 }
-
 #submit_result {
     position: absolute;
     bottom: 27px;
@@ -236,7 +247,11 @@ canvas{
 }
 
 .success_result {
-    color: #3eb95d;
+    background-color: #3eb95d;
+    color: #FFFFFF;
+    position: fixed;
+    right: 25px;
+    bottom: 60px;
 }
 
 .error_result {
