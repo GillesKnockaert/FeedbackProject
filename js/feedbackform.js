@@ -49,6 +49,13 @@ var feedbackModule = (function() {
       feedbackBtn.className = "feedbackBtn button";
       document.body.appendChild(feedbackBtn);
       feedbackBtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
+
+      var successModal = document.createElement('div');
+      successModal.id = "successModal";
+      successModal.className = "success_result";
+      document.body.appendChild(successModal);
+      successModal.innerHTML = "Succes sending feedback!";
+      document.getElementById('successModal').style.visibility = "hidden";
     }
 
     /*function createReadyButton() {
@@ -240,8 +247,10 @@ var feedbackModule = (function() {
             document.getElementById("feedbackModal").style.visibility = "hidden";
             document.body.className = bodystate;
             //TODO maybe 'thank you' modal that disappears after couple seconds?
+            document.getElementById('successModal').style.visibility = "visible";
+            eventFire(document.getElementById('closeModal'), 'click');
           } else if (jsonResponse.status == "error") {
-            document.getElementById("submit_result").className += " error_result";
+            document.getElementById("submit_result").className += "error_result";
             document.getElementById("submit_result").innerText = jsonResponse.message;
             document.getElementById("submitModal").innerText = "Retry";
           }
@@ -281,6 +290,7 @@ var feedbackModule = (function() {
 
         }
         document.getElementById("feedbackModal").style.visibility = "visible";
+        document.getElementById('successModal').style.visibility = "hidden";
 
         //Put html code in the feedbackModal div
         document.getElementById("feedbackModal").innerHTML = "" +
@@ -367,35 +377,35 @@ var feedbackModule = (function() {
               document.getElementById("partialContainer").appendChild(canvas);
 
               var ctx = canvas.getContext("2d");
-              if(imgDataPartial != null)
+              // BUG#2 fixed 
+              /*if(imgDataPartial != null)
               {
-                //var content = ctx.putImageData(imgDataPartial, 0, 0);
                 ctx = canvas.getContext("2d");
                 ctx.putImageData(imgDataPartial, 0, 0);
               }
               if(imgDataPartial == null)
-              {
-                var content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
-                canvas.height = document.body.clientHeight;
-                ctx = canvas.getContext("2d");
-                ctx.putImageData(content, 0, 0);
-                imgDataPartialOriginal = content;
-              }
+              {*/
+              var content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
+              canvas.height = document.body.clientHeight;
+              ctx = canvas.getContext("2d");
+              ctx.putImageData(content, 0, 0);
+              imgDataPartialOriginal = content;
+              //}
               
               document.getElementById("partialContainer").onclick = function() {
                 imgDataPartialBool = true;
+                imgDataFullBool = false;
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 DrawfreeInCanvas(hasEventListeners);
 
-                if(imgDataPartial){
+                if(imgDataPartial != null){
                   context.putImageData(imgDataPartial, 0, 0);
-                }   
+                }
               };
             }
           });
-
           html2canvas(document.body, {
             onrendered: function(canvas) {
               canvas.id = "screenshotCanvasFull";
@@ -418,7 +428,6 @@ var feedbackModule = (function() {
               var ctx = canvas.getContext("2d");
               if(imgDataFull != null)
               {
-                //var content = ctx.putImageData(imgDataFull, 0, 0);
                 ctx = canvas.getContext("2d");
                 ctx.putImageData(imgDataFull, 0, 0);
               }
@@ -430,10 +439,9 @@ var feedbackModule = (function() {
                 imgDataFullOriginal = content;
               }
 
-              //-----------full screenshot in screenshotcontainer--------------------
-              //document.getElementById("screenshotsContainer").appendChild(canvas);
               document.getElementById("fullContainer").onclick = function() {
                 imgDataFullBool = true;
+                imgDataPartialBool = false;
                 document.getElementById("Toolbox").style.visibility = "visible";
                 document.getElementById("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
@@ -453,14 +461,16 @@ var feedbackModule = (function() {
         } // end of getScreenshots()
 
         document.getElementById("readyButton").onclick = function() {
-          if(imgDataPartialBool){imgDataPartial = context.getImageData(0, 0, canvas.width, canvas.height);}
+          console.log('imgDataPartialBool = ' + imgDataPartialBool);
+          console.log('imgDataFullBool = ' + imgDataFullBool);
+
+          if(imgDataPartialBool){imgDataPartial = context.getImageData(0, 0, canvas.width, document.body.clientHeight);}
           if(imgDataFullBool){imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);}
           document.body.className += " bodyOverflowClass";
           //document.getElementById("feedbackBtn").style.visibility = "visible";
           document.getElementById("highlightModal").style.visibility = "hidden";
           document.getElementById("readyButton").style.visibility = "hidden";
           document.getElementById("Toolbox").style.visibility = "hidden";
-
 
           document.getElementById("drawFree").className = "";
           document.getElementById("drawRect").className = "";
@@ -770,6 +780,8 @@ function submitForm(e) {
     document.getElementById("params").value = feedbackModule.getBackgroundInfo();
     var data = serializeFormData();
     feedbackModule.createTicket(data);
+
+
 }
 
 function serializeFormData() {

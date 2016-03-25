@@ -213,7 +213,8 @@ canvas{
     margin: 5px;
     z-index: 99999999999;
     position: fixed;
-    bottom: 50%;
+    top: 50%;
+    transform:translateY(-50%);
     right: 20px;
 }
 #Toolbox img{
@@ -246,7 +247,11 @@ canvas{
 }
 
 .success_result {
-    color: #3eb95d;
+    background-color: #3eb95d;
+    color: #FFFFFF;
+    position: fixed;
+    right: 25px;
+    bottom: 60px;
 }
 
 .error_result {
