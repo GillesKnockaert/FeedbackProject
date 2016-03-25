@@ -170,9 +170,6 @@ var feedbackModule = (function() {
       	// build with inner html
       	fillFeedbackModal();
 
-      	// add succes/error modal
-      	createSubmitModal();
-
       	// validate form before submitting!
         getDomElement('feedbackForm').addEventListener("submit", submitForm);
 
@@ -195,15 +192,15 @@ var feedbackModule = (function() {
         document.body.appendChild(Toolbox);
         Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + 
         					img + "erase.png id='erase'><img src=" + img + "check-mark-md.png id='readyButton'>";
-    	getDomElement("Toolbox").style.visibility = "hidden";
+    	  getDomElement("Toolbox").style.visibility = "hidden";
 
-    	getDomElement("drawFree").onclick = function() {
-          getDomElement("drawFree").className = "";
-          getDomElement("drawRect").className = "";
-          getDomElement("erase").className = "";
-          getDomElement("drawFree").className += "toolboxItemClicked";
-          drawFreeInCanvas(hasEventListeners, 'pencil');
-        };
+      	getDomElement("drawFree").onclick = function() {
+            getDomElement("drawFree").className = "";
+            getDomElement("drawRect").className = "";
+            getDomElement("erase").className = "";
+            getDomElement("drawFree").className += "toolboxItemClicked";
+            drawFreeInCanvas(hasEventListeners, 'pencil');
+          };
 
         getDomElement("drawRect").onclick = function() {
           getDomElement("drawRect").className = "";
@@ -289,7 +286,6 @@ var feedbackModule = (function() {
           "<div id='screenshotsContainer'></div>" +
           "</div>" +
           "<div class='modalFooter'>" +
-          "<div id='submit_result'></div>" +
           "<div id='closeModal' class='button'>Close</div>" +
           "<button type='submit' id='submitModal' class='button buttonPrimary'>Send</button>" +
           "</div>" +
@@ -304,7 +300,11 @@ var feedbackModule = (function() {
 	    submit_result.id = "submit_result";
 	    document.body.appendChild(submit_result);
 
-	    document.getElementById('submit_result').style.visibility = "hidden";
+	    submit_result.style.visibility = "hidden";
+
+      submit_result.onclick = function(){
+        submit_result.style.visibility = "hidden";
+      }
     } // end createSubmitModal
 
     // creates the partial container for screenshots
@@ -649,16 +649,16 @@ var feedbackModule = (function() {
           if (jsonResponse.status == "success") {
             getDomElement("feedbackModal").style.visibility = "hidden";
             document.body.className = bodystate;
-            //TODO maybe 'thank you' modal that disappears after couple seconds?
-            getDomElement('successModal').style.visibility = "visible";
-            getDomElement()
-            // submit_result.innerHTML = "Succes sending feedback!";
+            getDomElement('submit_result').style.visibility = "visible";
+            //getDomElement('submit_result').className += "success_result";
+            getDomElement('submit_result').innerHTML = "Succes sending feedback!";
             eventFire(getDomElement('closeModal'), 'click');
           } else if (jsonResponse.status == "error") {
             getDomElement("submit_result").className += "error_result";
             getDomElement("submit_result").innerText = jsonResponse.message;
             getDomElement("submitModal").innerText = "Retry";
           }
+
         }
       };
       http.send(params);
@@ -743,6 +743,7 @@ var feedbackModule = (function() {
 	function init(){
 		loadElements();
 		getBackgroundInfo();
+    createSubmitModal();
 		getDomElement('feedbackBtn').onclick = function(){
 		  	createFeedbackModal();
 		  	getScreenshot('partialContainer');

@@ -240,17 +240,16 @@ canvas{
     pointer-events: none;
 }
 #submit_result {
-    position: absolute;
-    bottom: 27px;
-    left: 25px;
-}
-
-.success_result {
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: #3eb95d;
     color: #FFFFFF;
-    position: fixed;
-    right: 25px;
-    bottom: 60px;
+    width: 20%;
+    height: 10%;
 }
 
 .error_result {
