@@ -6,31 +6,31 @@ docReady(function() {
 
 // module method
 var feedbackModule = (function() {
-  // save the email filled in by the user in feedbackmodal
+  // save the email filled in by the user in bzk_feedbackModal
   var savedEmail;
 	// canvas imgData
 	var imgData;
 	// canvas imgData fullContainer
   var imgDataFull;
-  // canvas imgData fullContainer original / first ever 'screenshot'
+  // canvas imgData fullContainer original / first ever 'bzk_screenshot'
   var imgDataFullOriginal;
   // canvas imgdata partialContainer
   var imgDataPartial;
-  // canvas imgData partialContainer original / first ever 'screenshot'
+  // canvas imgData partialContainer original / first ever 'bzk_screenshot'
   var imgDataPartialOriginal;
   // boolean to check if FullContainer has been clicked
   var imgDataFullBool;
   // boolean to check if PartialCOntainer has been clicked
   var imgDataPartialBool;
   // boolean to check if the canvas already has mouseEventListeners
-  var hasEventListeners = false;
+  var hasEventListeners;
   // cssPath
 	var cssPath = "css/FeedbackStyleV2.css",
     	img = "img/", //path to img folder
     	html2CanvasPath = "js/html2canvas.js", // path to html2canvas library
     	head; // head DOM element
     
-	// loads css, html2canvas, feedbackBtn
+	// loads css, html2canvas, bzk_feedbackButton
 	function loadElements(){
     // loads the css file
     var cssId = 'myCss';
@@ -54,12 +54,12 @@ var feedbackModule = (function() {
     head.appendChild(script);
     document.body.appendChild(script);
 
-    // creates the feedbackButton
-    var feedbackBtn = document.createElement("div");
-    feedbackBtn.id = "feedbackBtn";
-    feedbackBtn.className = "feedbackBtn button";
-    document.body.appendChild(feedbackBtn);
-    feedbackBtn.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
+    // creates the bzk_feedbackButton
+    var bzk_feedbackButton = document.createElement("div");
+    bzk_feedbackButton.id = "bzk_feedbackButton";
+    bzk_feedbackButton.className = "bzk_feedbackButton bzk_button";
+    document.body.appendChild(bzk_feedbackButton);
+    bzk_feedbackButton.innerHTML = "<img src=" + img + "Bazookas_Logo_b.png>Send Feedback";
 	}
 
 	// get browser background information
@@ -162,38 +162,38 @@ var feedbackModule = (function() {
 
   function createFeedbackModal(){
   	//Add overlay feedback div to the html
-  	var feedbackModal = document.createElement("div");
-  	feedbackModal.id = "feedbackModal";
-  	feedbackModal.className = "feedbackModal";
-  	document.body.appendChild(feedbackModal);
+  	var bzk_feedbackModal = document.createElement("div");
+  	bzk_feedbackModal.id = "bzk_feedbackModal";
+  	bzk_feedbackModal.className = "bzk_feedbackModal";
+  	document.body.appendChild(bzk_feedbackModal);
 
   	// fill/build with inner html
-  	fillFeedbackModal();
+  	fillbzk_feedbackModal();
 
   	// validate form before submitting!
     getDomElement('feedbackForm').addEventListener("submit", submitForm);
 
     // add overflow hidden
   	bodystate = document.body.className;
-  	document.body.className += " bodyOverflowClass";
+  	document.body.className += " bzk_bodyOverflowClass";
 
     // onclick for close button
 		getDomElement('closeModal').onclick = function(){
       savedEmail = getDomElement('email').value;
 
-			getDomElement("feedbackModal").style.visibility = "hidden";
+			getDomElement("bzk_feedbackModal").style.visibility = "hidden";
       document.body.className = bodystate;
 		}
   }
 
   function createToolbox() {
-      var Toolbox = document.createElement("div");
-      Toolbox.id = "Toolbox";
-      Toolbox.className = "Toolbox";
-      document.body.appendChild(Toolbox);
-      Toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + 
-      					img + "erase.png id='erase'><img src=" + img + "check-mark-md.png id='readyButton'>";
-  	  getDomElement("Toolbox").style.visibility = "hidden";
+      var toolbox = document.createElement("div");
+      toolbox.id = "toolbox";
+      toolbox.className = "toolbox";
+      document.body.appendChild(toolbox);
+      toolbox.innerHTML = "<p>toolbox</p><img src=" + img + "toolboxPencil.png id='drawFree'><img src=" + img + "drawRect.png id='drawRect'><img src=" + 
+      					img + "erase.png id='erase'><img src=" + img + "check-mark-md.png id='bzk_readyButton'>";
+  	  getDomElement("toolbox").style.visibility = "hidden";
 
     	getDomElement("drawFree").onclick = function() {
           getDomElement("drawFree").className = "";
@@ -226,15 +226,15 @@ var feedbackModule = (function() {
         drawFreeInCanvas(hasEventListeners, 'pencil');
       }
 
-      getDomElement("readyButton").onclick = function() {
+      getDomElement("bzk_readyButton").onclick = function() {
         if(imgDataPartialBool){imgDataPartial = context.getImageData(0, 0, canvas.width, document.body.clientHeight);}
         if(imgDataFullBool){imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);}
 
-        document.body.className += " bodyOverflowClass";
+        document.body.className += " bzk_bodyOverflowClass";
 
-        getDomElement("highlightModal").style.visibility = "hidden";
-        getDomElement("readyButton").style.visibility = "hidden";
-        getDomElement("Toolbox").style.visibility = "hidden";
+        getDomElement("bzk_highlightModal").style.visibility = "hidden";
+        getDomElement("bzk_readyButton").style.visibility = "hidden";
+        getDomElement("toolbox").style.visibility = "hidden";
 
         getDomElement("drawFree").className = "";
         getDomElement("drawRect").className = "";
@@ -245,13 +245,13 @@ var feedbackModule = (function() {
       };
   }
 
-  // Put html code in the feedbackModal div using innerHTML
-  function fillFeedbackModal(){
-      document.getElementById("feedbackModal").innerHTML = "" +
-        "<div id='modalContent'>" +
-        "<div class='modalHeader'>Feedback</div>" +
+  // Put html code in the bzk_feedbackModal div using innerHTML
+  function fillbzk_feedbackModal(){
+      document.getElementById("bzk_feedbackModal").innerHTML = "" +
+        "<div id='bzk_modalContent'>" +
+        "<div class='bzk_modalHeader'>Feedback</div>" +
         "<form method='post' id='feedbackForm' novalidate>" +
-        "<div class='modalBody'>" +
+        "<div class='bzk_modalBody'>" +
         "<label for='email'>email</label>" +
         "<input type='email' id='email' name='email' placeholder='example@provider.com' required />" +
 
@@ -276,13 +276,11 @@ var feedbackModule = (function() {
         "<option value='3'>Hoog</option>" +
         "<option value='4'>Urgent</option>" +
         "</select>" +
-        //"<div id='screenshotbutton' class='button'><img class='icon' src=" + img + "picture.png>Screenshot</div>" +
-        //"<div id='highlitebutton' class='button'><img class='icon' src=" + img + "pencil.png>Highlight</div>" +
-        "<div id='screenshotsContainer'></div>" +
+        "<div id='bzk_screenshotsContainer'></div>" +
         "</div>" +
-        "<div class='modalFooter'>" +
-        "<div id='closeModal' class='button'>Close</div>" +
-        "<button type='submit' id='submitModal' class='button buttonPrimary'>Send</button>" +
+        "<div class='bzk_modalFooter'>" +
+        "<div id='closeModal' class='bzk_button'>Close</div>" +
+        "<button type='submit' id='submitModal' class='bzk_button bzk_buttonPrimary'>Send</button>" +
         "</div>" +
         "</form>" +
         "</div>";
@@ -295,26 +293,26 @@ var feedbackModule = (function() {
   // create submitModal for success/error submit ticket
   function createSubmitModal(){
   	// TODO moet nog verzet worden
-    var submit_result = document.createElement('div');
-    submit_result.id = "submit_result";
-    document.body.appendChild(submit_result);
+    var bzk_submit_result = document.createElement('div');
+    bzk_submit_result.id = "bzk_submit_result";
+    document.body.appendChild(bzk_submit_result);
 
-    submit_result.style.visibility = "hidden";
+    bzk_submit_result.style.visibility = "hidden";
 
-    submit_result.onclick = function(){
-      submit_result.style.visibility = "hidden";
+    bzk_submit_result.onclick = function(){
+      bzk_submit_result.style.visibility = "hidden";
     }
   }
 
-  // creates the partial container for screenshots
+  // creates the partial container for bzk_screenshots
   function createContainer(container, canvas){
   	if(container == 'partialContainer')
   	{
-  		canvas.id = "screenshotcanvasPartial";
+  		canvas.id = "bzk_screenshotcanvasPartial";
 	    var partialContainer = document.createElement("div");
 	    partialContainer.id = "partialContainer";
-	    partialContainer.className = "screenshot";
-	    getDomElement("screenshotsContainer").appendChild(partialContainer);
+	    partialContainer.className = "bzk_screenshot";
+	    getDomElement("bzk_screenshotsContainer").appendChild(partialContainer);
 
 	    var partialOverlay = document.createElement("div");
       partialOverlay.id = "partialOverlay";
@@ -326,11 +324,11 @@ var feedbackModule = (function() {
       getDomElement("partialContainer").appendChild(canvas);
   	}
   	else {
-  		canvas.id = "screenshotCanvasFull";
+  		canvas.id = "bzk_screenshotCanvasFull";
       var fullContainer = document.createElement("div");
       fullContainer.id = "fullContainer";
-      fullContainer.className = "screenshot";
-      getDomElement("screenshotsContainer").appendChild(fullContainer);
+      fullContainer.className = "bzk_screenshot";
+      getDomElement("bzk_screenshotsContainer").appendChild(fullContainer);
 
       var fullOverlay = document.createElement("div");
       fullOverlay.id = "fullOverlay";
@@ -371,59 +369,59 @@ var feedbackModule = (function() {
   	}
   }
 
-  function createHighlightModal(highlightModal){
-      highlightModal.id = "highlightModal";
-      highlightModal.className = "highlightModal";
-      document.body.appendChild(highlightModal);
+  function createHighlightModal(bzk_highlightModal){
+      bzk_highlightModal.id = "bzk_highlightModal";
+      bzk_highlightModal.className = "bzk_highlightModal";
+      document.body.appendChild(bzk_highlightModal);
   }
 
-  // creates the X close button on highlightmodal
-  function createXClose(highlightModal){
-  	var xClose = document.createElement("div");
-      xClose.id = "xClose";
-      xClose.className = "xClose";
-      xClose.innerHTML = "<img src=" + img + "x-close.png>";
-      highlightModal.appendChild(xClose);
+  // creates the X close button on bzk_highlightModal
+  function createXClose(bzk_highlightModal){
+  	  var bzk_xClose = document.createElement("div");
+      bzk_xClose.id = "bzk_xClose";
+      bzk_xClose.className = "bzk_xClose";
+      bzk_xClose.innerHTML = "<img src=" + img + "x-close.png>";
+      bzk_highlightModal.appendChild(bzk_xClose);
 
-      xClose.onclick = function(){
+      bzk_xClose.onclick = function(){
         eventFire(getDomElement('erase'), 'click');
-        eventFire(getDomElement('readyButton'), 'click');
+        eventFire(getDomElement('bzk_readyButton'), 'click');
       }
   }
 
   // the actual div you draw on
-  function createHighlightModalInnerDiv(highlightModal, highlightModalInnerdiv){
-      highlightModalInnerdiv.id = "highlightModalInnerdiv";
-      highlightModalInnerdiv.className = "highlightModalInnerdiv";
-      highlightModal.appendChild(highlightModalInnerdiv);
+  function createHighlightModalInnerDiv(bzk_highlightModal, bzk_highlightModalInnerdiv){
+      bzk_highlightModalInnerdiv.id = "bzk_highlightModalInnerdiv";
+      bzk_highlightModalInnerdiv.className = "bzk_highlightModalInnerdiv";
+      bzk_highlightModal.appendChild(bzk_highlightModalInnerdiv);
   }
 
   // enables the ability to draw on canvas
   function DrawOnCanvas(canvas){
-    var myElem = document.getElementById('highlightModal');
+    var myElem = document.getElementById('bzk_highlightModal');
     if (myElem === null ) 
     {
-    	var highlightModal = document.createElement("div");
-    	var highlightModalInnerdiv = document.createElement("div");
-      // creates/fixes the highlightmodal
-      createHighlightModal(highlightModal);
-      // creates/fixes the xClose div
-      createXClose(highlightModal);
+    	var bzk_highlightModal = document.createElement("div");
+    	var bzk_highlightModalInnerdiv = document.createElement("div");
+      // creates/fixes the bzk_highlightModal
+      createHighlightModal(bzk_highlightModal);
+      // creates/fixes the bzk_xClose div
+      createXClose(bzk_highlightModal);
       // creates/fixes the inner div you draw on
-      createHighlightModalInnerDiv(highlightModal, highlightModalInnerdiv);
+      createHighlightModalInnerDiv(bzk_highlightModal, bzk_highlightModalInnerdiv);
 
       var copiedCanvas = cloneCanvas(canvas);
-      highlightModalInnerdiv.appendChild(copiedCanvas);
+      bzk_highlightModalInnerdiv.appendChild(copiedCanvas);
     }
     else{
-      var modalInnerDiv = getDomElement("highlightModalInnerdiv");
-      modalInnerDiv.removeChild(getDomElement("zoomedCanvas"));
+      var modalInnerDiv = getDomElement("bzk_highlightModalInnerdiv");
+      modalInnerDiv.removeChild(getDomElement("bzk_zoomedCanvas"));
 
       var copiedCanvas = cloneCanvas(canvas);
       modalInnerDiv.appendChild(copiedCanvas);
     }
-    getDomElement("highlightModal").style.visibility = "visible";
-    getDomElement("readyButton").style.visibility = "visible";
+    getDomElement("bzk_highlightModal").style.visibility = "visible";
+    getDomElement("bzk_readyButton").style.visibility = "visible";
   }
 
   // clone a canvas 
@@ -435,7 +433,7 @@ var feedbackModule = (function() {
 	  //set dimensions
 	  newCanvas.width = oldCanvas.width;
 	  newCanvas.height = oldCanvas.height;
-	  newCanvas.id = "zoomedCanvas";
+	  newCanvas.id = "bzk_zoomedCanvas";
 
 	  //apply the old canvas to the new one
 	  context.drawImage(oldCanvas, 0, 0);
@@ -446,7 +444,7 @@ var feedbackModule = (function() {
 
   // this is the draw behaviour
   function drawFreeInCanvas(hasEventListeners, tool){
-    canvas = getDomElement('zoomedCanvas');
+    canvas = getDomElement('bzk_zoomedCanvas');
     if (!canvas) {
         alert('Error: I cannot find the canvas element!');
         return;
@@ -507,7 +505,7 @@ var feedbackModule = (function() {
 	    this.mousedown = function (ev) {
 	      console.log("mousedown rectangle");
 	      //else {
-	      //  var d = document.getElementById('temporaryRectangle');
+	      //  var d = document.getElementById('bzk_temporaryRectangle');
 	      //  d.style.position = "absolute";
 	      //  d.style.left = x;
 	      //  d.style.top = y;
@@ -532,13 +530,13 @@ var feedbackModule = (function() {
 	      w = Math.abs(ev._x - tool.x0);
 	      h = Math.abs(ev._y - tool.y0);
 
-	      var myElem = document.getElementById('temporaryRectangle');
+	      var myElem = document.getElementById('bzk_temporaryRectangle');
 	      if (!myElem) {
-	        var temporaryRectangle = document.createElement("div");
-	        temporaryRectangle.id = "temporaryRectangle";
-	        temporaryRectangle.className = "temporaryRectangle";
-	        getDomElement('highlightModalInnerdiv').appendChild(temporaryRectangle);
-	        myElem = document.getElementById('temporaryRectangle');
+	        var bzk_temporaryRectangle = document.createElement("div");
+	        bzk_temporaryRectangle.id = "bzk_temporaryRectangle";
+	        bzk_temporaryRectangle.className = "bzk_temporaryRectangle";
+	        getDomElement('bzk_highlightModalInnerdiv').appendChild(bzk_temporaryRectangle);
+	        myElem = document.getElementById('bzk_temporaryRectangle');
 	      }
 
 	      myElem.style.left = x * (canvas.clientWidth / canvas.width) + 'px';
@@ -562,9 +560,9 @@ var feedbackModule = (function() {
 	        //img_update();
 	      }
 
-	      var myElem = getDomElement('temporaryRectangle');
+	      var myElem = getDomElement('bzk_temporaryRectangle');
 	      if (myElem) {
-	        var parent = getDomElement("highlightModalInnerdiv");
+	        var parent = getDomElement("bzk_highlightModalInnerdiv");
 	        parent.removeChild(myElem);
 	      }
 
@@ -636,15 +634,15 @@ var feedbackModule = (function() {
           var jsonResponse = JSON.parse(http.response);
 
           if (jsonResponse.status == "success") {
-            getDomElement("feedbackModal").style.visibility = "hidden";
+            getDomElement("bzk_feedbackModal").style.visibility = "hidden";
             document.body.className = bodystate;
-            getDomElement('submit_result').style.visibility = "visible";
-            //getDomElement('submit_result').className += "success_result";
-            getDomElement('submit_result').innerHTML = "Succes sending feedback!";
+            getDomElement('bzk_submit_result').style.visibility = "visible";
+            //getDomElement('bzk_submit_result').className += "success_result";
+            getDomElement('bzk_submit_result').innerHTML = "Succes sending feedback!";
             eventFire(getDomElement('closeModal'), 'click');
           } else if (jsonResponse.status == "error") {
-            getDomElement("submit_result").className += "error_result";
-            getDomElement("submit_result").innerText = jsonResponse.message;
+            getDomElement("bzk_submit_result").className += "bzk_error_result";
+            getDomElement("bzk_submit_result").innerText = jsonResponse.message;
             getDomElement("submitModal").innerText = "Retry";
           }
         }
@@ -673,14 +671,13 @@ var feedbackModule = (function() {
 	        + 'params=' + document.getElementById('params').value;
 	}
 
-  // gets screenshots from your page
+  // gets bzk_screenshots from your page
   function getScreenshot(container){
   	document.body.className = bodystate;
 
-  	// hide modal & button so you can take screenshot
-  	getDomElement("feedbackModal").style.visibility = "hidden";
-      getDomElement("feedbackBtn").style.visibility = "hidden";
-
+  	// hide modal & button so you can take bzk_screenshot
+  	getDomElement("bzk_feedbackModal").style.visibility = "hidden";
+      getDomElement("bzk_feedbackButton").style.visibility = "hidden";
       if(container == 'partialContainer'){
       	//use html2canvas library to generate the html page on a canvas
           html2canvas(document.body, {
@@ -691,7 +688,7 @@ var feedbackModule = (function() {
               getDomElement("partialContainer").onclick = function() {
                 imgDataPartialBool = true;
                 imgDataFullBool = false;
-                getDomElement("Toolbox").style.visibility = "visible";
+                getDomElement("toolbox").style.visibility = "visible";
                 getDomElement("drawFree").className += "toolboxItemClicked";
                 DrawOnCanvas(canvas);
                 drawFreeInCanvas(hasEventListeners, 'pencil');
@@ -712,7 +709,7 @@ var feedbackModule = (function() {
 	          getDomElement("fullContainer").onclick = function() {
 	            imgDataFullBool = true;
 	            imgDataPartialBool = false;
-	            getDomElement("Toolbox").style.visibility = "visible";
+	            getDomElement("toolbox").style.visibility = "visible";
 	            getDomElement("drawFree").className += "toolboxItemClicked";
 	            DrawOnCanvas(canvas);
 	            drawFreeInCanvas(hasEventListeners, 'pencil');
@@ -724,10 +721,10 @@ var feedbackModule = (function() {
 	        } // end onrendered
 	      }); // end html2canvas fullcontainer
       } // end if-else partial or full
-      document.body.className += " bodyOverflowClass";
-      // feedbackmodal and button can be visible again
-      getDomElement("feedbackModal").style.visibility = "visible";
-      getDomElement("feedbackBtn").style.visibility = "visible";
+      document.body.className += " bzk_bodyOverflowClass";
+      // bzk_feedbackModal and button can be visible again
+      getDomElement("bzk_feedbackModal").style.visibility = "visible";
+      getDomElement("bzk_feedbackButton").style.visibility = "visible";
   }
 
   // initialize function called on docReady
@@ -735,7 +732,7 @@ var feedbackModule = (function() {
 		loadElements();
 		getBackgroundInfo();
     createSubmitModal();
-		getDomElement('feedbackBtn').onclick = function(){
+		getDomElement('bzk_feedbackButton').onclick = function(){
 		  	createFeedbackModal();
 		  	getScreenshot('partialContainer');
 		  	getScreenshot('fullContainer');

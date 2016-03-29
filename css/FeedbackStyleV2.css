@@ -1,14 +1,14 @@
-.bodyOverflowClass{
+.bzk_bodyOverflowClass{
     overflow: hidden;
 }
 
-.feedbackBtn{
+.bzk_feedbackButton{
     position: fixed;
     bottom: 10px;
     right: 20px;
 }
 
-.button{
+.bzk_button{
     display: inline-block;
     margin: 5px;
     padding: 6px 12px;
@@ -24,16 +24,15 @@
     background-color: #eeeeee;
 }
 
-.feedbackBtn img, .icon{
+.bzk_feedbackButton img, .icon{
     padding-right: 5px;
     display: inline;
     width: auto;
     height: 15px;
 }
 
-#feedbackModal {
+#bzk_feedbackModal {
     overflow-y: scroll;
-    /*background-color: rgba(0,0,0,0.7);*/
     visibility: hidden;
     position: fixed;
     left: 0px;
@@ -45,7 +44,8 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
 }
-#modalContent {
+
+#bzk_modalContent {
     -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
@@ -55,36 +55,36 @@
     max-width: 600px;
     margin: 100px auto;
     background-color: #ffffff;
-    /*border:1px solid #000;
-    padding:15px;*/
     text-align:left;
 }
-.modalHeader{
+
+.bzk_modalHeader{
     padding: 15px;
     font-size: 1.4em;
     font-weight: 400;
     color: #555555;
 }
 
-.modalBody{
+.bzk_modalBody{
     padding: 15px;
     margin: 10px;
     border-top: solid 1px #dddddd;
     border-bottom: solid 1px #dddddd;
 }
 
-.modalFooter{
+.bzk_modalFooter{
     text-align:right;
     padding: 15px;
     margin: 0px;
     position: relative;
 }
 
-.buttonPrimary{
+.bzk_buttonPrimary{
     background-color: #428bca;
     color: white;
 }
-.buttonPrimary:hover{
+
+.bzk_buttonPrimary:hover{
     background-color: #317ab9;
 }
 
@@ -100,15 +100,18 @@ input, select, textarea{
     font-family: inherit;
     font-size: inherit;
 }
+
 canvas{
     margin:auto;
     width: 100%;
     height: auto;
 }
-#readyButton{
+
+#bzk_readyButton{
     z-index: 999999;
 }
-.screenshot{
+
+.bzk_screenshot{
     max-height: 200px;
     overflow: hidden;
     cursor: pointer;
@@ -123,14 +126,15 @@ canvas{
     line-height: 1.42857143;
     text-align: center;
 }
-.screenshot p{
+
+.bzk_screenshot p{
     padding: 5px 0px;
 }
-
 
 #partialContainer, #fullContainer{
     position: relative;
 }
+
 .partialOverlay, .fullOverlay{
     color: white;
     position: absolute;
@@ -140,25 +144,23 @@ canvas{
     padding: 0px;
     opacity: 0;
 }
+
 .partialOverlay > img, .fullOverlay > img{
     margin-top: 65px;
     width: 50px;
     height: auto;
 }
+
 .partialOverlay:hover, .fullOverlay:hover{
     opacity: 1;
     background-color: rgba(0,0,0,0.7);
-    /*background-image: url("../img/pencil.png");
-    background-position: top;
-    background-repeat: no-repeat;*/
 }
 
-#zoomedCanvas:hover{
+#bzk_zoomedCanvas:hover{
     cursor: crosshair;
 }
 
-/*  ---------- highlite modal ----------  */
-#highlightModal {
+#bzk_highlightModal {
     overflow-y: scroll;
     background-color: rgba(0,0,0,0.9);
     /*background-color: white;*/
@@ -175,12 +177,7 @@ canvas{
     font-size: 0.9em;
 }
 
-#closeDiv{
-    max-width: 100%;
-    max-height: 100%;
-}
-
-#xClose{
+#bzk_xClose{
     position: relative;
     max-width: 50px;
     z-index: 999999;
@@ -189,14 +186,13 @@ canvas{
     padding-bottom: 1%;
 }
 
-#highlightModalInnerdiv{
+#bzk_highlightModalInnerdiv{
     background-color: white;
     position: relative;
     z-index: 999999;
 }
 
-/*  ---------- toolbox ----------  */
-#Toolbox{
+#toolbox{
     visibility: hidden;
     display: inline-block;
     font-size: 14px;
@@ -216,7 +212,8 @@ canvas{
     transform:translateY(-50%);
     right: 20px;
 }
-#Toolbox img{
+
+#toolbox img{
     margin: auto;
     display: block;
     padding: 10px;
@@ -225,21 +222,25 @@ canvas{
     margin-bottom: 5px;
     cursor: pointer;
 }
-#Toolbox p{
+
+#toolbox p{
     text-decoration: underline;
 }
+
 .toolboxItemClicked{
     border-radius: 4px;
     border: 1px solid #999999;
     background-color: #bbbbbb;
 }
-#temporaryRectangle{
+
+#bzk_temporaryRectangle{
     position: absolute;
     z-index: 999999999999;
     border: solid 5px magenta;
     pointer-events: none;
 }
-#submit_result {
+
+#bzk_submit_result {
     position: fixed;
     right: 0;
     left: 0;
@@ -252,6 +253,6 @@ canvas{
     height: 10%;
 }
 
-.error_result {
+.bzk_error_result {
     color: #cc211b
 }
