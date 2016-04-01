@@ -1,0 +1,23 @@
+{
+  "name": "feedback-project",
+  "description": "Bazookas feedback tool",
+  "main": "app/app.js",
+  "authors": [
+    "Bazookas"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/GillesKnockaert/FeedbackProject",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.2",
+    "bootstrap": "^3.3.6",
+    "html2canvas": "^0.4.1"
+  }
+}

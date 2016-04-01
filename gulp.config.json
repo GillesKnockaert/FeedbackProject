@@ -1,0 +1,56 @@
+{
+  "default": {
+    "angular": {
+      "isAngularProject": false,
+      "appName": "",
+      "angularSrc": "",
+      "singleModule": false
+    },
+    "assetsSrc": "assets",
+    "defaultDest": "build",
+    "additionalFiles": "assets/other",
+    "libraries": [
+      {
+        "name": "lib",
+        "minify": false,
+        "sources": [
+          "bower_components/jquery/dist/jquery.min.js",
+          "bower_components/html2canvas/build/html2canvas.min.js",
+          "bower_components/bootstrap/dist/js/bootstrap.min.js"
+        ]
+      }
+    ],
+    "extraStylesheets": [
+      "bower_components/bootstrap/dist/css/bootstrap.min.css"
+    ],
+    "templatingEngine": false,
+    "jshint": true,
+    "jscs": true,
+    "verbose": true,
+    "minify": true,
+    "sourceMaps": true,
+    "useHtmlInjection": false,
+    "browsersync": {
+      "port": 8000,
+      "isProxy": false,
+      "proxyTarget": null,
+      "websockets": false,
+      "debug": true
+    }
+  },
+
+  "prod": {
+    "jshint": false,
+    "jscs": false,
+    "minify": true,
+    "verbose": false,
+    "sourceMaps": false,
+    "browsersync": {
+      "port": 8028,
+      "isProxy": false,
+      "proxyTarget": null,
+      "websockets": false,
+      "debug": false
+    }
+  }
+}

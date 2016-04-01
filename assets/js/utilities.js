@@ -1,3 +1,8 @@
+var onLoadCallbacks = [
+  feedbackModule.init
+];
+
+// jscs:disable
 // Vanilla javascript DOM ready implementation of jQuery's .ready();
 // http://stackoverflow.com/a/9899701/4141858
 (function(funcName, baseObj) {
@@ -69,6 +74,10 @@
         }
     };
 })("docReady", window);
+
+for (var i = 0; i < onLoadCallbacks.length; i++) {
+  docReady(onLoadCallbacks[i]);
+}
 
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
