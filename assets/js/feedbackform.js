@@ -312,7 +312,7 @@ var feedbackModule = (function() {
       var partialContainer = document.createElement('div');
       partialContainer.id = 'partialContainer';
       partialContainer.className = 'bzkScreenshot';
-      getDomElement('bzkCloseWithXcreenshotsContainer').appendChild(partialContainer);
+      getDomElement('bzkScreenshotsContainer').appendChild(partialContainer);
 
       var partialOverlay = document.createElement('div');
       partialOverlay.id = 'partialOverlay';
@@ -341,12 +341,11 @@ var feedbackModule = (function() {
     }
   }
 
-  function takeScreenshot(container, canvas) {
+  function takeScreenshot(container, canvas, callback) {
     var ctx, content;
     if (container === 'partialContainer') {
       ctx = canvas.getContext('2d');
       content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
-      console.log(context);
       canvas.height = document.body.clientHeight;
 
       ctx = canvas.getContext('2d');
@@ -354,20 +353,13 @@ var feedbackModule = (function() {
 
       imgDataPartialOriginal = content;
     }
-    else {
+    else if (container === 'fullContainer') {
       ctx = canvas.getContext('2d');
-      if (imgDataFull !== null) {
-        ctx = canvas.getContext('2d');
-        ctx.putImageData(imgDataFull, 0, 0);
-      }
-
-      if (imgDataFull === null) {
-        content = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        ctx = canvas.getContext('2d');
-        ctx.putImageData(content, 0, 0);
-        imgDataFullOriginal = content;
-      }
+      content = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      ctx.putImageData(content, 0, 0);
+      imgDataFullOriginal = content;
     }
+    callback();
   }
 
   function createHighlightModal(bzkHighlightModal) {
@@ -629,6 +621,7 @@ var feedbackModule = (function() {
         var jsonResponse = JSON.parse(http.response);
 
         if (jsonResponse.status == 'success') {
+          console.log('setting hidden after success');
           getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
           document.body.className = bodystate;
           getDomElement('bzkSubmitResult').style.visibility = 'visible';
@@ -666,61 +659,64 @@ var feedbackModule = (function() {
     'params=' + document.getElementById('params').value;
   }
 
+  var bzkFeedbackModal, bzkFeedbackButton;
+  function showFeedbackModal(show) {
+    if (!bzkFeedbackModal) {
+      bzkFeedbackModal = getDomElement('bzkFeedbackModal');
+    }
+
+    if (!bzkFeedbackButton) {
+      bzkFeedbackButton = getDomElement('bzkFeedbackButton');
+    }
+
+    bzkFeedbackModal.style.visibility = show ? 'visible' : 'hidden';
+    bzkFeedbackButton.style.visibility = show ? 'visible' : 'hidden';
+  }
+
   // gets bzkScreenshots from your page
-  function getScreenshot(container) {
+  function getScreenshots() {
+    var screenshots = 0;
+
     document.body.className = bodystate;
 
     // hide modal & button so you can take bzkScreenshot
-    getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
-    getDomElement('bzkFeedbackButton').style.visibility = 'hidden';
-    if (container == 'partialContainer') {
-      //use html2canvas library to generate the html page on a canvas
+    showFeedbackModal(false);
+
+    function getScreenshotForContainer(container) {
       html2canvas(document.body, {
         onrendered: function(canvas) {
           createContainer(container, canvas);
-          takeScreenshot(container, canvas);
+          takeScreenshot(container, canvas, function() {
+            screenshots++;
+            checkIfScreenshotsTaken();
+          });
 
-          getDomElement('partialContainer').onclick = function() {
-            imgDataPartialBool = true;
-            imgDataFullBool = false;
+          getDomElement(container).onclick = function() {
+            imgDataPartialBool = (container === 'partialContainer');
+            imgDataFullBool = (container !== 'partialContainer');
             getDomElement('toolbox').style.visibility = 'visible';
             getDomElement('drawFree').className += 'toolboxItemClicked';
             DrawOnCanvas(canvas);
             drawFreeInCanvas(hasEventListeners, 'pencil');
 
-            if (imgDataPartial !== null) {
+            if (imgDataPartial) {
               context.putImageData(imgDataPartial, 0, 0);
             }
           };
         }
       });
     }
-    else {
-      html2canvas(document.body, {
-        onrendered: function(canvas) {
-          createContainer(container, canvas);
-          takeScreenshot(container, canvas);
 
-          getDomElement('fullContainer').onclick = function() {
-            imgDataFullBool = true;
-            imgDataPartialBool = false;
-            getDomElement('toolbox').style.visibility = 'visible';
-            getDomElement('drawFree').className += 'toolboxItemClicked';
-            DrawOnCanvas(canvas);
-            drawFreeInCanvas(hasEventListeners, 'pencil');
-
-            if (imgDataFull) {
-              context.putImageData(imgDataFull, 0, 0);
-            }
-          };
-        }
-      });
+    function checkIfScreenshotsTaken() {
+      if (screenshots > 1) {
+        showFeedbackModal(true);
+      }
     }
 
+    getScreenshotForContainer('partialContainer');
+    getScreenshotForContainer('fullContainer');
+
     document.body.className += ' bzkBodyOverflowClass';
-    // bzkFeedbackModal and button can be visible again
-    getDomElement('bzkFeedbackModal').style.visibility = 'visible';
-    getDomElement('bzkFeedbackButton').style.visibility = 'visible';
   }
 
   // initialize function called on docReady
@@ -730,8 +726,7 @@ var feedbackModule = (function() {
     createSubmitModal();
     getDomElement('bzkFeedbackButton').onclick = function() {
       createFeedbackModal();
-      getScreenshot('partialContainer');
-      getScreenshot('fullContainer');
+      getScreenshots();
       createToolbox();
     };
   }
