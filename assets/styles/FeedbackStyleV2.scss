@@ -1,14 +1,14 @@
-.bzk_bodyOverflowClass{
+.bzkBodyOverflowClass{
     overflow: hidden;
 }
 
-.bzk_feedbackButton{
+.bzkFeedbackButton{
     position: fixed;
     bottom: 10px;
     right: 20px;
 }
 
-.bzk_button{
+.bzkButton{
     display: inline-block;
     margin: 5px;
     padding: 6px 12px;
@@ -24,14 +24,14 @@
     background-color: #eeeeee;
 }
 
-.bzk_feedbackButton img, .icon{
+.bzkFeedbackButton img, .icon{
     padding-right: 5px;
     display: inline;
     width: auto;
     height: 15px;
 }
 
-#bzk_feedbackModal {
+#bzkFeedbackModal {
     overflow-y: scroll;
     visibility: hidden;
     position: fixed;
@@ -45,7 +45,7 @@
     font-size: 0.9em;
 }
 
-#bzk_modalContent {
+#bzkModalContent {
     -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
@@ -58,33 +58,33 @@
     text-align:left;
 }
 
-.bzk_modalHeader{
+.bzkModalHeader{
     padding: 15px;
     font-size: 1.4em;
     font-weight: 400;
     color: #555555;
 }
 
-.bzk_modalBody{
+.bzkModalBody{
     padding: 15px;
     margin: 10px;
     border-top: solid 1px #dddddd;
     border-bottom: solid 1px #dddddd;
 }
 
-.bzk_modalFooter{
+.bzkModalFooter{
     text-align:right;
     padding: 15px;
     margin: 0px;
     position: relative;
 }
 
-.bzk_buttonPrimary{
+.bzkButtonPrimary{
     background-color: #428bca;
     color: white;
 }
 
-.bzk_buttonPrimary:hover{
+.bzkButtonPrimary:hover{
     background-color: #317ab9;
 }
 
@@ -107,11 +107,11 @@ canvas{
     height: auto;
 }
 
-#bzk_readyButton{
+#bzkReadyButton{
     z-index: 999999;
 }
 
-.bzk_screenshot{
+.bzkScreenshot{
     max-height: 200px;
     overflow: hidden;
     cursor: pointer;
@@ -127,7 +127,7 @@ canvas{
     text-align: center;
 }
 
-.bzk_screenshot p{
+.bzkScreenshot p{
     padding: 5px 0px;
 }
 
@@ -156,11 +156,11 @@ canvas{
     background-color: rgba(0,0,0,0.7);
 }
 
-#bzk_zoomedCanvas:hover{
+#bzkZoomedCanvas:hover{
     cursor: crosshair;
 }
 
-#bzk_highlightModal {
+#bzkHighlightModal {
     overflow-y: scroll;
     background-color: rgba(0,0,0,0.9);
     /*background-color: white;*/
@@ -177,7 +177,7 @@ canvas{
     font-size: 0.9em;
 }
 
-#bzk_xClose{
+#bzkCloseWithX{
     position: relative;
     max-width: 50px;
     z-index: 999999;
@@ -186,7 +186,7 @@ canvas{
     padding-bottom: 1%;
 }
 
-#bzk_highlightModalInnerdiv{
+#bzkHighlightModalInnerdiv{
     background-color: white;
     position: relative;
     z-index: 999999;
@@ -233,14 +233,14 @@ canvas{
     background-color: #bbbbbb;
 }
 
-#bzk_temporaryRectangle{
+#bzkTemporaryRectangle{
     position: absolute;
     z-index: 999999999999;
     border: solid 5px magenta;
     pointer-events: none;
 }
 
-#bzk_submit_result {
+#bzkSubmitResult {
     position: fixed;
     right: 0;
     left: 0;
@@ -253,6 +253,6 @@ canvas{
     height: 10%;
 }
 
-.bzk_error_result {
+.bzkErrorResult {
     color: #cc211b
 }

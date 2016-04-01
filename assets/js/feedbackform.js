@@ -15,13 +15,13 @@ var feedbackModule = (function() {
   // canvas imgData fullContainer
   var imgDataFull;
 
-  // canvas imgData fullContainer original / first ever 'bzk_screenshot'
+  // canvas imgData fullContainer original / first ever 'bzkScreenshot'
   var imgDataFullOriginal;
 
   // canvas imgdata partialContainer
   var imgDataPartial;
 
-  // canvas imgData partialContainer original / first ever 'bzk_screenshot'
+  // canvas imgData partialContainer original / first ever 'bzkScreenshot'
   var imgDataPartialOriginal;
 
   // boolean to check if FullContainer has been clicked
@@ -33,40 +33,15 @@ var feedbackModule = (function() {
   // boolean to check if the canvas already has mouseEventListeners
   var hasEventListeners;
 
-  // cssPath
-  var cssPath = 'css/FeedbackStyleV2.css',
-      img = 'img/', //path to img folder
-      html2CanvasPath = 'js/html2canvas.js', // path to html2canvas library
-      head; // head DOM element
+  //path to img folder
+  var img = 'img/';
 
   // loads css, html2canvas, bzkFeedbackButton
-  function loadElements() {
-    // loads the css file
-    var cssId = 'myCss';
-    if (!document.getElementById(cssId)) {
-      head = head || document.getElementsByTagName('head')[0];
-
-      var link = document.createElement('link');
-      link.id = cssId;
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = cssPath;
-      link.media = 'all';
-      head.appendChild(link);
-    }
-
-    // loads the html2canvas
-    head = head || document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = html2CanvasPath;
-    head.appendChild(script);
-    document.body.appendChild(script);
-
+  function createFeedbackButton() {
     // creates the bzkFeedbackButton
     var bzkFeedbackButton = document.createElement('div');
     bzkFeedbackButton.id = 'bzkFeedbackButton';
-    bzkFeedbackButton.className = 'bzkFeedbackButton bzk_button';
+    bzkFeedbackButton.className = 'bzkFeedbackButton bzkButton';
     document.body.appendChild(bzkFeedbackButton);
     bzkFeedbackButton.innerHTML = '<img src=' + img + 'Bazookas_Logo_b.png>Send Feedback';
   }
@@ -192,7 +167,7 @@ var feedbackModule = (function() {
 
     // add overflow hidden
     bodystate = document.body.className;
-    document.body.className += ' bzk_bodyOverflowClass';
+    document.body.className += ' bzkBodyOverflowClass';
 
     // onclick for close button
     getDomElement('closeModal').onclick = function() {
@@ -212,7 +187,7 @@ var feedbackModule = (function() {
       'toolboxPencil.png id="drawFree"><img src=' + img +
       'drawRect.png id="drawRect"><img src=' + img +
       'erase.png id="erase"><img src=' + img +
-      'check-mark-md.png id="bzk_readyButton">';
+      'check-mark-md.png id="bzkReadyButton">';
     getDomElement('toolbox').style.visibility = 'hidden';
 
     getDomElement('drawFree').onclick = function() {
@@ -247,7 +222,7 @@ var feedbackModule = (function() {
       drawFreeInCanvas(hasEventListeners, 'pencil');
     };
 
-    getDomElement('bzk_readyButton').onclick = function() {
+    getDomElement('bzkReadyButton').onclick = function() {
       if (imgDataPartialBool) {
         imgDataPartial = context.getImageData(0, 0, canvas.width, document.body.clientHeight);
       }
@@ -256,10 +231,10 @@ var feedbackModule = (function() {
         imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);
       }
 
-      document.body.className += ' bzk_bodyOverflowClass';
+      document.body.className += ' bzkBodyOverflowClass';
 
       getDomElement('bzkHighlightModal').style.visibility = 'hidden';
-      getDomElement('bzk_readyButton').style.visibility = 'hidden';
+      getDomElement('bzkReadyButton').style.visibility = 'hidden';
       getDomElement('toolbox').style.visibility = 'hidden';
 
       getDomElement('drawFree').className = '';
@@ -274,10 +249,10 @@ var feedbackModule = (function() {
   // Put html code in the bzkFeedbackModal div using innerHTML
   function fillbzkFeedbackModal() {
     document.getElementById('bzkFeedbackModal').innerHTML = '' +
-    '<div id="bzk_modalContent">' +
-    '<div class="bzk_modalHeader">Feedback</div>' +
+    '<div id="bzkModalContent">' +
+    '<div class="bzkModalHeader">Feedback</div>' +
     '<form method="post" id="feedbackForm" novalidate>' +
-    '<div class="bzk_modalBody">' +
+    '<div class="bzkModalBody">' +
     '<label for="email">email</label>' +
     '<input type="email" id="email" name="email" placeholder="example@provider.com" required />' +
 
@@ -302,11 +277,11 @@ var feedbackModule = (function() {
     '<option value="3">Hoog</option>' +
     '<option value="4">Urgent</option>' +
     '</select>' +
-    '<div id="bzk_screenshotsContainer"></div>' +
+    '<div id="bzkScreenshotsContainer"></div>' +
     '</div>' +
-    '<div class="bzk_modalFooter">' +
-    '<div id="closeModal" class="bzk_button">Close</div>' +
-    '<button type="submit" id="submitModal" class="bzk_button bzk_buttonPrimary">Send</button>' +
+    '<div class="bzkModalFooter">' +
+    '<div id="closeModal" class="bzkButton">Close</div>' +
+    '<button type="submit" id="submitModal" class="bzkButton bzkButtonPrimary">Send</button>' +
     '</div>' +
     '</form>' +
     '</div>';
@@ -330,14 +305,14 @@ var feedbackModule = (function() {
     };
   }
 
-  // creates the partial container for bzk_screenshots
+  // creates the partial container for bzkScreenshots
   function createContainer(container, canvas) {
     if (container == 'partialContainer') {
-      canvas.id = 'bzk_screenshotcanvasPartial';
+      canvas.id = 'bzkScreenshotcanvasPartial';
       var partialContainer = document.createElement('div');
       partialContainer.id = 'partialContainer';
-      partialContainer.className = 'bzk_screenshot';
-      getDomElement('bzk_screenshotsContainer').appendChild(partialContainer);
+      partialContainer.className = 'bzkScreenshot';
+      getDomElement('bzkCloseWithXcreenshotsContainer').appendChild(partialContainer);
 
       var partialOverlay = document.createElement('div');
       partialOverlay.id = 'partialOverlay';
@@ -349,11 +324,11 @@ var feedbackModule = (function() {
       getDomElement('partialContainer').appendChild(canvas);
     }
     else {
-      canvas.id = 'bzk_screenshotCanvasFull';
+      canvas.id = 'bzkScreenshotCanvasFull';
       var fullContainer = document.createElement('div');
       fullContainer.id = 'fullContainer';
-      fullContainer.className = 'bzk_screenshot';
-      getDomElement('bzk_screenshotsContainer').appendChild(fullContainer);
+      fullContainer.className = 'bzkScreenshot';
+      getDomElement('bzkScreenshotsContainer').appendChild(fullContainer);
 
       var fullOverlay = document.createElement('div');
       fullOverlay.id = 'fullOverlay';
@@ -411,7 +386,7 @@ var feedbackModule = (function() {
 
     bzkCloseWithX.onclick = function() {
       eventFire(getDomElement('erase'), 'click');
-      eventFire(getDomElement('bzk_readyButton'), 'click');
+      eventFire(getDomElement('bzkReadyButton'), 'click');
     };
   }
 
@@ -441,14 +416,14 @@ var feedbackModule = (function() {
     }
     else {
       var modalInnerDiv = getDomElement('bzkHighlightModalInnerdiv');
-      modalInnerDiv.removeChild(getDomElement('bzk_zoomedCanvas'));
+      modalInnerDiv.removeChild(getDomElement('bzkZoomedCanvas'));
 
       copiedCanvas = cloneCanvas(canvas);
       modalInnerDiv.appendChild(copiedCanvas);
     }
 
     getDomElement('bzkHighlightModal').style.visibility = 'visible';
-    getDomElement('bzk_readyButton').style.visibility = 'visible';
+    getDomElement('bzkReadyButton').style.visibility = 'visible';
   }
 
   // clone a canvas
@@ -460,7 +435,7 @@ var feedbackModule = (function() {
     //set dimensions
     newCanvas.width = oldCanvas.width;
     newCanvas.height = oldCanvas.height;
-    newCanvas.id = 'bzk_zoomedCanvas';
+    newCanvas.id = 'bzkZoomedCanvas';
 
     //apply the old canvas to the new one
     context.drawImage(oldCanvas, 0, 0);
@@ -471,7 +446,7 @@ var feedbackModule = (function() {
 
   // this is the draw behaviour
   function drawFreeInCanvas(hasEventListeners, tool) {
-    canvas = getDomElement('bzk_zoomedCanvas');
+    canvas = getDomElement('bzkZoomedCanvas');
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
       return;
@@ -661,7 +636,7 @@ var feedbackModule = (function() {
           getDomElement('bzkSubmitResult').innerHTML = 'Succes sending feedback!';
           eventFire(getDomElement('closeModal'), 'click');
         } else if (jsonResponse.status == 'error') {
-          getDomElement('bzkSubmitResult').className += 'bzk_error_result';
+          getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
           getDomElement('submitModal').innerText = 'Retry';
         }
@@ -691,11 +666,11 @@ var feedbackModule = (function() {
     'params=' + document.getElementById('params').value;
   }
 
-  // gets bzk_screenshots from your page
+  // gets bzkScreenshots from your page
   function getScreenshot(container) {
     document.body.className = bodystate;
 
-    // hide modal & button so you can take bzk_screenshot
+    // hide modal & button so you can take bzkScreenshot
     getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
     getDomElement('bzkFeedbackButton').style.visibility = 'hidden';
     if (container == 'partialContainer') {
@@ -742,7 +717,7 @@ var feedbackModule = (function() {
       });
     }
 
-    document.body.className += ' bzk_bodyOverflowClass';
+    document.body.className += ' bzkBodyOverflowClass';
     // bzkFeedbackModal and button can be visible again
     getDomElement('bzkFeedbackModal').style.visibility = 'visible';
     getDomElement('bzkFeedbackButton').style.visibility = 'visible';
@@ -750,7 +725,7 @@ var feedbackModule = (function() {
 
   // initialize function called on docReady
   function init() {
-    loadElements();
+    createFeedbackButton();
     getBackgroundInfo();
     createSubmitModal();
     getDomElement('bzkFeedbackButton').onclick = function() {

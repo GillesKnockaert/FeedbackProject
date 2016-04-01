@@ -54,20 +54,20 @@ var serveFrontend = function() {
     gulp.watch(config.assetsSrc + '/**/*.js', ['compile-scripts'])
         .on('change', function(event) {
           changeEvent(event);
-          browserSync.reload();
+          browsersync.reload();
         });
 
     if (config.angular.isAngularProject) {
       gulp.watch(config.angular.angularSrc + '/**/*.js', ['compile-angular-scripts'])
           .on('change', function(event) {
             changeEvent(event);
-            browserSync.reload();
+            browsersync.reload();
           });
 
       gulp.watch(config.angular.angularSrc + '/**/*.html', ['compile-template-cache'])
           .on('change', function(event) {
             changeEvent(event);
-            browserSync.reload();
+            browsersync.reload();
           });
     }
   };
