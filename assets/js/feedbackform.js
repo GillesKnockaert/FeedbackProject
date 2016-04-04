@@ -37,6 +37,9 @@ var feedbackModule = (function() {
   // Classname of the body element
   var bodystate;
 
+  // Variable for holding the current canvas context
+  var context;
+
   // loads css, html2canvas, bzkFeedbackButton
   function createFeedbackButton() {
     // creates the bzkFeedbackButton
@@ -421,7 +424,7 @@ var feedbackModule = (function() {
   function cloneCanvas(oldCanvas) {
     //create a new canvas
     var newCanvas = document.createElement('canvas');
-    var context = newCanvas.getContext('2d');
+    context = newCanvas.getContext('2d');
 
     //set dimensions
     newCanvas.width = oldCanvas.width;
@@ -449,7 +452,7 @@ var feedbackModule = (function() {
     }
 
     // Get the 2D canvas context.
-    var context = canvas.getContext('2d');
+    context = canvas.getContext('2d');
     if (!context) {
       alert('Error: failed to getContext!');
       return;
@@ -457,9 +460,8 @@ var feedbackModule = (function() {
     // set tool with pencil or rectangle behaviour
     //tool = new tool_behaviour(tool);
 
-    console.log('this: ', this);
     if (tool === 'pencil') {
-      tool = this;
+      tool = canvas;
       console.log(tool);
       tool.started = false;
 
@@ -493,7 +495,7 @@ var feedbackModule = (function() {
     }
 
     if (tool === 'rectangle') {
-      tool = this;
+      tool = canvas;
       console.log(tool);
       tool.started = false;
 
