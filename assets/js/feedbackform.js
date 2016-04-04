@@ -180,6 +180,18 @@ var feedbackModule = (function() {
 
   function createToolbox() {
     var toolbox = document.createElement('div');
+
+    var resetToolboxSelection = function() {
+      getDomElement('drawFree').className = '';
+      getDomElement('drawRect').className = '';
+      getDomElement('erase').className = '';
+    };
+
+    var makeToolboxSelection = function(selection) {
+      resetToolboxSelection();
+      getDomElement(selection).className += 'toolboxItemClicked';
+    };
+
     toolbox.id = 'toolbox';
     toolbox.className = 'toolbox';
     document.body.appendChild(toolbox);
@@ -191,26 +203,17 @@ var feedbackModule = (function() {
     getDomElement('toolbox').style.visibility = 'hidden';
 
     getDomElement('drawFree').onclick = function() {
-        getDomElement('drawFree').className = '';
-        getDomElement('drawRect').className = '';
-        getDomElement('erase').className = '';
-        getDomElement('drawFree').className += 'toolboxItemClicked';
-        drawFreeInCanvas(hasEventListeners, 'pencil');
-      };
+      makeToolboxSelection('drawFree');
+      drawFreeInCanvas(hasEventListeners, 'pencil');
+    };
 
     getDomElement('drawRect').onclick = function() {
-      getDomElement('drawRect').className = '';
-      getDomElement('drawFree').className = '';
-      getDomElement('erase').className = '';
-      getDomElement('drawRect').className += 'toolboxItemClicked';
+      makeToolboxSelection('drawRect');
       drawFreeInCanvas(hasEventListeners, 'rectangle');
     };
 
     getDomElement('erase').onclick = function() {
-      getDomElement('drawFree').className = '';
-      getDomElement('drawRect').className = '';
-      getDomElement('erase').className = '';
-      getDomElement('drawFree').className += 'toolboxItemClicked';
+      makeToolboxSelection('drawFree');
       if (imgDataFullBool) {
         context.putImageData(imgDataFullOriginal, 0, 0);
       }
@@ -226,8 +229,7 @@ var feedbackModule = (function() {
       if (imgDataPartialBool) {
         imgDataPartial = context.getImageData(0, 0, canvas.width, document.body.clientHeight);
       }
-
-      if (imgDataFullBool) {
+      else {
         imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);
       }
 
@@ -237,9 +239,7 @@ var feedbackModule = (function() {
       getDomElement('bzkReadyButton').style.visibility = 'hidden';
       getDomElement('toolbox').style.visibility = 'hidden';
 
-      getDomElement('drawFree').className = '';
-      getDomElement('drawRect').className = '';
-      getDomElement('erase').className = '';
+      resetToolboxSelection();
 
       imgDataFullBool = false;
       imgDataPartialBool = false;
