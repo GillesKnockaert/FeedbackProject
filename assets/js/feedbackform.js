@@ -155,6 +155,9 @@ var feedbackModule = (function() {
   }
 
   function createFeedbackModal() {
+    // fixes the scroll issue to top
+    document.body.style.top = -document.body.scrollTop + 'px';
+
     //Add overlay feedback div to the html
     var bzkFeedbackModal = document.createElement('div');
     bzkFeedbackModal.id = 'bzkFeedbackModal';
@@ -434,7 +437,7 @@ var feedbackModule = (function() {
 
   // this is the draw behaviour
   function drawFreeInCanvas(hasEventListeners, tool) {
-    canvas = getDomElement('bzkZoomedCanvas');
+    var canvas = getDomElement('bzkZoomedCanvas');
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
       return;
@@ -446,7 +449,7 @@ var feedbackModule = (function() {
     }
 
     // Get the 2D canvas context.
-    context = canvas.getContext('2d');
+    var context = canvas.getContext('2d');
     if (!context) {
       alert('Error: failed to getContext!');
       return;
@@ -454,13 +457,15 @@ var feedbackModule = (function() {
     // set tool with pencil or rectangle behaviour
     //tool = new tool_behaviour(tool);
 
-    if (tool == 'pencil') {
+    console.log('this: ', this);
+    if (tool === 'pencil') {
       tool = this;
-      this.started = false;
+      console.log(tool);
+      tool.started = false;
 
       // This is called when you start holding down the mouse button.
       // This starts the pencil drawing.
-      this.mousedown = function(ev) {
+      tool.mousedown = function(ev) {
         context.strokeStyle = 'magenta';
         context.lineWidth = '5';
         context.beginPath();
@@ -471,7 +476,7 @@ var feedbackModule = (function() {
       // This function is called every time you move the mouse. Obviously, it only
       // draws if the tool.started state is set to true (when you are holding down
       // the mouse button).
-      this.mousemove = function(ev) {
+      tool.mousemove = function(ev) {
         if (tool.started) {
           context.lineTo(ev._x, ev._y);
           context.stroke();
@@ -479,7 +484,7 @@ var feedbackModule = (function() {
       };
 
       // This is called when you release the mouse button.
-      this.mouseup = function(ev) {
+      tool.mouseup = function(ev) {
         if (tool.started) {
           tool.mousemove(ev);
           tool.started = false;
@@ -487,11 +492,12 @@ var feedbackModule = (function() {
       };
     }
 
-    if (tool == 'rectangle') {
+    if (tool === 'rectangle') {
       tool = this;
-      this.started = false;
+      console.log(tool);
+      tool.started = false;
 
-      this.mousedown = function(ev) {
+      tool.mousedown = function(ev) {
         //else {
         //  var d = document.getElementById('bzkTemporaryRectangle');
         //  d.style.position = 'absolute';
@@ -507,7 +513,7 @@ var feedbackModule = (function() {
 
       var x, y, w, h;
 
-      this.mousemove = function(ev) {
+      tool.mousemove = function(ev) {
         if (!tool.started) {
           return;
         }
@@ -536,7 +542,7 @@ var feedbackModule = (function() {
         }
       };
 
-      this.mouseup = function(ev) {
+      tool.mouseup = function(ev) {
         // call here instead of at the end op 'mouseup' => otherwise he ccalls mousemove twice and you get double rectangles when drawing quickly!
         if (tool.started) {
           tool.mousemove(ev);
