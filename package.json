@@ -1,7 +1,7 @@
 {
-  "name": "informat_webapp",
+  "name": "bazookas_feedback_project",
   "version": "0.1.0",
-  "description": "Angular starter project of Bazookas",
+  "description": "Bazookas feedback tool",
   "main": "app/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,11 +1,9 @@
-// docReady function is defined in utilities.js. It ensures cross-browser compatible
-// on document ready initialisation
-// docReady(function() {
-//   feedbackModule.init();
-// });
-
 // module method
+// TODO: Currently, images are not rendered in the locally hosted version of this
+// feedback script. This is due to a CORS issue, which SHOULD be resolved once it's
+// hosted on an actuall server. We need to check this before launching!
 var feedbackModule = (function() {
+  'use strict';
   // save the email filled in by the user in bzkFeedbackModal
   var savedEmail;
 
@@ -33,8 +31,11 @@ var feedbackModule = (function() {
   // boolean to check if the canvas already has mouseEventListeners
   var hasEventListeners;
 
-  //path to img folder
+  // path to img folder
   var img = 'img/';
+
+  // Classname of the body element
+  var bodystate;
 
   // loads css, html2canvas, bzkFeedbackButton
   function createFeedbackButton() {
@@ -106,6 +107,7 @@ var feedbackModule = (function() {
       }
     }
 
+    var ix;
     // trim the fullVersion string at semicolon/space if present
     if ((ix = fullVersion.indexOf(';')) != -1)
       fullVersion = fullVersion.substring(0, ix);
@@ -124,7 +126,7 @@ var feedbackModule = (function() {
     }
 
     // Format the current time in the following format: hh:mm:ss
-    time = date.getHours() + ':' + checkNumber(date.getMinutes()) + ':' + checkNumber(date.getSeconds());
+    var time = date.getHours() + ':' + checkNumber(date.getMinutes()) + ':' + checkNumber(date.getSeconds());
 
     // Format the current date in the following format: dd/mm/yyyy
     date = checkNumber(date.getDate()) + '/' + checkNumber(date.getMonth() + 1) + '/' + date.getFullYear();
@@ -247,47 +249,51 @@ var feedbackModule = (function() {
   }
 
   // Put html code in the bzkFeedbackModal div using innerHTML
+  var feedbackModalInitialized = false;
+
   function fillbzkFeedbackModal() {
-    document.getElementById('bzkFeedbackModal').innerHTML = '' +
-    '<div id="bzkModalContent">' +
-    '<div class="bzkModalHeader">Feedback</div>' +
-    '<form method="post" id="feedbackForm" novalidate>' +
-    '<div class="bzkModalBody">' +
-    '<label for="email">email</label>' +
-    '<input type="email" id="email" name="email" placeholder="example@provider.com" required />' +
+    if (!feedbackModalInitialized) {
+      document.getElementById('bzkFeedbackModal').innerHTML = '' +
+      '<div id="bzkModalContent">' +
+      '<div class="bzkModalHeader">Feedback</div>' +
+      '<form method="post" id="feedbackForm" novalidate>' +
+      '<div class="bzkModalBody">' +
+      '<label for="email">email</label>' +
+      '<input type="email" id="email" name="email" value="' +
+      ((savedEmail) ? savedEmail : '') +
+      '" placeholder="example@provider.com" required />' +
 
-    '<label for="Subject">Subject</label>' +
-    '<input type="text" id="Subject" name="Subject" placeholder="Subject" required />' +
+      '<label for="Subject">Subject</label>' +
+      '<input type="text" id="Subject" name="Subject" placeholder="Subject" required />' +
 
-    '<label for="Subject">Description</label>' +
-    '<textarea rows="5" id="Description" name="Description" placeholder="Description" required></textarea>' +
+      '<label for="Subject">Description</label>' +
+      '<textarea rows="5" id="Description" name="Description" placeholder="Description" required></textarea>' +
 
-    '<label for="Type">Type</label>' +
-    '<select id="Type" name="Type">' +
-    '<option value="Incident" selected>Incident</option>' +
-    '<option value="Service Request">Service Request</option>' +
-    '</select>' +
+      '<label for="Type">Type</label>' +
+      '<select id="Type" name="Type">' +
+      '<option value="Incident" selected>Incident</option>' +
+      '<option value="Service Request">Service Request</option>' +
+      '</select>' +
 
-    '<input type="hidden" name="params" id="params" required />' +
+      '<input type="hidden" name="params" id="params" required />' +
 
-    '<label for="Priority">Priority</label>' +
-    '<select id="Priority" name="Priority">' +
-    '<option value="1">Laag</option>' +
-    '<option value="2" selected>Gemiddeld</option>' +
-    '<option value="3">Hoog</option>' +
-    '<option value="4">Urgent</option>' +
-    '</select>' +
-    '<div id="bzkScreenshotsContainer"></div>' +
-    '</div>' +
-    '<div class="bzkModalFooter">' +
-    '<div id="closeModal" class="bzkButton">Close</div>' +
-    '<button type="submit" id="submitModal" class="bzkButton bzkButtonPrimary">Send</button>' +
-    '</div>' +
-    '</form>' +
-    '</div>';
+      '<label for="Priority">Priority</label>' +
+      '<select id="Priority" name="Priority">' +
+      '<option value="1">Laag</option>' +
+      '<option value="2" selected>Gemiddeld</option>' +
+      '<option value="3">Hoog</option>' +
+      '<option value="4">Urgent</option>' +
+      '</select>' +
+      '<div id="bzkScreenshotsContainer"></div>' +
+      '</div>' +
+      '<div class="bzkModalFooter">' +
+      '<div id="closeModal" class="bzkButton">Close</div>' +
+      '<button type="submit" id="submitModal" class="bzkButton bzkButtonPrimary">Send</button>' +
+      '</div>' +
+      '</form>' +
+      '</div>';
 
-    if (savedEmail) {
-      getDomElement('email').value = savedEmail;
+      feedbackModalInitialized = true;
     }
   }
 
@@ -306,39 +312,28 @@ var feedbackModule = (function() {
   }
 
   // creates the partial container for bzkScreenshots
+  // @param container is either 'partial' or 'full'
+  // We'll use these variables to create several DOM elements with the correct
+  // id/classname
   function createContainer(container, canvas) {
-    if (container == 'partialContainer') {
-      canvas.id = 'bzkScreenshotcanvasPartial';
-      var partialContainer = document.createElement('div');
-      partialContainer.id = 'partialContainer';
-      partialContainer.className = 'bzkScreenshot';
-      getDomElement('bzkScreenshotsContainer').appendChild(partialContainer);
+    container = container.replace('Container', '');
+    console.log('container: ', container);
+    var upperCaseContainer = container.charAt(0).toUpperCase() + container.slice(1);
 
-      var partialOverlay = document.createElement('div');
-      partialOverlay.id = 'partialOverlay';
-      partialOverlay.className = 'partialOverlay';
-      getDomElement('partialContainer').appendChild(partialOverlay);
+    canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
+    var containerElement = document.createElement('div');
+    containerElement.id = container + 'Container';
+    containerElement.className = 'bzkScreenshot';
+    getDomElement('bzkScreenshotsContainer').appendChild(containerElement);
 
-      getDomElement('partialOverlay').innerHTML += '<img src=' + img + 'pencilWhite.png><p>Click to edit</p>';
-      getDomElement('partialContainer').innerHTML += '<p>Screenshot from the current view</p>';
-      getDomElement('partialContainer').appendChild(canvas);
-    }
-    else {
-      canvas.id = 'bzkScreenshotCanvasFull';
-      var fullContainer = document.createElement('div');
-      fullContainer.id = 'fullContainer';
-      fullContainer.className = 'bzkScreenshot';
-      getDomElement('bzkScreenshotsContainer').appendChild(fullContainer);
+    var overlay = document.createElement('div');
+    overlay.id = container + 'Overlay';
+    overlay.className = container + 'Overlay';
+    getDomElement(container + 'Container').appendChild(overlay);
 
-      var fullOverlay = document.createElement('div');
-      fullOverlay.id = 'fullOverlay';
-      fullOverlay.className = 'fullOverlay';
-      getDomElement('fullContainer').appendChild(fullOverlay);
-
-      getDomElement('fullOverlay').innerHTML += '<img src=' + img + 'pencilWhite.png><p>Click to edit</p>';
-      getDomElement('fullContainer').innerHTML += '<p>Screenshot from the full website</p>';
-      getDomElement('fullContainer').appendChild(canvas);
-    }
+    getDomElement(container + 'Overlay').innerHTML += '<img src=' + img + 'pencilWhite.png><p>Click to edit</p>';
+    getDomElement(container + 'Container').innerHTML += '<p>Screenshot from the current view</p>';
+    getDomElement(container + 'Container').appendChild(canvas);
   }
 
   function takeScreenshot(container, canvas, callback) {
@@ -359,6 +354,7 @@ var feedbackModule = (function() {
       ctx.putImageData(content, 0, 0);
       imgDataFullOriginal = content;
     }
+
     callback();
   }
 
@@ -676,8 +672,6 @@ var feedbackModule = (function() {
   // gets bzkScreenshots from your page
   function getScreenshots() {
     var screenshots = 0;
-
-    document.body.className = bodystate;
 
     // hide modal & button so you can take bzkScreenshot
     showFeedbackModal(false);
