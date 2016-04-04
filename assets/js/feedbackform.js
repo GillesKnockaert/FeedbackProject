@@ -154,9 +154,13 @@ var feedbackModule = (function() {
     'Platform = ' + platform + '\n';
   }
 
+  var domElementCache = {};
   function getDomElement(element) {
-    // directly returns the element
-    return document.getElementById(element);
+    if (!domElementCache[element]) {
+      domElementCache[element] = document.getElementById(element);
+    }
+
+    return domElementCache[element];
   }
 
   function createFeedbackModal() {
