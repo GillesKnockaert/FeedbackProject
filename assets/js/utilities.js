@@ -114,3 +114,12 @@ for (var i = 0; i < onLoadCallbacks.length; i++) {
     return data ? fn( data ) : fn;
   };
 })();
+
+(function() {
+  this.getBrowserHeight = function() {
+    var body = document.body,
+    html = document.documentElement;
+
+    return Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+  };
+})();

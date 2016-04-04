@@ -40,6 +40,8 @@ var feedbackModule = (function() {
   // Variable for holding the current canvas context
   var context;
 
+  var fullDocumentHeight;
+
   // loads css, html2canvas, bzkFeedbackButton
   function createFeedbackButton() {
     // creates the bzkFeedbackButton
@@ -158,6 +160,7 @@ var feedbackModule = (function() {
   }
 
   function createFeedbackModal() {
+    fullDocumentHeight = getBrowserHeight();
     // fixes the scroll issue to top
     document.body.style.top = -document.body.scrollTop + 'px';
 
@@ -323,7 +326,6 @@ var feedbackModule = (function() {
   // id/classname
   function createContainer(container, canvas) {
     container = container.replace('Container', '');
-    console.log('container: ', container);
     var upperCaseContainer = container.charAt(0).toUpperCase() + container.slice(1);
 
     canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
@@ -338,7 +340,10 @@ var feedbackModule = (function() {
     getDomElement(container + 'Container').appendChild(overlay);
 
     getDomElement(container + 'Overlay').innerHTML += '<img src=' + img + 'pencilWhite.png><p>Click to edit</p>';
-    getDomElement(container + 'Container').innerHTML += '<p>Screenshot from the current view</p>';
+
+    var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
+
+    getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p>';
     getDomElement(container + 'Container').appendChild(canvas);
   }
 
@@ -348,6 +353,7 @@ var feedbackModule = (function() {
       ctx = canvas.getContext('2d');
       content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
       canvas.height = document.body.clientHeight;
+      canvas.testProperty = 'PARTIAL';
 
       ctx = canvas.getContext('2d');
       ctx.putImageData(content, 0, 0);
@@ -356,7 +362,7 @@ var feedbackModule = (function() {
     }
     else if (container === 'fullContainer') {
       ctx = canvas.getContext('2d');
-      content = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      content = ctx.getImageData(0, 0, canvas.width, fullDocumentHeight);
       ctx.putImageData(content, 0, 0);
       imgDataFullOriginal = content;
     }
@@ -462,7 +468,6 @@ var feedbackModule = (function() {
 
     if (tool === 'pencil') {
       tool = canvas;
-      console.log(tool);
       tool.started = false;
 
       // This is called when you start holding down the mouse button.
@@ -496,7 +501,6 @@ var feedbackModule = (function() {
 
     if (tool === 'rectangle') {
       tool = canvas;
-      console.log(tool);
       tool.started = false;
 
       tool.mousedown = function(ev) {
@@ -625,7 +629,6 @@ var feedbackModule = (function() {
         var jsonResponse = JSON.parse(http.response);
 
         if (jsonResponse.status == 'success') {
-          console.log('setting hidden after success');
           getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
           document.body.className = bodystate;
           getDomElement('bzkSubmitResult').style.visibility = 'visible';
@@ -686,6 +689,7 @@ var feedbackModule = (function() {
 
     function getScreenshotForContainer(container) {
       html2canvas(document.body, {
+        height: fullDocumentHeight,
         onrendered: function(canvas) {
           createContainer(container, canvas);
           takeScreenshot(container, canvas, function() {
