@@ -16,14 +16,20 @@ var feedbackModule = (function() {
   // canvas imgData fullContainer original / first ever 'bzkScreenshot'
   var imgDataFullOriginal;
 
+  // holds the blobed image of the full canvas
+  var imgDataFullBlob;
+
+  // boolean to check if FullContainer has been clicked
+  var imgDataFullBool;
+
   // canvas imgdata partialContainer
   var imgDataPartial;
 
   // canvas imgData partialContainer original / first ever 'bzkScreenshot'
   var imgDataPartialOriginal;
 
-  // boolean to check if FullContainer has been clicked
-  var imgDataFullBool;
+  // holds the blobed image of the partial canvas
+  var imgDataPartialBlob;
 
   // boolean to check if PartialCOntainer has been clicked
   var imgDataPartialBool;
@@ -40,7 +46,17 @@ var feedbackModule = (function() {
   // Variable for holding the current canvas context
   var context;
 
+  // Variable for holding the webpage's full height
   var fullDocumentHeight;
+
+  // Variable for holding the amount the user scrolled down on a webpage
+  var scrollTopVar;
+
+  // Put html code in the bzkFeedbackModal div using innerHTML
+  var feedbackModalInitialized = false;
+
+  // needed for showFeedbackModal to check wether or not the elements are hidden/visible
+  var bzkFeedbackModal, bzkFeedbackButton;
 
   // loads css, html2canvas, bzkFeedbackButton
   function createFeedbackButton() {
@@ -141,7 +157,7 @@ var feedbackModule = (function() {
 
     var result = '';
 
-    return 'Browser name  = ' + browserName + '\n' +
+    return '\n' + 'Browser name  = ' + browserName + '\n' +
     'Full version  = ' + fullVersion + '\n' +
     'Major version = ' + majorVersion + '\n' +
     'Browser width = ' + BrowserWidth + '\n' +
@@ -154,19 +170,14 @@ var feedbackModule = (function() {
     'Platform = ' + platform + '\n';
   }
 
-  var domElementCache = {};
   function getDomElement(element) {
-    if (!domElementCache[element]) {
-      domElementCache[element] = document.getElementById(element);
-    }
-
-    return domElementCache[element];
+    // returns the dom element
+    return document.getElementById(element);
   }
 
   function createFeedbackModal() {
     fullDocumentHeight = getBrowserHeight();
-    // fixes the scroll issue to top
-    document.body.style.top = -document.body.scrollTop + 'px';
+    scrollTopVar = document.body.scrollTop;
 
     //Add overlay feedback div to the html
     var bzkFeedbackModal = document.createElement('div');
@@ -241,12 +252,23 @@ var feedbackModule = (function() {
     };
 
     getDomElement('bzkReadyButton').onclick = function() {
+      var canvas = getDomElement('bzkZoomedCanvas');
+      context = canvas.getContext('2d');
+
+      var data = canvasDataUrl('bzkZoomedCanvas', 'image/png');
+      var blob = dataURItoBlob(data);
+
       if (imgDataPartialBool) {
         imgDataPartial = context.getImageData(0, 0, canvas.width, document.body.clientHeight);
+        imgDataPartialBlob = blob;
       }
       else {
         imgDataFull = context.getImageData(0, 0, canvas.width, canvas.height);
+        imgDataFullBlob = blob;
       }
+
+      console.log('imgDataPartialBlob: ', imgDataPartialBlob);
+      console.log('imgDataFullBlob: ', imgDataFullBlob);
 
       document.body.className += ' bzkBodyOverflowClass';
 
@@ -260,9 +282,6 @@ var feedbackModule = (function() {
       imgDataPartialBool = false;
     };
   }
-
-  // Put html code in the bzkFeedbackModal div using innerHTML
-  var feedbackModalInitialized = false;
 
   function fillbzkFeedbackModal() {
     if (!feedbackModalInitialized) {
@@ -353,23 +372,18 @@ var feedbackModule = (function() {
 
   function takeScreenshot(container, canvas, callback) {
     var ctx, content;
+    ctx = canvas.getContext('2d');
     if (container === 'partialContainer') {
-      ctx = canvas.getContext('2d');
-      content = ctx.getImageData(0, document.body.scrollTop, canvas.width, document.body.clientHeight);
+      content = ctx.getImageData(0, scrollTopVar, canvas.width, document.body.clientHeight);
       canvas.height = document.body.clientHeight;
-      canvas.testProperty = 'PARTIAL';
-
-      ctx = canvas.getContext('2d');
-      ctx.putImageData(content, 0, 0);
-
       imgDataPartialOriginal = content;
     }
     else if (container === 'fullContainer') {
-      ctx = canvas.getContext('2d');
       content = ctx.getImageData(0, 0, canvas.width, fullDocumentHeight);
-      ctx.putImageData(content, 0, 0);
       imgDataFullOriginal = content;
     }
+
+    ctx.putImageData(content, 0, 0);
 
     callback();
   }
@@ -467,15 +481,12 @@ var feedbackModule = (function() {
       alert('Error: failed to getContext!');
       return;
     }
-    // set tool with pencil or rectangle behaviour
-    //tool = new tool_behaviour(tool);
 
+    // set tool with pencil or rectangle behaviour
     if (tool === 'pencil') {
       tool = canvas;
       tool.started = false;
 
-      // This is called when you start holding down the mouse button.
-      // This starts the pencil drawing.
       tool.mousedown = function(ev) {
         context.strokeStyle = 'magenta';
         context.lineWidth = '5';
@@ -484,9 +495,6 @@ var feedbackModule = (function() {
         tool.started = true;
       };
 
-      // This function is called every time you move the mouse. Obviously, it only
-      // draws if the tool.started state is set to true (when you are holding down
-      // the mouse button).
       tool.mousemove = function(ev) {
         if (tool.started) {
           context.lineTo(ev._x, ev._y);
@@ -494,7 +502,6 @@ var feedbackModule = (function() {
         }
       };
 
-      // This is called when you release the mouse button.
       tool.mouseup = function(ev) {
         if (tool.started) {
           tool.mousemove(ev);
@@ -508,17 +515,10 @@ var feedbackModule = (function() {
       tool.started = false;
 
       tool.mousedown = function(ev) {
-        //else {
-        //  var d = document.getElementById('bzkTemporaryRectangle');
-        //  d.style.position = 'absolute';
-        //  d.style.left = x;
-        //  d.style.top = y;
-        //  console.log(x + ' ' + y);
-        //}
-
         tool.started = true;
         tool.x0 = ev._x;
         tool.y0 = ev._y;
+
       };
 
       var x, y, w, h;
@@ -542,6 +542,8 @@ var feedbackModule = (function() {
           myElem = document.getElementById('bzkTemporaryRectangle');
         }
 
+        myElem.style.visibility = 'visible';
+
         myElem.style.left = x * (canvas.clientWidth / canvas.width) + 'px';
         myElem.style.top = y * (canvas.clientHeight / canvas.height) + 'px';
         myElem.style.width = w * (canvas.clientWidth / canvas.width) + 'px';
@@ -553,20 +555,18 @@ var feedbackModule = (function() {
       };
 
       tool.mouseup = function(ev) {
-        // call here instead of at the end op 'mouseup' => otherwise he ccalls mousemove twice and you get double rectangles when drawing quickly!
+        // call here instead of at the end op 'mouseup' => otherwise he calls mousemove twice and you get double rectangles when drawing quickly!
         if (tool.started) {
           tool.mousemove(ev);
           tool.started = false;
-          //img_update();
         }
 
         var myElem = getDomElement('bzkTemporaryRectangle');
         if (myElem) {
           var parent = getDomElement('bzkHighlightModalInnerdiv');
-          parent.removeChild(myElem);
+          myElem.style.visibility = 'hidden';
         }
 
-        //console.log(x + ' ' + y+ ' ' + w+ ' ' + h)
         context.strokeStyle = 'magenta';
         context.lineWidth = 5;
         // here you draw the rectangle // x + the line width /2 => so that you draw nicely in the center of your border, rather than outer/inner border // same for y, w & h
@@ -621,11 +621,14 @@ var feedbackModule = (function() {
 
   // creates a ticket in the freshService
   function createTicket(params) {
+    getDomElement('submitModal').innerText = 'Sending feedback...';
+    getDomElement('closeModal').style.visibility = 'hidden';
+
     var http = new XMLHttpRequest();
     var url = 'http://localhost:8000/api/post/ticket';
     http.open('POST', url, true);
 
-    //Send the proper header information along with the request
+    // Send the proper header information along with the request
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     http.onreadystatechange = function() {//Call a function when the state changes.
@@ -668,9 +671,23 @@ var feedbackModule = (function() {
     'priority=' + document.getElementById('Priority').value + '&' +
     'type=' + document.getElementById('Type').value + '&' +
     'params=' + document.getElementById('params').value;
+    /*'attachments[]=' + imgDataPartialBlob + '&' + 
+    'attachments[]=' + imgDataFullBlob;*/
+
+    /*var fd = new FormData();
+
+    fd.append("description", getDomElement('Description').value);
+    fd.append("subject", getDomElement('Subject').value);
+    fd.append("email", getDomElement('email').value);
+    fd.append("priority", getDomElement('Priority').value);
+    fd.append("type", getDomElement('Type').value);
+    fd.append("params", getDomElement('params').value);
+    fd.append("attachments[]", imgDataPartialBlob);
+    fd.append("attachments[]", imgDataFullBlob);
+
+    return fd;*/
   }
 
-  var bzkFeedbackModal, bzkFeedbackButton;
   function showFeedbackModal(show) {
     if (!bzkFeedbackModal) {
       bzkFeedbackModal = getDomElement('bzkFeedbackModal');
@@ -709,8 +726,12 @@ var feedbackModule = (function() {
             DrawOnCanvas(canvas);
             drawFreeInCanvas(hasEventListeners, 'pencil');
 
-            if (imgDataPartial) {
+            if (container === 'partialContainer' && imgDataPartial) {
               context.putImageData(imgDataPartial, 0, 0);
+            }
+
+            if (container === 'fullContainer' && imgDataFull) {
+              context.putImageData(imgDataFull, 0, 0);
             }
           };
         }
@@ -727,6 +748,28 @@ var feedbackModule = (function() {
     getScreenshotForContainer('fullContainer');
 
     document.body.className += ' bzkBodyOverflowClass';
+  }
+
+  // converts canvas to a dataURI
+  function canvasDataUrl(id,mime){
+    var canvas = document.getElementById(id);
+    if(canvas){
+      return canvas.toDataURL(mime);
+    }
+    else{
+      return '';
+    }
+  }
+
+  // converts dataURI to a blob (image)
+  function dataURItoBlob(dataURI) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: 'image/png' });
   }
 
   // initialize function called on docReady

@@ -31,7 +31,7 @@
     "sourceMaps": true,
     "useHtmlInjection": false,
     "browsersync": {
-      "port": 8000,
+      "port": 8001,
       "isProxy": false,
       "proxyTarget": null,
       "websockets": false,
