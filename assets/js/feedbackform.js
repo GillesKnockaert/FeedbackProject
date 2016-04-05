@@ -629,7 +629,7 @@ var feedbackModule = (function() {
     http.open('POST', url, true);
 
     // Send the proper header information along with the request
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    // http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     http.onreadystatechange = function() {//Call a function when the state changes.
       if (http.readyState == XMLHttpRequest.DONE) {
@@ -663,18 +663,16 @@ var feedbackModule = (function() {
     feedbackModule.createTicket(data);
   }
 
-  // returns formData in a String
+  // returns formData in a String/formData object
   function serializeFormData() {
-    return 'description=' + document.getElementById('Description').value + '&' +
+    /*return 'description=' + document.getElementById('Description').value + '&' +
     'subject=' + document.getElementById('Subject').value + '&' +
     'email=' + document.getElementById('email').value + '&' +
     'priority=' + document.getElementById('Priority').value + '&' +
     'type=' + document.getElementById('Type').value + '&' +
-    'params=' + document.getElementById('params').value;
-    /*'attachments[]=' + imgDataPartialBlob + '&' + 
-    'attachments[]=' + imgDataFullBlob;*/
+    'params=' + document.getElementById('params').value;*/
 
-    /*var fd = new FormData();
+    var fd = new FormData();
 
     fd.append("description", getDomElement('Description').value);
     fd.append("subject", getDomElement('Subject').value);
@@ -685,7 +683,7 @@ var feedbackModule = (function() {
     fd.append("attachments[]", imgDataPartialBlob);
     fd.append("attachments[]", imgDataFullBlob);
 
-    return fd;*/
+    return fd;
   }
 
   function showFeedbackModal(show) {
