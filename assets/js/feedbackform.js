@@ -697,6 +697,9 @@ var feedbackModule = (function() {
 
     bzkFeedbackModal.style.visibility = show ? 'visible' : 'hidden';
     bzkFeedbackButton.style.visibility = show ? 'visible' : 'hidden';
+
+    // scrolls the window back to it's original scrolled position - BE WARNED could cause problems with parallaxing sites
+    window.scrollTo(0, scrollTopVar);
   }
 
   // gets bzkScreenshots from your page
