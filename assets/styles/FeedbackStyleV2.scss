@@ -134,10 +134,11 @@ canvas{
 #partialContainer, #fullContainer{
     position: relative;
     height: 5%;
-    width: 30%;
+    width: 25%;
     max-height:40px;
     background-color: #428bca;
     color: #F7F4F2;
+    font-weight: bold;
 }
 
 .partialOverlay:hover, .fullOverlay:hover{
