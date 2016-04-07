@@ -347,6 +347,10 @@ var feedbackModule = (function() {
     bzkSubmitResult.onclick = function() {
       bzkSubmitResult.style.visibility = 'hidden';
     };
+
+    window.onscroll = function(){
+      bzkSubmitResult.style.visibility = 'hidden';
+    };
   }
 
   // creates the partial container for bzkScreenshots
@@ -649,6 +653,10 @@ var feedbackModule = (function() {
           //getDomElement('bzkSubmitResult').className += 'success_result';
           getDomElement('bzkSubmitResult').innerHTML = 'Succes sending feedback!';
           eventFire(getDomElement('closeModal'), 'click');
+          imgDataPartial = imgDataPartialOriginal;
+          imgDataFull = imgDataFullOriginal;
+          getDomElement('Subject').value = '';
+          getDomElement('Description').value = '';
         } else if (jsonResponse.status == 'error') {
           getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
