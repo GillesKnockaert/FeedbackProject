@@ -661,7 +661,6 @@ var feedbackModule = (function() {
           getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
           document.body.className = bodystate;
           getDomElement('bzkSubmitResult').style.visibility = 'visible';
-          //getDomElement('bzkSubmitResult').className += 'success_result';
           getDomElement('bzkSubmitResult').innerHTML = 'Succes sending feedback!';
           eventFire(getDomElement('closeModal'), 'click');
           imgDataPartial = imgDataPartialOriginal;
@@ -669,6 +668,8 @@ var feedbackModule = (function() {
           getDomElement('Subject').value = '';
           getDomElement('Description').value = '';
           getDomElement('email').value = savedEmail;
+          getDomElement('submitModal').innerText = 'Send';
+          getDomElement('closeModal').style.visibility = 'visible';
         } else if (jsonResponse.status == 'error') {
           getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
