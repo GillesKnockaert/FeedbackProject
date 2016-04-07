@@ -364,16 +364,18 @@ var feedbackModule = (function() {
     var upperCaseContainer = container.charAt(0).toUpperCase() + container.slice(1);
     var bzkScreenshotsContainer = getDomElement('bzkScreenshotsContainer');
 
-    canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
-    var containerElement = document.createElement('div');
-    containerElement.id = container + 'Container';
-    containerElement.className = 'bzkScreenshot';
-    bzkScreenshotsContainer.appendChild(containerElement);
+    if(!(getDomElement(container + 'Container'))){
+      canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
+      var containerElement = document.createElement('div');
+      containerElement.id = container + 'Container';
+      containerElement.className = 'bzkScreenshot';
+      bzkScreenshotsContainer.appendChild(containerElement);
 
-    var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
+      var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
 
-    getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p><br><br>';
-    getDomElement(container + 'Container').appendChild(canvas);
+      getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p><br><br>';
+      getDomElement(container + 'Container').appendChild(canvas);
+    }
   }
 
   function takeScreenshot(container, canvas, callback) {
