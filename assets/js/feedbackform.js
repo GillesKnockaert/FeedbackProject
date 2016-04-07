@@ -267,9 +267,6 @@ var feedbackModule = (function() {
         imgDataFullBlob = blob;
       }
 
-      console.log('imgDataPartialBlob: ', imgDataPartialBlob);
-      console.log('imgDataFullBlob: ', imgDataFullBlob);
-
       document.body.className += ' bzkBodyOverflowClass';
 
       getDomElement('bzkHighlightModal').style.visibility = 'hidden';
@@ -288,7 +285,7 @@ var feedbackModule = (function() {
       document.getElementById('bzkFeedbackModal').innerHTML = '' +
       '<div id="bzkModalContent">' +
       '<div class="bzkModalHeader">Feedback</div>' +
-      '<form method="post" id="feedbackForm" novalidate>' +
+      '<form method="post" id="feedbackForm" >' +
       '<div class="bzkModalBody">' +
       '<label for="email">email</label>' +
       '<input type="email" id="email" name="email" value="' +
@@ -355,13 +352,13 @@ var feedbackModule = (function() {
 
     bzkSubmitResult.style.visibility = 'hidden';
 
-    /*bzkSubmitResult.onclick = function() {
+    bzkSubmitResult.onclick = function() {
       bzkSubmitResult.style.visibility = 'hidden';
     };
 
     window.onscroll = function(){
       bzkSubmitResult.style.visibility = 'hidden';
-    };*/
+    };
   }
 
   // creates the partial container for bzkScreenshots
@@ -381,15 +378,15 @@ var feedbackModule = (function() {
       bzkScreenshotsContainer.appendChild(containerElement);
 
       var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
-
       getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p><br><br>';
-      getDomElement(container + 'Container').appendChild(canvas);
+      
     }
   }
 
   function takeScreenshot(container, canvas, callback) {
     var ctx, content;
     ctx = canvas.getContext('2d');
+    canvas.id = 'temporaryID';
     if (container === 'partialContainer') {
       content = ctx.getImageData(0, scrollTopVar, canvas.width, document.body.clientHeight);
       canvas.height = document.body.clientHeight;
@@ -682,19 +679,22 @@ var feedbackModule = (function() {
 
     e.preventDefault();
     document.getElementById('params').value = feedbackModule.getBackgroundInfo();
+
+    if(!imgDataPartial){
+      eventFire(getDomElement('partialContainer'), 'click');
+      eventFire(getDomElement('bzkReadyButton'), 'click');
+    }
+    if(!imgDataFull){
+      eventFire(getDomElement('fullContainer'), 'click');
+      eventFire(getDomElement('bzkReadyButton'), 'click');
+    }
+
     var data = serializeFormData();
     feedbackModule.createTicket(data);
   }
 
   // returns formData in a String/formData object
   function serializeFormData() {
-    /*return 'description=' + document.getElementById('Description').value + '&' +
-    'subject=' + document.getElementById('Subject').value + '&' +
-    'email=' + document.getElementById('email').value + '&' +
-    'priority=' + document.getElementById('Priority').value + '&' +
-    'type=' + document.getElementById('Type').value + '&' +
-    'params=' + document.getElementById('params').value;*/
-
     var fd = new FormData();
 
     fd.append("description", getDomElement('Description').value);
@@ -705,7 +705,7 @@ var feedbackModule = (function() {
     fd.append("params", getDomElement('params').value);
     fd.append("attachments[]", imgDataPartialBlob);
     fd.append("attachments[]", imgDataFullBlob);
-    fd.append("bzkFileInput", getDomElement('bzkFileInput').files);
+    fd.append("bzkFileInput", getDomElement('uploadButton').files);
 
     return fd;
   }
