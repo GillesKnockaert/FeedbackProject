@@ -295,12 +295,15 @@ var feedbackModule = (function() {
       ((savedEmail) ? savedEmail : '') +
       '" placeholder="example@provider.com" required />' +
 
+      '</br>' +
       '<label for="Subject">Subject</label>' +
       '<input type="text" id="Subject" name="Subject" placeholder="Subject" required />' +
 
+      '</br>' +
       '<label for="Subject">Description</label>' +
       '<textarea rows="5" id="Description" name="Description" placeholder="Description" required></textarea>' +
 
+      '</br>' +
       '<label for="Type">Type</label>' +
       '<select id="Type" name="Type">' +
       '<option value="Incident" selected>Incident</option>' +
@@ -309,6 +312,7 @@ var feedbackModule = (function() {
 
       '<input type="hidden" name="params" id="params" required />' +
 
+      '</br>' +
       '<label for="Priority">Priority</label>' +
       '<select id="Priority" name="Priority">' +
       '<option value="1">Laag</option>' +
@@ -316,6 +320,8 @@ var feedbackModule = (function() {
       '<option value="3">Hoog</option>' +
       '<option value="4">Urgent</option>' +
       '</select>' +
+      '</br>' +
+      '<label>BUTTONS</label>' +
       '<div id="bzkScreenshotsContainer"></div>' +
       '</div>' +
       '<div class="bzkModalFooter">' +
@@ -576,17 +582,18 @@ var feedbackModule = (function() {
 
     // determines the mouse position relative to the canvas element
     function evCanvas(ev) {
-      if (ev.layerX || ev.layerX === 0) { // Firefox
-        ev._x = ev.layerX;
-        ev._y = ev.layerY;
-      } else if (ev.offsetX || ev.offsetX === 0) { // Opera
+      if (ev.offsetX || ev.offsetX === 0) { // Opera
         ev._x = ev.offsetX;
         ev._y = ev.offsetY;
       }
+      else if (ev.layerX || ev.layerX === 0) { // Firefox
+        ev._x = ev.layerX;
+        ev._y = ev.layerY;
+      }
 
-      ev._x *= (canvas.width / canvas.clientWidth);
+      ev._x = (ev._x * (canvas.width / canvas.clientWidth));
       //ev._y *= (canvas.height / canvas.clientHeight) + document.body.scrollTop;
-      ev._y = (ev._y * (canvas.height / canvas.clientHeight)) - (document.body.scrollTop * (canvas.height / canvas.clientHeight));
+      ev._y = (ev._y * (canvas.height / canvas.clientHeight));
       // Call the event handler of the tool.
       var func = tool[ev.type];
       if (func) {
