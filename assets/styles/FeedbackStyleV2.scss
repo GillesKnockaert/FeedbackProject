@@ -53,7 +53,7 @@
     border-radius: 0.5em;
     width:80%;
     max-width: 600px;
-    margin: 100px auto;
+    margin: 75px auto;
     background-color: #ffffff;
     text-align:left;
 }
@@ -133,6 +133,9 @@ canvas{
 
 #partialContainer, #fullContainer{
     position: relative;
+    height: 10%;
+    width: 48%;
+    max-height:95px;
 }
 
 .partialOverlay, .fullOverlay{

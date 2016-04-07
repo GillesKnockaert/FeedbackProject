@@ -321,8 +321,10 @@ var feedbackModule = (function() {
       '<option value="4">Urgent</option>' +
       '</select>' +
       '</br>' +
-      '<label>BUTTONS</label>' +
+      '<label>Draw on screenshots</label>' +
       '<div id="bzkScreenshotsContainer"></div>' +
+      '<label>Upload your own file</label>' + 
+      '<input id="bzkFileInput" type="file" name="bzkFileInput" accept="image/*">' + 
       '</div>' +
       '<div class="bzkModalFooter">' +
       '<div id="closeModal" class="bzkButton">Close</div>' +
@@ -360,23 +362,17 @@ var feedbackModule = (function() {
   function createContainer(container, canvas) {
     container = container.replace('Container', '');
     var upperCaseContainer = container.charAt(0).toUpperCase() + container.slice(1);
+    var bzkScreenshotsContainer = getDomElement('bzkScreenshotsContainer');
 
     canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
     var containerElement = document.createElement('div');
     containerElement.id = container + 'Container';
     containerElement.className = 'bzkScreenshot';
-    getDomElement('bzkScreenshotsContainer').appendChild(containerElement);
-
-    var overlay = document.createElement('div');
-    overlay.id = container + 'Overlay';
-    overlay.className = container + 'Overlay';
-    getDomElement(container + 'Container').appendChild(overlay);
-
-    getDomElement(container + 'Overlay').innerHTML += '<img src=' + img + 'pencilWhite.png><p>Click to edit</p>';
+    bzkScreenshotsContainer.appendChild(containerElement);
 
     var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
 
-    getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p>';
+    getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p><br><br>';
     getDomElement(container + 'Container').appendChild(canvas);
   }
 
@@ -697,6 +693,7 @@ var feedbackModule = (function() {
     fd.append("params", getDomElement('params').value);
     fd.append("attachments[]", imgDataPartialBlob);
     fd.append("attachments[]", imgDataFullBlob);
+    fd.append("bzkFileInput", getDomElement('bzkFileInput').files);
 
     return fd;
   }
