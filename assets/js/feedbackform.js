@@ -58,6 +58,9 @@ var feedbackModule = (function() {
   // needed for showFeedbackModal to check wether or not the elements are hidden/visible
   var bzkFeedbackModal, bzkFeedbackButton;
 
+  // Variable that holds the amount scrolled on the website for the partial view
+  var scrollPartialView;
+
   // loads css, html2canvas, bzkFeedbackButton
   function createFeedbackButton() {
     // creates the bzkFeedbackButton
@@ -275,6 +278,10 @@ var feedbackModule = (function() {
 
       resetToolboxSelection();
 
+      if(imgDataPartialBool){
+        scrollPartialView = scrollTopVar;
+      }
+
       imgDataFullBool = false;
       imgDataPartialBool = false;
     };
@@ -390,7 +397,7 @@ var feedbackModule = (function() {
     if (container === 'partialContainer') {
       content = ctx.getImageData(0, scrollTopVar, canvas.width, document.body.clientHeight);
       canvas.height = document.body.clientHeight;
-      imgDataPartialOriginal = content;
+      imgDataPartialOriginal = content;      
     }
     else if (container === 'fullContainer') {
       content = ctx.getImageData(0, 0, canvas.width, fullDocumentHeight);
@@ -751,7 +758,7 @@ var feedbackModule = (function() {
             DrawOnCanvas(canvas);
             drawFreeInCanvas(hasEventListeners, 'pencil');
 
-            if (container === 'partialContainer' && imgDataPartial) {
+            if (container === 'partialContainer' && imgDataPartial && (scrollTopVar === scrollPartialView)) {
               context.putImageData(imgDataPartial, 0, 0);
             }
 
