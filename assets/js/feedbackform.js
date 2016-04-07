@@ -324,7 +324,12 @@ var feedbackModule = (function() {
       '<label>Draw on screenshots</label>' +
       '<div id="bzkScreenshotsContainer"></div>' +
       '<label>Upload your own file</label>' + 
-      '<input id="bzkFileInput" type="file" name="bzkFileInput" accept="image/*">' + 
+      '<br>' + 
+      '<div class="fileUpload btn btn-primary">' +
+      '<span>Upload</span>' + 
+      '<input id="uploadButton" class="bzkFileInput" type="file" name="bzkFileInput" accept="image/*">' + 
+      '</div>' + 
+      '<input id="uploadFile" placeholder="Choose File" disabled="disabled" />' + 
       '</div>' +
       '<div class="bzkModalFooter">' +
       '<div id="closeModal" class="bzkButton">Close</div>' +
@@ -334,6 +339,10 @@ var feedbackModule = (function() {
       '</div>';
 
       feedbackModalInitialized = true;
+
+      getDomElement("uploadButton").onchange = function () {
+        getDomElement("uploadFile").value = this.value;
+    };
     }
   }
 
@@ -346,13 +355,13 @@ var feedbackModule = (function() {
 
     bzkSubmitResult.style.visibility = 'hidden';
 
-    bzkSubmitResult.onclick = function() {
+    /*bzkSubmitResult.onclick = function() {
       bzkSubmitResult.style.visibility = 'hidden';
     };
 
     window.onscroll = function(){
       bzkSubmitResult.style.visibility = 'hidden';
-    };
+    };*/
   }
 
   // creates the partial container for bzkScreenshots
@@ -655,6 +664,7 @@ var feedbackModule = (function() {
           imgDataFull = imgDataFullOriginal;
           getDomElement('Subject').value = '';
           getDomElement('Description').value = '';
+          getDomElement('email').value = savedEmail;
         } else if (jsonResponse.status == 'error') {
           getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;

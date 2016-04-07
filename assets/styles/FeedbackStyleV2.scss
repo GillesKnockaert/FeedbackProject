@@ -250,12 +250,37 @@ canvas{
     margin: 0 auto;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #3eb95d;
-    color: #FFFFFF;
+    background-color: #42AD5D;
+    color: #000000;
     width: 20%;
     height: 10%;
+    border-radius: 25%;
+    text-align: center;
 }
 
 .bzkErrorResult {
     color: #cc211b
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.fileUpload input.bzkFileInput {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+#uploadFile {
+    width: 82%;
+    display: inline;
 }
