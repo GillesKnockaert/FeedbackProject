@@ -322,7 +322,7 @@ var feedbackModule = (function() {
       '<div id="bzkScreenshotsContainer"></div>' +
       '<label>Upload your own file</label>' + 
       '<br>' + 
-      '<div class="fileUpload btn btn-primary">' +
+      '<div class="fileUpload">' +
       '<span>Upload</span>' + 
       '<input id="uploadButton" class="bzkFileInput" type="file" name="bzkFileInput" accept="image/*">' + 
       '</div>' + 
@@ -374,10 +374,10 @@ var feedbackModule = (function() {
       canvas.id = 'bzkScreenshotcanvas' + upperCaseContainer;
       var containerElement = document.createElement('div');
       containerElement.id = container + 'Container';
-      containerElement.className = 'bzkScreenshot';
+      containerElement.className = 'bzkScreenshot bzkButtonPrimary';
       bzkScreenshotsContainer.appendChild(containerElement);
 
-      var explanationString = 'Screenshot from the ' + ((container === 'full') ? 'full' : 'current') + ' view';
+      var explanationString = ((container === 'full') ? 'full' : 'current') + ' view';
       getDomElement(container + 'Container').innerHTML += '<p>' + explanationString + '</p><br><br>';
       
     }
