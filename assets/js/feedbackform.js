@@ -65,6 +65,7 @@ var feedbackModule = (function() {
   function createFeedbackButton() {
     // creates the bzkFeedbackButton
     var bzkFeedbackButton = document.createElement('div');
+    bzkFeedbackButton.style.visibility = "hidden";
     bzkFeedbackButton.id = 'bzkFeedbackButton';
     bzkFeedbackButton.className = 'bzkFeedbackButton bzkButton';
     document.body.appendChild(bzkFeedbackButton);
@@ -160,6 +161,8 @@ var feedbackModule = (function() {
 
     var result = '';
 
+    getDomElement('bzkFeedbackButton').style.visibility = "visible";
+
     return '\n' + 'Browser name  = ' + browserName + '\n' +
     'Full version  = ' + fullVersion + '\n' +
     'Major version = ' + majorVersion + '\n' +
@@ -178,9 +181,17 @@ var feedbackModule = (function() {
     return document.getElementById(element);
   }
 
+  function setMouseCursor(cursor){
+    //gives the cursor an appropriate icon
+    document.body.style.cursor = cursor;
+  }
+
   function createFeedbackModal() {
     fullDocumentHeight = getBrowserHeight();
     scrollTopVar = document.body.scrollTop;
+
+    // gives the cursor the radial wait icon
+    setMouseCursor('wait');
 
     //Add overlay feedback div to the html
     var bzkFeedbackModal = document.createElement('div');
@@ -228,9 +239,24 @@ var feedbackModule = (function() {
     toolbox.innerHTML = '<p>toolbox</p><img src=' + img +
       'toolboxPencil.png id="drawFree"><img src=' + img +
       'drawRect.png id="drawRect"><img src=' + img +
-      'erase.png id="erase"><img src=' + img +
-      'check-mark-md.png id="bzkReadyButton">';
+      'erase.png id="erase"><img src=' + img + 
+      'check-mark-md.png id="bzkReadyButton" className="bzkReadyButton">';
+    getDomElement('bzkReadyButton').addEventListener('mouseover', whiteCheck);
+    getDomElement('bzkReadyButton').addEventListener('mouseout', greenCheck);
+
     getDomElement('toolbox').style.visibility = 'hidden';
+
+    // does the normal green V check
+    function greenCheck(event) {
+      event.target.setAttribute('src', img + 'check-mark-md.png');
+      event.target.setAttribute("style", "background-color: #F8F8F8;");
+    }
+
+    // does the normal
+    function whiteCheck(event){
+      event.target.setAttribute('src', img + 'white-check-mark.png');
+      event.target.setAttribute("style", "background-color: #51a351; border-radius: 5px;");
+    }
 
     getDomElement('drawFree').onclick = function() {
       makeToolboxSelection('drawFree');
@@ -413,13 +439,25 @@ var feedbackModule = (function() {
     var bzkCloseWithX = document.createElement('div');
     bzkCloseWithX.id = 'bzkCloseWithX';
     bzkCloseWithX.className = 'bzkCloseWithX';
-    bzkCloseWithX.innerHTML = '<img src=' + img + 'x-close.png>';
+    bzkCloseWithX.innerHTML = '<img id="bzkCloseWithXImg" src=' + img + 'x-close.png>';
     bzkHighlightModal.appendChild(bzkCloseWithX);
 
     bzkCloseWithX.onclick = function() {
       eventFire(getDomElement('erase'), 'click');
       eventFire(getDomElement('bzkReadyButton'), 'click');
     };
+
+    getDomElement('bzkCloseWithXImg').addEventListener('mouseover', redCheck);
+    getDomElement('bzkCloseWithXImg').addEventListener('mouseout', blackCheck);
+
+    // does the normal green V check
+    function redCheck(event) {
+      event.target.setAttribute("style", "background-color: #F22C36;");
+    }
+
+    function blackCheck(event) {
+      event.target.setAttribute("style", "background-color: rgba(0,0,0,.9);");
+    }
   }
 
   // the actual div you draw on
@@ -639,6 +677,8 @@ var feedbackModule = (function() {
     getDomElement('submitModal').innerText = 'Sending feedback...';
     getDomElement('closeModal').style.visibility = 'hidden';
 
+    setMouseCursor('wait');
+
     var http = new XMLHttpRequest();
     var url = 'http://localhost:8000/api/post/ticket';
     http.open('POST', url, true);
@@ -661,10 +701,12 @@ var feedbackModule = (function() {
           getDomElement('Description').value = '';
           getDomElement('email').value = savedEmail;
           getDomElement('submitModal').innerText = 'Send';
+          setMouseCursor('default');
         } else if (jsonResponse.status == 'error') {
           getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
           getDomElement('submitModal').innerText = 'Retry';
+          setMouseCursor('default');
         }
       }
     };
@@ -770,6 +812,7 @@ var feedbackModule = (function() {
     function checkIfScreenshotsTaken() {
       if (screenshots > 1) {
         showFeedbackModal(true);
+        setMouseCursor('default');
       }
     }
 

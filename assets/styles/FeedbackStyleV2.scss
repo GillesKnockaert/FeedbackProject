@@ -1,3 +1,33 @@
+$z-index:(
+  'bzkFeedbackModal':           99999,
+  'bzkHighlightModal':          99999,
+  'bzkReadyButton':             999999,
+  'bzkCloseWithX':              999999,
+  'bzkHighlightModalInnerdiv':  999999,
+  'toolbox':                    99999999999,
+  'bzkTemporaryRectangle':      999999999999
+);
+
+/*function to retrieve values easier*/
+@function z-index($key) {
+  @return map-get($z-index,$key);
+}
+
+$bzk-border : 1px solid #aaaaaa;
+$bzk-border-radius : 5px;
+$bzk-broken-white : #F8F8F8;
+$bzk-font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
+$bzk-font-size: 0.9em;
+$bzk-font-size-header: 1.4em;
+$bzk-color: #555555;
+$bzk-button-primary: #428bca;
+$bzk-button-primary-hover: #317ab9;
+$bzk-gray-overlay-color: rgba(0,0,0,0.9);
+$bzk-temporary-rectangle-border: solid 5px magenta;
+$bzk-success-color: #51a351;
+$bzk-error-color: #cc211b;
+$bzk-boxshadow: 0 4px 16px 0 #252525;
+
 .bzkBodyOverflowClass{
     overflow: hidden;
 }
@@ -6,6 +36,7 @@
     position: fixed;
     bottom: 10px;
     right: 20px;
+    box-shadow: 0 4px 16px 0 #252525;
 }
 
 .bzkButton{
@@ -19,9 +50,9 @@
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
-    border: 1px solid #aaaaaa;
-    border-radius: 4px;
-    background-color: #eeeeee;
+    border: $bzk-border;
+    border-radius: $bzk-border-radius;
+    background-color: $bzk-broken-white;
 }
 
 .bzkFeedbackButton img, .icon{
@@ -40,36 +71,37 @@
     top: 0px;
     bottom: 0px;
     text-align:center;
-    z-index: 99999;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 0.9em;
+    z-index: z-index('bzkFeedbackModal');
+    font-family: $bzk-font-family;
+    font-size: $bzk-font-size;
+    box-shadow: $bzk-boxshadow;
 }
 
 #bzkModalContent {
     -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
-    color: #122b40;
-    border-radius: 0.5em;
+    color: $bzk-color;
+    border-radius: $bzk-border-radius;
     width:80%;
     max-width: 600px;
     margin: 75px auto;
-    background-color: #ffffff;
+    background-color: $bzk-broken-white;
     text-align:left;
 }
 
 .bzkModalHeader{
     padding: 15px;
-    font-size: 1.4em;
+    font-size: $bzk-font-size-header;
     font-weight: 400;
-    color: #555555;
+    color: $bzk-color;
 }
 
 .bzkModalBody{
     padding: 15px;
     margin: 10px;
-    border-top: solid 1px #dddddd;
-    border-bottom: solid 1px #dddddd;
+    border-top: $bzk-border;
+    border-bottom: $bzk-border;
 }
 
 .bzkModalFooter{
@@ -80,25 +112,29 @@
 }
 
 .bzkButtonPrimary{
-    background-color: #428bca;
-    color: white;
+    background-color: $bzk-button-primary;
+    color: $bzk-broken-white;
 }
 
 .bzkButtonPrimary:hover{
-    background-color: #317ab9;
+    background-color: $bzk-button-primary-hover;
 }
 
 input, select, textarea{
     resize: none;
-    color: black;
+    color: $bzk-color;
     width:100%;
     display: block;
-    border: solid 1px #dddddd;
-    border-radius: 0.2em;
+    border: $bzk-border;
+    border-radius: $bzk-border-radius;
     padding: 3px;
     margin: 5px 0;
-    font-family: inherit;
-    font-size: inherit;
+    font-family: $bzk-font-family;
+    font-size: $bzk-font-size;
+}
+
+select, option{
+    cursor: pointer;
 }
 
 canvas{
@@ -107,20 +143,15 @@ canvas{
     height: auto;
 }
 
-#bzkReadyButton{
-    z-index: 999999;
-}
-
 .bzkScreenshot{
     max-height: 200px;
     overflow: hidden;
     cursor: pointer;
-    border: 1px solid #aaaaaa;
-    border-radius: 4px;
-    background-color: #eeeeee;
+    border: $bzk-border;
+    border-radius: $bzk-border-radius;
+    background-color: $bzk-broken-white;
     display: inline-block;
-    margin: 5px;
-    /*padding: 6px 12px;*/
+    margin: 5px 10px 5px 0px;
     font-size: 18px;
     font-weight: 400;
     line-height: 1.42857143;
@@ -136,14 +167,14 @@ canvas{
     height: 5%;
     width: 25%;
     max-height:40px;
-    background-color: #428bca;
+    background-color: $bzk-button-primary;
     color: #F7F4F2;
     font-weight: bold;
+    font-size: 20px;
 }
 
-.partialOverlay:hover, .fullOverlay:hover{
-    opacity: 1;
-    background-color: rgba(0,0,0,0.7);
+#partialContainer:hover, #fullContainer:hover{
+    background-color: $bzk-button-primary-hover;
 }
 
 #bzkZoomedCanvas:hover{
@@ -152,7 +183,7 @@ canvas{
 
 #bzkHighlightModal {
     overflow-y: scroll;
-    background-color: rgba(0,0,0,0.9);
+    background-color: $bzk-gray-overlay-color;
     visibility: hidden;
     position: fixed;
     left: 0%;
@@ -161,47 +192,53 @@ canvas{
     bottom: 0%;
     padding: 5% 10%;
     text-align:center;
-    z-index: 99999;
-    font-size: 0.9em;
+    z-index: z-index('bzkHighlightModal');
+    font-size: $bzk-font-size;
 }
 
 #bzkCloseWithX{
     position: relative;
     max-width: 50px;
-    z-index: 999999;
-    cursor: pointer;
+    z-index: z-index('bzkCloseWithX');
     left: 100%;
-    padding-bottom: 1%;
+    margin-bottom: 3%;
+    margin-left: 3%;
+    margin-top: -5%;
+}
+
+#bzkCloseWithX img{
+    cursor: pointer;
+    border-radius: 25%;
 }
 
 #bzkHighlightModalInnerdiv{
-    background-color: white;
+    background-color: $bzk-broken-white;
     position: relative;
-    z-index: 999999;
+    z-index: z-index('bzkHighlightModalInnerdiv');
 }
 
 #toolbox{
     visibility: hidden;
     display: inline-block;
-    font-size: 14px;
     font-weight: 400;
     line-height: 1.42857143;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    border: 1px solid #aaaaaa;
-    border-radius: 4px;
-    background-color: #eeeeee;
+    border: $bzk-border;
+    border-radius: $bzk-border-radius;
+    background-color: $bzk-broken-white;
     padding: 5px;
     margin: 5px;
-    z-index: 99999999999;
+    z-index: z-index('toolbox');
     position: fixed;
     top: 50%;
     transform:translateY(-50%);
     right: 20px;
+    background-color: $bzk-broken-white;
 }
 
-#toolbox img{
+#toolbox img, i{
     margin: auto;
     display: block;
     padding: 10px;
@@ -216,15 +253,19 @@ canvas{
 }
 
 .toolboxItemClicked{
-    border-radius: 4px;
-    border: 1px solid #999999;
+    border-radius: $bzk-border-radius;
+    border: $bzk-border;
     background-color: #bbbbbb;
+}
+
+#bzkReadyButton{
+    z-index: z-index('bzkReadyButton');
 }
 
 #bzkTemporaryRectangle{
     position: absolute;
-    z-index: 999999999999;
-    border: solid 5px magenta;
+    z-index: z-index('bzkTemporaryRectangle');
+    border: $bzk-temporary-rectangle-border;
     pointer-events: none;
 }
 
@@ -235,16 +276,16 @@ canvas{
     margin: 0 auto;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #51a351;
-    color: #F8F8F8;
+    background-color: $bzk-success-color;
+    color: $bzk-broken-white;
     width: 80%;
     max-width: 400px;
-    border-radius: 5px;
+    border-radius: $bzk-border-radius;
     text-align: center;
     line-height: 28px;
     font-size: 20px;
     padding: 12px;
-    box-shadow: 0 4px 16px 0 #252525;
+    box-shadow: $bzk-boxshadow;
     animation: anim 5s 0s ease-in-out;
     animation-fill-mode: both;
 }
@@ -280,16 +321,16 @@ canvas{
 }
 
 .bzkErrorResult {
-    color: #cc211b
+    color: $bzk-error-color;
 }
 
 .fileUpload {
     position: relative;
     overflow: hidden;
-    margin: 10px;
-    background-color: #428bca;
-    color: #F7F4F2;
-    border-radius: 4px;
+    margin-right: 15px;
+    background-color: $bzk-button-primary;
+    color: $bzk-broken-white;
+    border-radius: $bzk-border-radius;
     padding: 5px;
     width: 5%;
     display: inline;
@@ -308,6 +349,6 @@ canvas{
 }
 
 #uploadFile {
-    width: 82%;
+    width: 87%;
     display: inline;
 }
