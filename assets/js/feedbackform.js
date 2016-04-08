@@ -386,9 +386,11 @@ var feedbackModule = (function() {
       bzkSubmitResult.id = 'bzkSubmitResult';
   }
 
+  // shows the submit modal with the correct response + color
   function showSubmitModal(status) {
     var submitModal = getDomElement('bzkSubmitResult'),
         statusClass = '';
+
     if(status === 'success'){
       submitModal.innerHTML = 'Success sending feedback!';
       statusClass = 'success';
