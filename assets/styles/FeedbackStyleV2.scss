@@ -26,7 +26,7 @@ $bzk-gray-overlay-color: rgba(0,0,0,0.9);
 $bzk-temporary-rectangle-border: solid 5px magenta;
 $bzk-success-color: #51a351;
 $bzk-error-color: #cc211b;
-$bzk-boxshadow: 0 4px 16px 0 #252525;
+$bzk-boxshadow: 0 4px 16px 0 #4F4C4C;
 
 .bzkBodyOverflowClass{
     overflow: hidden;
@@ -34,9 +34,9 @@ $bzk-boxshadow: 0 4px 16px 0 #252525;
 
 .bzkFeedbackButton{
     position: fixed;
-    bottom: 10px;
-    right: 20px;
-    box-shadow: 0 4px 16px 0 #252525;
+    bottom: 2%;
+    right: 2%;
+    box-shadow: $bzk-boxshadow;
 }
 
 .bzkButton{
@@ -118,6 +118,11 @@ $bzk-boxshadow: 0 4px 16px 0 #252525;
 
 .bzkButtonPrimary:hover{
     background-color: $bzk-button-primary-hover;
+}
+
+
+#closeModal:hover{
+    background-color: #E8E8E8;
 }
 
 input, select, textarea{
@@ -233,8 +238,8 @@ canvas{
     z-index: z-index('toolbox');
     position: fixed;
     top: 50%;
+    right: 2%;
     transform:translateY(-50%);
-    right: 20px;
     background-color: $bzk-broken-white;
 }
 
@@ -276,7 +281,6 @@ canvas{
     margin: 0 auto;
     top: 50%;
     transform: translateY(-50%);
-    background-color: $bzk-success-color;
     color: $bzk-broken-white;
     width: 80%;
     max-width: 400px;
@@ -286,38 +290,22 @@ canvas{
     font-size: 20px;
     padding: 12px;
     box-shadow: $bzk-boxshadow;
-    animation: anim 5s 0s ease-in-out;
-    animation-fill-mode: both;
-}
-
-@keyframes anim {
-    0% {
-        opacity:0;
-    }
-    20% {
-        opacity:1;
-    }
-  60% {
-    opacity: 1;
-  }
-  100% {
     opacity: 0;
-  }
-}
+    pointer-events: none;
+    -webkit-transition: opacity ease 1.5s;
+    transition: opacity ease 1.5s;
 
-@-webkit-keyframes anim {
-    0% {
-        opacity:0;
+    &.visible {
+        opacity: 1;
     }
-    20% {
-        opacity:1;
+
+    &.success {
+        background-color: $bzk-success-color;
     }
-  60% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+
+    &.error {
+        background-color: $bzk-error-color;
+    }
 }
 
 .bzkErrorResult {
@@ -327,7 +315,6 @@ canvas{
 .fileUpload {
     position: relative;
     overflow: hidden;
-    margin-right: 15px;
     background-color: $bzk-button-primary;
     color: $bzk-broken-white;
     border-radius: $bzk-border-radius;
@@ -351,4 +338,5 @@ canvas{
 #uploadFile {
     width: 87%;
     display: inline;
+    margin-left: 15px;
 }

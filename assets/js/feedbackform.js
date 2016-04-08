@@ -217,6 +217,8 @@ var feedbackModule = (function() {
       getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
       document.body.className = bodystate;
     };
+
+    createSubmitModal();
   }
 
   function createToolbox() {
@@ -316,7 +318,7 @@ var feedbackModule = (function() {
 
   function fillbzkFeedbackModal() {
     if (!feedbackModalInitialized) {
-      document.getElementById('bzkFeedbackModal').innerHTML = '' +
+      getDomElement('bzkFeedbackModal').innerHTML = '' +
       '<div id="bzkModalContent">' +
       '<div class="bzkModalHeader">Feedback</div>' +
       '<form method="post" id="feedbackForm" >' +
@@ -379,12 +381,30 @@ var feedbackModule = (function() {
 
   // create submitModal for success/error submit ticket
   function createSubmitModal() {
-    // TODO moet nog verzet worden
-    var bzkSubmitResult = document.createElement('div');
-    bzkSubmitResult.id = 'bzkSubmitResult';
-    document.body.appendChild(bzkSubmitResult);
+      var bzkSubmitResult = document.createElement('div');
+      document.body.appendChild(bzkSubmitResult);
+      bzkSubmitResult.id = 'bzkSubmitResult';
+  }
 
-    bzkSubmitResult.style.visibility = 'hidden';
+  function showSubmitModal(status) {
+    var submitModal = getDomElement('bzkSubmitResult'),
+        statusClass = '';
+    if(status === 'success'){
+      submitModal.innerHTML = 'Success sending feedback!';
+      statusClass = 'success';
+      submitModal.setAttribute('class', 'visible ' + statusClass);
+    }
+
+    if(status === 'error'){
+      submitModal.innerHTML = 'Something went wrong!';
+      submitModal.setAttribute('style', 'background-color: #cc211b;');
+      statusClass = 'error';
+      submitModal.setAttribute('class', 'visible ' + statusClass);
+    }
+    
+    setTimeout(function() {
+      submitModal.setAttribute('class', statusClass);
+    }, 2500);
   }
 
   // creates the partial container for bzkScreenshots
@@ -686,32 +706,34 @@ var feedbackModule = (function() {
     http.onreadystatechange = function() {//Call a function when the state changes.
       if (http.readyState == XMLHttpRequest.DONE) {
         var jsonResponse = JSON.parse(http.response);
+        var status = jsonResponse.status;
 
-        createSubmitModal();
-
-        if (jsonResponse.status == 'success') {
-          getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
-          document.body.className = bodystate;
-          getDomElement('bzkSubmitResult').style.visibility = 'visible';
-          getDomElement('bzkSubmitResult').innerHTML = 'Success sending feedback!';
-          eventFire(getDomElement('closeModal'), 'click');
-          imgDataPartial = imgDataPartialOriginal;
-          imgDataFull = imgDataFullOriginal;
-          getDomElement('Subject').value = '';
-          getDomElement('Description').value = '';
-          getDomElement('email').value = savedEmail;
-          getDomElement('submitModal').innerText = 'Send';
-          setMouseCursor('default');
-        } else if (jsonResponse.status == 'error') {
-          getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
-          getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
-          getDomElement('submitModal').innerText = 'Retry';
-          setMouseCursor('default');
-        }
+        showSubmitModal(status);
+        finalizeCreateTicket(status);
       }
     };
 
     http.send(params);
+  }
+
+  function finalizeCreateTicket(status){
+    if (status == 'success') {
+        getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
+        document.body.className = bodystate;
+        eventFire(getDomElement('closeModal'), 'click');
+        imgDataPartial = imgDataPartialOriginal;
+        imgDataFull = imgDataFullOriginal;
+        getDomElement('Subject').value = '';
+        getDomElement('Description').value = '';
+        getDomElement('email').value = savedEmail;
+        getDomElement('submitModal').innerText = 'Send';
+        setMouseCursor('default');
+        }
+      else if (status == 'error') {
+        getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
+        getDomElement('submitModal').innerText = 'Retry';
+        setMouseCursor('default');
+        }
   }
 
   // submits the form
