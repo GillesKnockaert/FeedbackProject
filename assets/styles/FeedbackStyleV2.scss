@@ -32,7 +32,7 @@
 }
 
 #bzkFeedbackModal {
-    overflow-y: scroll;
+    overflow-y: auto;
     visibility: hidden;
     position: fixed;
     left: 0px;
@@ -235,16 +235,48 @@ canvas{
     margin: 0 auto;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #42AD5D;
-    color: #000000;
-    width: 20%;
-    height: 10%;
-    border-radius: 25%;
+    background-color: #51a351;
+    color: #F8F8F8;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 5px;
     text-align: center;
-    line-height: 5;
-    border-style: solid;
-    border-color: #F7F4F2;
-    border-width: 5px;
+    line-height: 28px;
+    font-size: 20px;
+    padding: 12px;
+    box-shadow: 0 4px 16px 0 #252525;
+    animation: anim 5s 0s ease-in-out;
+    animation-fill-mode: both;
+}
+
+@keyframes anim {
+    0% {
+        opacity:0;
+    }
+    20% {
+        opacity:1;
+    }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes anim {
+    0% {
+        opacity:0;
+    }
+    20% {
+        opacity:1;
+    }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .bzkErrorResult {

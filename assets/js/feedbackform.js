@@ -56,7 +56,7 @@ var feedbackModule = (function() {
   var feedbackModalInitialized = false;
 
   // needed for showFeedbackModal to check wether or not the elements are hidden/visible
-  var bzkFeedbackModal, bzkFeedbackButton;
+  var bzkFeedbackModal, bzkFeedbackButton, bzkCloseModal;
 
   // Variable that holds the amount scrolled on the website for the partial view
   var scrollPartialView;
@@ -201,6 +201,7 @@ var feedbackModule = (function() {
     // onclick for close button
     getDomElement('closeModal').onclick = function() {
       savedEmail = getDomElement('email').value;
+      getDomElement('closeModal').style.visibility = "hidden";
 
       getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
       document.body.className = bodystate;
@@ -358,14 +359,6 @@ var feedbackModule = (function() {
     document.body.appendChild(bzkSubmitResult);
 
     bzkSubmitResult.style.visibility = 'hidden';
-
-    bzkSubmitResult.onclick = function() {
-      bzkSubmitResult.style.visibility = 'hidden';
-    };
-
-    window.onscroll = function(){
-      bzkSubmitResult.style.visibility = 'hidden';
-    };
   }
 
   // creates the partial container for bzkScreenshots
@@ -650,18 +643,17 @@ var feedbackModule = (function() {
     var url = 'http://localhost:8000/api/post/ticket';
     http.open('POST', url, true);
 
-    // Send the proper header information along with the request
-    // http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
     http.onreadystatechange = function() {//Call a function when the state changes.
       if (http.readyState == XMLHttpRequest.DONE) {
         var jsonResponse = JSON.parse(http.response);
+
+        createSubmitModal();
 
         if (jsonResponse.status == 'success') {
           getDomElement('bzkFeedbackModal').style.visibility = 'hidden';
           document.body.className = bodystate;
           getDomElement('bzkSubmitResult').style.visibility = 'visible';
-          getDomElement('bzkSubmitResult').innerHTML = 'Succes sending feedback!';
+          getDomElement('bzkSubmitResult').innerHTML = 'Success sending feedback!';
           eventFire(getDomElement('closeModal'), 'click');
           imgDataPartial = imgDataPartialOriginal;
           imgDataFull = imgDataFullOriginal;
@@ -669,7 +661,6 @@ var feedbackModule = (function() {
           getDomElement('Description').value = '';
           getDomElement('email').value = savedEmail;
           getDomElement('submitModal').innerText = 'Send';
-          getDomElement('closeModal').style.visibility = 'visible';
         } else if (jsonResponse.status == 'error') {
           getDomElement('bzkSubmitResult').className += 'bzkErrorResult';
           getDomElement('bzkSubmitResult').innerText = jsonResponse.message;
@@ -727,8 +718,13 @@ var feedbackModule = (function() {
       bzkFeedbackButton = getDomElement('bzkFeedbackButton');
     }
 
+    if(!bzkCloseModal){
+      bzkCloseModal = getDomElement('closeModal');
+    }
+
     bzkFeedbackModal.style.visibility = show ? 'visible' : 'hidden';
     bzkFeedbackButton.style.visibility = show ? 'visible' : 'hidden';
+    bzkCloseModal.style.visibility = show ? 'visible' : 'hidden';
 
     // scrolls the window back to it's original scrolled position - BE WARNED could cause problems with parallaxing sites
     window.scrollTo(0, scrollTopVar);
@@ -809,7 +805,6 @@ var feedbackModule = (function() {
   function init() {
     createFeedbackButton();
     getBackgroundInfo();
-    createSubmitModal();
     getDomElement('bzkFeedbackButton').onclick = function() {
       createFeedbackModal();
       getScreenshots();
