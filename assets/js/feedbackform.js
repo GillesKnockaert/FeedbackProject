@@ -391,7 +391,7 @@ var feedbackModule = (function() {
     var submitModal = getDomElement('bzkSubmitResult'),
         statusClass = '';
 
-    if(status === 'success'){
+    /*if(status === 'success'){
       submitModal.innerHTML = 'Success sending feedback!';
       statusClass = 'success';
       submitModal.setAttribute('class', 'visible ' + statusClass);
@@ -402,7 +402,9 @@ var feedbackModule = (function() {
       submitModal.setAttribute('style', 'background-color: #cc211b;');
       statusClass = 'error';
       submitModal.setAttribute('class', 'visible ' + statusClass);
-    }
+    }*/
+
+    console.log('Sent');
     
     setTimeout(function() {
       submitModal.setAttribute('class', statusClass);
