@@ -241,19 +241,21 @@ var feedbackModule = (function() {
 
       http.onreadystatechange = function() {//Call a function when the state changes.
         if(http.readyState == XMLHttpRequest.DONE) {
-          var jsonResponse = JSON.parse(http.response);
+          //var jsonResponse = JSON.parse(http.response);
 
-          if (jsonResponse.status == "success") {
+          /*if (jsonResponse.status == "success") {
             document.getElementById("feedbackModal").style.visibility = "hidden";
             document.body.className = bodystate;
-            //TODO maybe 'thank you' modal that disappears after couple seconds?
+            //TODO maybe 'thank you' modal that disappears after couple seconds?          UNCOMMENT FOR WORKING RELEASE
             document.getElementById('successModal').style.visibility = "visible";
             eventFire(document.getElementById('closeModal'), 'click');
           } else if (jsonResponse.status == "error") {
             document.getElementById("submit_result").className += "error_result";
             document.getElementById("submit_result").innerText = jsonResponse.message;
             document.getElementById("submitModal").innerText = "Retry";
-          }
+          }*/
+
+          window.alert(http.response);
         }
       };
       http.send(params);
@@ -481,8 +483,8 @@ var feedbackModule = (function() {
 
           // simulate click event in JS
 
-          eventFire(document.getElementById('closeModal'), 'click');
-          eventFire(document.getElementById('feedbackBtn'), 'click');
+          //eventFire(document.getElementById('closeModal'), 'click');
+          //eventFire(document.getElementById('feedbackBtn'), 'click');
         };
 
         document.getElementById("drawFree").onclick = function() {
