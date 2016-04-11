@@ -1,3 +1,8 @@
+var onLoadCallbacks = [
+  feedbackModule.init
+];
+
+// jscs:disable
 // Vanilla javascript DOM ready implementation of jQuery's .ready();
 // http://stackoverflow.com/a/9899701/4141858
 (function(funcName, baseObj) {
@@ -70,6 +75,10 @@
     };
 })("docReady", window);
 
+for (var i = 0; i < onLoadCallbacks.length; i++) {
+  docReady(onLoadCallbacks[i]);
+}
+
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
 (function(){
@@ -103,5 +112,14 @@
 
     // Provide some basic currying to the user
     return data ? fn( data ) : fn;
+  };
+})();
+
+(function() {
+  this.getBrowserHeight = function() {
+    var body = document.body,
+    html = document.documentElement;
+
+    return Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
   };
 })();
