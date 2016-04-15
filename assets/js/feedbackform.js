@@ -770,7 +770,7 @@ var feedbackModule = (function() {
     fd.append("params", getDomElement('params').value);
     fd.append("attachments[]", imgDataPartialBlob);
     fd.append("attachments[]", imgDataFullBlob);
-    fd.append("bzkFileInput", getDomElement('uploadButton').files);
+    fd.append("bzkFileInput", getDomElement('uploadButton').files[0]);
 
     return fd;
   }
